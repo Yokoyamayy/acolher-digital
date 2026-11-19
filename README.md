@@ -1,4 +1,5 @@
 (Versão 0.4) ----------------------------------------------------------------------
+
 Contador de + e - no prontuário para adicionar ou reduzir sessões extras livremente
 
 Remoção da barra superior do site
@@ -22,6 +23,7 @@ Sincronização bidirecional de dados entre Meu Perfil e os cadastros de Psicól
 Visualização em Lista na Agenda com filtro por psicólogo e cards grandes agrupados por dia da semana e horário
 
 (Versão 0.3) ----------------------------------------------------------------------
+
 Removido o modo escuro e todos os códigos técnicos ou referências de leis da interface.
 
 Menu lateral fixado para acompanhar o scroll da página, com badges em cinza exibindo as pendências de cada aba.
