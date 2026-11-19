@@ -1,3 +1,27 @@
+(Versão 0.4)
+Contador de + e - no prontuário para adicionar ou reduzir sessões extras livremente
+
+Remoção da barra superior do site
+
+Botões de Exportar Planilha e Nova Pasta Digital movidos para a aba Pacientes (e Exportar Planilha também em Psicólogos Voluntários)
+
+Remoção do texto "CACS • Gestão Unificada" abaixo de AcolherDigital no menu lateral
+
+Remoção do texto "Psicoterapia Breve (Ciclo de 12 Sessões)" na tela Início
+
+Remoção do botão Simulador de Sigilo do menu lateral
+
+Renomeação do menu para Início, Fila de Triagem, Pacientes, Agenda, Equipe, Gestão de Acessos, Documentos e Configurações
+
+Unificação de Coordenação Técnica, Coordenação Administrativa e Admins de TI na página Perfis com filtros por categoria
+
+Menu com setinha para cima no usuário do rodapé com opções de Meu Perfil e Sair
+
+Sincronização bidirecional de dados entre Meu Perfil e os cadastros de Psicólogos Voluntários e Perfis
+
+Visualização em Lista na Agenda com filtro por psicólogo e cards grandes agrupados por dia da semana e horário
+
+(Versão 0.3)
 Removido o modo escuro e todos os códigos técnicos ou referências de leis da interface.
 
 Menu lateral fixado para acompanhar o scroll da página, com badges em cinza exibindo as pendências de cada aba.
