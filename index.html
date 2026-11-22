@@ -747,36 +747,49 @@
 
       <!-- VIEW 6: PERFIS UNIFICADOS (COORD. TÉCNICA, COORD. ADMINISTRATIVA, ADMIN TI) -->
       <section id="view-perfis" class="hidden space-y-4">
-        <div class="bg-white rounded-2xl border border-slate-300 p-5 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div>
-            <h2 class="text-lg font-bold text-slate-900">Perfis da Equipe</h2>
-            <p class="text-xs text-slate-600 mt-1">
-              Gestão unificada de Coordenadores Técnicos, Coordenadores Administrativos e Administradores de TI.
-            </p>
+        <div class="bg-white rounded-2xl border border-slate-300 p-5 shadow-sm space-y-4">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">Perfis da Equipe</h2>
+              <p class="text-xs text-slate-600 mt-1">
+                Gestão unificada de Coordenadores Técnicos, Coordenadores Administrativos e Administradores de TI.
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+              <button onclick="triggerSimulatedDownload('Perfis_Equipe_CACS.xlsx', 'Planilha consolidada de membros da equipe e perfis', false)" class="w-full sm:w-48 h-9 px-3 rounded-xl bg-white border border-slate-400 hover:bg-slate-100 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition whitespace-nowrap">
+                <i data-lucide="upload" class="w-4 h-4 text-blue-600"></i>
+                <span>Exportar Perfis</span>
+              </button>
+              <button onclick="openStaffCreateModal()" class="w-full sm:w-48 h-9 px-3 rounded-xl bg-blue-600 border border-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition whitespace-nowrap">
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                <span>Cadastrar Membro</span>
+              </button>
+            </div>
           </div>
-          <div class="flex flex-wrap items-center gap-2 shrink-0">
-            <button onclick="openStaffCreateModal('coordTecnica')" class="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Coord. Técnico</span>
-            </button>
-            <button onclick="openStaffCreateModal('coordAdmin')" class="px-3 py-2 rounded-xl bg-white border border-slate-400 hover:bg-slate-100 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition">
-              <i data-lucide="plus" class="w-3.5 h-3.5 text-blue-600"></i><span>Coord. Admin</span>
-            </button>
-            <button onclick="openStaffCreateModal('adminsTi')" class="px-3 py-2 rounded-xl bg-white border border-slate-400 hover:bg-slate-100 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition">
-              <i data-lucide="plus" class="w-3.5 h-3.5 text-blue-600"></i><span>Admin TI</span>
-            </button>
-          </div>
-        </div>
 
-        <div class="bg-white rounded-2xl border border-slate-300 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
-          <div class="flex flex-wrap items-center gap-1.5">
-            <button onclick="setPerfisFilter('todos')" id="perfilter-todos" class="perfilter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white border border-blue-700">Todos</button>
-            <button onclick="setPerfisFilter('coordTecnica')" id="perfilter-coordTecnica" class="perfilter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 border border-slate-300 text-slate-700 hover:bg-slate-200">Coordenação Técnica</button>
-            <button onclick="setPerfisFilter('coordAdmin')" id="perfilter-coordAdmin" class="perfilter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 border border-slate-300 text-slate-700 hover:bg-slate-200">Coordenação Administrativa</button>
-            <button onclick="setPerfisFilter('adminsTi')" id="perfilter-adminsTi" class="perfilter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 border border-slate-300 text-slate-700 hover:bg-slate-200">Administrador de TI</button>
-          </div>
-          <div class="relative w-full sm:w-64">
-            <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
-            <input type="text" id="perfisSearchInput" oninput="renderPerfisTable()" placeholder="Buscar nome, e-mail ou setor..." class="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-400 text-xs focus:outline-none focus:border-blue-600" />
+          <div class="pt-3.5 border-t border-slate-200 flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5">
+            <div class="relative flex-1">
+              <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="perfisSearchInput" oninput="onPerfisSearchChange()" placeholder="Buscar por nome, e-mail, telefone, cargo, CRP ou setor..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50/50 focus:bg-white transition" />
+            </div>
+            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+              <div class="relative flex items-center">
+                <i data-lucide="filter" class="w-3.5 h-3.5 text-slate-500 absolute left-3 pointer-events-none"></i>
+                <select id="perfisFilterSelect" onchange="setPerfisFilter(this.value)" aria-label="Filtrar membros da equipe" class="pl-8 pr-8 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 cursor-pointer appearance-none">
+                  <option value="todos">Todos os Perfis</option>
+                  <option value="coordTecnica">Categoria: Coordenação Técnica</option>
+                  <option value="coordAdmin">Categoria: Coordenação Administrativa</option>
+                  <option value="adminsTi">Categoria: Administrador de TI</option>
+                  <option value="Ativo">Status: Ativo</option>
+                  <option value="Inativo">Status: Inativo</option>
+                </select>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 pointer-events-none"></i>
+              </div>
+              <button type="button" id="perfisClearFilterBtn" onclick="resetPerfisFilters()" class="hidden px-2.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold items-center gap-1 transition" title="Limpar busca e filtros">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                <span>Limpar</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -784,16 +797,46 @@
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
               <thead>
-                <tr class="border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100/80">
-                  <th class="py-3 px-4">Nome</th>
-                  <th class="py-3 px-4">Categoria</th>
-                  <th class="py-3 px-4">CRP / Cargo / Área</th>
+                <tr class="border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100/80 select-none">
+                  <th onclick="sortPerfisBy('nome')" class="py-3 px-4 cursor-pointer hover:bg-slate-200/70 hover:text-slate-800 transition group" title="Clique para ordenar por Nome do Integrante">
+                    <div class="inline-flex items-center gap-1.5">
+                      <span>Integrante</span>
+                      <span id="perfis-sort-icon-nome" class="inline-flex items-center"></span>
+                    </div>
+                  </th>
                   <th class="py-3 px-4">Contato</th>
+                  <th onclick="sortPerfisBy('status')" class="py-3 px-4 cursor-pointer hover:bg-slate-200/70 hover:text-slate-800 transition group" title="Clique para ordenar por Status">
+                    <div class="inline-flex items-center gap-1.5">
+                      <span>Status</span>
+                      <span id="perfis-sort-icon-status" class="inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="sortPerfisBy('categoria')" class="py-3 px-4 cursor-pointer hover:bg-slate-200/70 hover:text-slate-800 transition group" title="Clique para ordenar por Categoria">
+                    <div class="inline-flex items-center gap-1.5">
+                      <span>Categoria</span>
+                      <span id="perfis-sort-icon-categoria" class="inline-flex items-center"></span>
+                    </div>
+                  </th>
                   <th class="py-3 px-4 text-right">Ações</th>
                 </tr>
               </thead>
               <tbody id="perfisTableBody" class="divide-y divide-slate-300 text-xs"></tbody>
             </table>
+          </div>
+          <div id="perfisPaginationBar" class="px-4 py-3 bg-slate-50 border-t border-slate-300 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+            <div class="flex flex-wrap items-center gap-3">
+              <span id="perfisPaginationInfo" class="font-medium">Exibindo 0–0 de 0 integrantes</span>
+              <div class="flex items-center gap-1.5">
+                <label for="perfisPageSizeSelect" class="text-slate-600 font-medium">Itens por página:</label>
+                <select id="perfisPageSizeSelect" onchange="setPerfisPageSize(this.value)" class="px-2.5 py-1 rounded-lg border border-slate-400 bg-white text-slate-800 font-semibold text-xs focus:outline-none focus:border-blue-600 cursor-pointer">
+                  <option value="5">5</option>
+                  <option value="10" selected>10</option>
+                  <option value="20">20</option>
+                  <option value="all">Todos</option>
+                </select>
+              </div>
+            </div>
+            <div id="perfisPaginationControls" class="flex items-center gap-1"></div>
           </div>
         </div>
       </section>
@@ -1735,23 +1778,100 @@
         </div>
         <button onclick="requestCloseModal('staffMemberModal')" aria-label="Fechar" class="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-blue-700 shrink-0 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-      <div class="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-5 text-xs">
+      <div class="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4 text-xs">
         <input type="hidden" id="staffModalType" />
         <input type="hidden" id="staffModalEditId" />
-        <div class="p-4 rounded-2xl border-2 border-blue-200 bg-white space-y-3.5">
-          <h4 class="text-xs font-bold text-blue-900 flex items-center gap-1.5"><i data-lucide="user-plus" class="w-4 h-4 text-blue-600"></i><span>Identificação e Contato</span></h4>
-          <div id="staffErrorBox" class="hidden p-3 rounded-xl bg-red-50 border border-red-300 text-red-900 text-xs font-semibold"></div>
-          <div><label class="block font-bold text-slate-700 mb-1">Nome Completo *:</label><input type="text" id="staffName" placeholder="Digite o nome completo" class="w-full p-2.5 rounded-xl border border-slate-400 disabled:bg-slate-100 disabled:text-slate-500" /></div>
-          <div><label id="staffExtraFieldLabel" class="block font-bold text-slate-700 mb-1">Registro / Setor *:</label><input type="text" id="staffExtraField" placeholder="Ex: CRP ou Setor" class="w-full p-2.5 rounded-xl border border-slate-400 disabled:bg-slate-100 disabled:text-slate-500" /></div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div><label class="block font-bold text-slate-700 mb-1">E-mail *:</label><input type="email" id="staffEmail" placeholder="Ex: nome@cacs.org.br" class="w-full p-2.5 rounded-xl border border-slate-400" /></div>
-            <div><label class="block font-bold text-slate-700 mb-1">Telefone *:</label><input type="text" inputmode="numeric" id="staffPhone" oninput="formatPhoneDigitsOnly(this)" placeholder="Ex: (11) 98765-4321" class="w-full p-2.5 rounded-xl border border-slate-400" /></div>
+        <div id="staffErrorBox" class="hidden p-3 rounded-xl bg-red-50 border border-red-300 text-red-900 text-xs font-semibold"></div>
+
+        <details open class="rounded-xl border border-slate-300 bg-slate-50/70 overflow-hidden">
+          <summary class="px-4 py-3 cursor-pointer select-none flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition">
+            <span class="flex items-center gap-2"><i data-lucide="user-check" class="w-4 h-4 text-blue-600"></i><span>Identificação e Atribuição Institucional</span></span>
+            <span class="text-[11px] font-semibold text-slate-500">Dados do perfil • Expandir / Recolher</span>
+          </summary>
+          <div class="px-4 pb-4 pt-3 bg-white border-t border-slate-200 space-y-3.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Categoria da Equipe *:</label>
+                <select id="staffCategorySelect" onchange="onStaffCategoryChange(this.value)" class="w-full p-2.5 rounded-xl border border-slate-400 bg-white font-medium">
+                  <option value="coordTecnica">Coordenação Técnica</option>
+                  <option value="coordAdmin">Coordenação Administrativa</option>
+                  <option value="adminsTi">Administrador de TI</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Status do Membro *:</label>
+                <select id="staffStatus" class="w-full p-2.5 rounded-xl border border-slate-400 bg-white font-medium">
+                  <option value="Ativo" selected>Ativo</option>
+                  <option value="Inativo">Inativo</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Nome Completo *:</label>
+              <input type="text" id="staffName" placeholder="Ex: Dr. Marcelo Augusto Nogueira" class="w-full p-2.5 rounded-xl border border-slate-400 disabled:bg-slate-100 disabled:text-slate-500" />
+            </div>
+            <div>
+              <label id="staffExtraFieldLabel" class="block font-bold text-slate-700 mb-1">Registro CRP *:</label>
+              <input type="text" id="staffExtraField" placeholder="Ex: CRP 06/112450" class="w-full p-2.5 rounded-xl border border-slate-400 disabled:bg-slate-100 disabled:text-slate-500" />
+            </div>
           </div>
-        </div>
+        </details>
+
+        <details open class="rounded-xl border border-slate-300 bg-slate-50/70 overflow-hidden">
+          <summary class="px-4 py-3 cursor-pointer select-none flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition">
+            <span class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-blue-600"></i><span>Informações de Contato</span></span>
+            <span class="text-[11px] font-semibold text-slate-500">Comunicação oficial • Expandir / Recolher</span>
+          </summary>
+          <div class="px-4 pb-4 pt-3 bg-white border-t border-slate-200 space-y-3.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">E-mail Institucional *:</label>
+                <input type="email" id="staffEmail" placeholder="Ex: nome@cacs.org.br" class="w-full p-2.5 rounded-xl border border-slate-400" />
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Telefone / WhatsApp *:</label>
+                <input type="text" inputmode="numeric" id="staffPhone" oninput="formatPhoneDigitsOnly(this)" placeholder="Ex: (11) 98765-4321" class="w-full p-2.5 rounded-xl border border-slate-400" />
+              </div>
+            </div>
+          </div>
+        </details>
       </div>
       <div class="px-6 py-3.5 bg-slate-100 border-t border-slate-300 flex flex-wrap items-center justify-end gap-2.5 shrink-0">
         <button onclick="requestCloseModal('staffMemberModal')" class="px-4 py-1.5 rounded-xl bg-white border border-slate-400 hover:bg-slate-200/60 text-xs font-semibold text-slate-700 transition">Cancelar</button>
-        <button onclick="saveStaffMember()" class="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition"><i data-lucide="save" class="w-3.5 h-3.5"></i><span>Salvar Membro</span></button>
+        <button onclick="saveStaffMember()" class="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition"><i data-lucide="save" class="w-3.5 h-3.5"></i><span>Salvar</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6B: FICHA COMPLETA DO INTEGRANTE DA EQUIPE -->
+  <div id="staffDetailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-400 overflow-hidden">
+      <div class="px-6 py-4 bg-blue-600 text-white flex items-center justify-between gap-3 shrink-0">
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2">
+            <span id="staffDetailCode" class="text-xs font-bold px-2.5 py-0.5 rounded bg-white/15 border border-white/30 text-white whitespace-nowrap">EQUIPE</span>
+            <span id="staffDetailStatus" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white text-emerald-700 whitespace-nowrap">Ativo</span>
+            <h3 id="staffDetailTitle" class="text-base font-bold text-white">Ficha do Integrante da Equipe</h3>
+          </div>
+          <p id="staffDetailMeta" class="text-xs text-blue-100 mt-1"></p>
+        </div>
+        <button onclick="requestCloseModal('staffDetailModal')" aria-label="Fechar" class="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-blue-700 shrink-0 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-6 text-xs flex-1 overflow-y-auto custom-scrollbar space-y-5" id="staffDetailBody"></div>
+      <div class="px-6 py-3.5 bg-slate-100 border-t border-slate-300 flex flex-wrap items-center justify-between gap-2.5 shrink-0">
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btnStaffDetailDownloadPdf" type="button" class="px-3 py-1.5 rounded-xl bg-white border border-slate-400 hover:bg-slate-200/60 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-blue-600"></i>
+            <span>Baixar Ficha PDF</span>
+          </button>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="requestCloseModal('staffDetailModal')" class="px-4 py-1.5 rounded-xl bg-white border border-slate-400 hover:bg-slate-200/60 text-xs font-semibold text-slate-700 transition">Fechar</button>
+          <button id="staffDetailEditBtn" type="button" class="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+            <span>Editar Membro</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -2025,6 +2145,10 @@
       volunteerPageSize: 10,
       activeVolunteerDetailId: null,
       perfisFilter: 'todos',
+      perfisSort: { field: 'nome', direction: 'asc' },
+      perfisPage: 1,
+      perfisPageSize: 10,
+      activeStaffDetailId: null,
       docFilter: 'Todos',
       nextProntCounter: 26,
       tempNewPatientSlots: [],
@@ -2047,14 +2171,15 @@
       ],
 
       coordTecnica: [
-        { id: 'CT1', nome: 'Dr. Marcelo Augusto Nogueira', extra: 'CRP 06/112450', email: 'marcelo.supervisao@cacs.org.br', telefone: '(11) 98210-4411' },
-        { id: 'CT2', nome: 'Dra. Simone Carvalho', extra: 'CRP 06/118902', email: 'simone.tecnica@cacs.org.br', telefone: '(11) 98114-5520' }
+        { id: 'CT1', status: 'Ativo', nome: 'Dr. Marcelo Augusto Nogueira', extra: 'CRP 06/112450', email: 'marcelo.supervisao@cacs.org.br', telefone: '(11) 98210-4411' },
+        { id: 'CT2', status: 'Ativo', nome: 'Dra. Simone Carvalho', extra: 'CRP 06/118902', email: 'simone.tecnica@cacs.org.br', telefone: '(11) 98114-5520' }
       ],
       coordAdmin: [
-        { id: 'CA1', nome: 'Mariana Penido', extra: 'Coordenação Administrativa', email: 'mariana.penido@cacs.org.br', telefone: '(11) 94254-7735' }
+        { id: 'CA1', status: 'Ativo', nome: 'Mariana Penido', extra: 'Coordenação Administrativa', email: 'mariana.penido@cacs.org.br', telefone: '(11) 94254-7735' },
+        { id: 'CA2', status: 'Inativo', nome: 'Lucas Bezerra', extra: 'Apoio Administrativo e Logística', email: 'lucas.bezerra@cacs.org.br', telefone: '(11) 94254-1122' }
       ],
       adminsTi: [
-        { id: 'TI1', nome: 'Equipe Sistemas IFSP', extra: 'Infraestrutura & Suporte', email: 'suporte.ti@cacs.org.br', telefone: '(11) 97001-2026' }
+        { id: 'TI1', status: 'Ativo', nome: 'Equipe Sistemas IFSP', extra: 'Infraestrutura & Suporte', email: 'suporte.ti@cacs.org.br', telefone: '(11) 97001-2026' }
       ],
 
       waitingQueue: [
@@ -2948,7 +3073,11 @@
     function resetPerfisFilters() {
       const input = document.getElementById('perfisSearchInput');
       if (input) input.value = '';
-      setPerfisFilter('todos');
+      state.perfisFilter = 'todos';
+      state.perfisPage = 1;
+      const sel = document.getElementById('perfisFilterSelect');
+      if (sel) sel.value = 'todos';
+      renderPerfisTable();
     }
 
     function resetDocFilters() {
@@ -6571,52 +6700,49 @@
     }
 
     // 5. PERFIS UNIFICADOS (COORD. TÉCNICA, ADMIN, TI)
+    function onStaffCategoryChange(newType) {
+      const cfg = getStaffConfig(newType);
+      document.getElementById('staffModalType').value = newType;
+      const lbl = document.getElementById('staffExtraFieldLabel');
+      if (lbl) lbl.textContent = cfg.extraLabel;
+      const inp = document.getElementById('staffExtraField');
+      if (inp) inp.placeholder = cfg.extraPlaceholder;
+    }
+
     function setPerfisFilter(filter) {
       state.perfisFilter = filter;
-      ['todos', 'coordTecnica', 'coordAdmin', 'adminsTi'].forEach(f => {
-        const btn = document.getElementById('perfilter-' + f);
-        if (btn) btn.className = (f === filter) ? 'perfilter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white border border-blue-700' : 'perfilter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 border border-slate-300 text-slate-700 hover:bg-slate-200';
-      });
+      state.perfisPage = 1;
+      const sel = document.getElementById('perfisFilterSelect');
+      if (sel && sel.value !== filter) sel.value = filter;
       renderPerfisTable();
     }
 
-    function renderPerfisTable() {
-      const tbody = document.getElementById('perfisTableBody');
-      if (!tbody) return;
-      const query = (document.getElementById('perfisSearchInput')?.value || '').toLowerCase();
+    function onPerfisSearchChange() {
+      state.perfisPage = 1;
+      renderPerfisTable();
+    }
 
-      const allItems = [
-        ...state.coordTecnica.map(m => ({ ...m, type: 'coordTecnica', typeLabel: 'Coord. Técnica', badgeCls: 'bg-blue-50 border-blue-300 text-blue-800' })),
-        ...state.coordAdmin.map(m => ({ ...m, type: 'coordAdmin', typeLabel: 'Coord. Administrativa', badgeCls: 'bg-amber-50 border-amber-300 text-amber-900' })),
-        ...state.adminsTi.map(m => ({ ...m, type: 'adminsTi', typeLabel: 'Admin de TI', badgeCls: 'bg-slate-100 border-slate-400 text-slate-800' }))
-      ];
-
-      const filtered = allItems.filter(m =>
-        (state.perfisFilter === 'todos' || m.type === state.perfisFilter) &&
-        (m.nome.toLowerCase().includes(query) || m.extra.toLowerCase().includes(query) || m.email.toLowerCase().includes(query))
-      );
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = getTableEmptyStateHtml(5, 'Nenhum integrante encontrado', 'Não há membros cadastrados para o filtro ou busca selecionados.', 'resetPerfisFilters()');
-        if (window.lucide) lucide.createIcons();
-        return;
+    function sortPerfisBy(field) {
+      if (!state.perfisSort) state.perfisSort = { field: 'nome', direction: 'asc' };
+      if (state.perfisSort.field === field) {
+        state.perfisSort.direction = state.perfisSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        state.perfisSort.field = field;
+        state.perfisSort.direction = 'asc';
       }
+      state.perfisPage = 1;
+      renderPerfisTable();
+    }
 
-      tbody.innerHTML = filtered.map(m => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="py-3.5 px-4 font-bold text-slate-900">${m.nome}</td>
-          <td class="py-3.5 px-4 whitespace-nowrap"><span class="px-2.5 py-0.5 rounded-full border font-semibold text-[11px] ${m.badgeCls}">${m.typeLabel}</span></td>
-          <td class="py-3.5 px-4 font-medium text-slate-700">${m.extra}</td>
-          <td class="py-3.5 px-4"><div class="text-slate-800">${m.email}</div><div class="text-[11px] text-slate-500">${m.telefone}</div></td>
-          <td class="py-3.5 px-4 text-right whitespace-nowrap">
-            <div class="inline-flex items-center gap-1.5">
-              <button onclick="openStaffEditModal('${m.type}', '${m.id}')" class="px-2.5 py-1.5 rounded-lg border border-blue-300 bg-blue-50 hover:bg-blue-100 text-blue-800 font-semibold text-[11px]">Editar</button>
-              <button onclick="requestDeleteStaffMember('${m.type}', '${m.id}')" title="Excluir membro" class="p-1.5 rounded-lg border border-red-400 bg-red-50 hover:bg-red-100 text-red-700"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-            </div>
-          </td>
-        </tr>
-      `).join('');
-      if (window.lucide) lucide.createIcons();
+    function setPerfisPageSize(size) {
+      state.perfisPageSize = size === 'all' ? 'all' : (parseInt(size, 10) || 10);
+      state.perfisPage = 1;
+      renderPerfisTable();
+    }
+
+    function goToPerfisPage(page) {
+      state.perfisPage = page;
+      renderPerfisTable();
     }
 
     function getStaffConfig(type) {
@@ -6625,17 +6751,271 @@
       return { title: 'Administrador de TI', extraLabel: 'Área / Especialidade *:', extraPlaceholder: 'Ex: Infraestrutura e Suporte', list: state.adminsTi };
     }
 
-    function openStaffCreateModal(type) {
+    function renderStaffDetailsHtml(member, type) {
+      const cfg = getStaffConfig(type);
+      const isAtivo = (member.status || 'Ativo') === 'Ativo';
+      const linkedAccount = state.userAccounts.find(acc => acc.displayName === member.nome || acc.linkedId === member.id);
+      const perms = linkedAccount ? linkedAccount.permissions.map(p => PERM_LABELS[p] || p).join(', ') : 'Nenhuma conta vinculada diretamente';
+
+      return `
+        <details open class="rounded-xl border border-slate-300 bg-slate-50/70 overflow-hidden">
+          <summary class="px-4 py-3 cursor-pointer select-none flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition">
+            <span class="flex items-center gap-2"><i data-lucide="user-check" class="w-4 h-4 text-blue-600"></i><span>Dados Cadastrais do Integrante</span></span>
+            <span class="text-[11px] font-semibold text-slate-500">${escapeHtml(member.nome)} • Expandir / Recolher</span>
+          </summary>
+          <div class="px-4 pb-4 pt-3 bg-white border-t border-slate-200 space-y-4">
+            <div class="space-y-2.5">
+              <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Identificação Institucional e Contato</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
+                <div><span class="text-slate-500 block text-[10px] uppercase font-bold">Nome Completo</span><strong class="text-slate-900">${escapeHtml(member.nome)}</strong></div>
+                <div><span class="text-slate-500 block text-[10px] uppercase font-bold">Categoria</span><strong class="text-slate-900">${escapeHtml(cfg.title)}</strong></div>
+                <div><span class="text-slate-500 block text-[10px] uppercase font-bold">${escapeHtml(cfg.extraLabel.replace('*:', '').trim())}</span><strong class="text-slate-900">${escapeHtml(member.extra || 'Não informado')}</strong></div>
+                <div><span class="text-slate-500 block text-[10px] uppercase font-bold">Status do Cadastro</span><strong class="${isAtivo ? 'text-emerald-700' : 'text-slate-600'}">${escapeHtml(member.status || 'Ativo')}</strong></div>
+                <div><span class="text-slate-500 block text-[10px] uppercase font-bold">E-mail Institucional</span><strong class="text-slate-900">${escapeHtml(member.email || 'Não informado')}</strong></div>
+                <div><span class="text-slate-500 block text-[10px] uppercase font-bold">Telefone / WhatsApp</span><strong class="text-slate-900">${escapeHtml(member.telefone || 'Não informado')}</strong></div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details open class="rounded-xl border border-slate-300 bg-slate-50/70 overflow-hidden">
+          <summary class="px-4 py-3 cursor-pointer select-none flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition">
+            <span class="flex items-center gap-2"><i data-lucide="key-round" class="w-4 h-4 text-blue-600"></i><span>Acesso e Permissões do Sistema</span></span>
+            <span class="text-[11px] font-semibold text-slate-500">${linkedAccount ? `Usuário: ${escapeHtml(linkedAccount.username)}` : 'Sem usuário vinculado'} • Expandir / Recolher</span>
+          </summary>
+          <div class="px-4 pb-4 pt-3 bg-white border-t border-slate-200 space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
+              <div><span class="text-slate-500 block text-[10px] uppercase font-bold">Conta de Login</span><strong class="text-slate-900">${linkedAccount ? escapeHtml(linkedAccount.username) : 'Nenhuma conta cadastrada'}</strong></div>
+              <div><span class="text-slate-500 block text-[10px] uppercase font-bold">Status do Acesso</span><strong class="${linkedAccount ? 'text-emerald-700' : 'text-amber-700'}">${linkedAccount ? 'Habilitado' : 'Aguardando criação na aba Acessos'}</strong></div>
+              <div class="sm:col-span-2"><span class="text-slate-500 block text-[10px] uppercase font-bold">Permissões Habilitadas</span><strong class="text-slate-900">${escapeHtml(perms)}</strong></div>
+            </div>
+          </div>
+        </details>
+
+        <div class="p-4 rounded-xl bg-blue-50 border border-blue-300 space-y-2">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-blue-800 block">Resumo Institucional</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
+            <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Papel na ONG</span><strong class="text-slate-900">${escapeHtml(cfg.title)}</strong></div>
+            <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Status Atual</span><strong class="${isAtivo ? 'text-emerald-700' : 'text-slate-600'}">${escapeHtml(member.status || 'Ativo')}</strong></div>
+            <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Identificação</span><strong class="text-slate-900">${escapeHtml(member.extra || '-')}</strong></div>
+            <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Contato Rápido</span><strong class="text-slate-900">${escapeHtml(member.telefone || '-')}</strong></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function openStaffDetailModal(type, id) {
+      const cfg = getStaffConfig(type);
+      const member = cfg.list.find(m => m.id === id);
+      if (!member) return;
+      state.activeStaffDetailId = { type, id };
+      const isAtivo = (member.status || 'Ativo') === 'Ativo';
+      document.getElementById('staffDetailCode').textContent = type === 'coordTecnica' ? (member.extra || 'CRP') : 'EQUIPE';
+      const stEl = document.getElementById('staffDetailStatus');
+      if (stEl) {
+        stEl.textContent = isAtivo ? 'Ativo' : 'Inativo';
+        stEl.className = `text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white ${isAtivo ? 'text-emerald-700' : 'text-slate-600'} whitespace-nowrap`;
+      }
+      document.getElementById('staffDetailTitle').textContent = member.nome;
+      document.getElementById('staffDetailMeta').textContent = `${cfg.title} • ${member.extra || 'Cadastro institucional'} • ${member.telefone || ''}`;
+      document.getElementById('staffDetailBody').innerHTML = renderStaffDetailsHtml(member, type);
+      const safeFileSlug = (member.nome || 'Membro').replace(/[^a-zA-Z0-9_-]+/g, '_');
+      const pdfBtn = document.getElementById('btnStaffDetailDownloadPdf');
+      if (pdfBtn) pdfBtn.onclick = () => triggerSimulatedDownload(`Ficha_Equipe_${safeFileSlug}.pdf`, `Ficha completa de ${member.nome} (${cfg.title})`, true);
+      const editBtn = document.getElementById('staffDetailEditBtn');
+      if (editBtn) {
+        editBtn.onclick = () => {
+          closeModal('staffDetailModal');
+          openStaffEditModal(type, id);
+        };
+      }
+      openModal('staffDetailModal');
+    }
+
+    function renderPerfisTable() {
+      const tbody = document.getElementById('perfisTableBody');
+      if (!tbody) return;
+      const query = (document.getElementById('perfisSearchInput')?.value || '').toLowerCase().trim();
+      const filterVal = state.perfisFilter || 'todos';
+
+      const clearBtn = document.getElementById('perfisClearFilterBtn');
+      if (clearBtn) {
+        if (filterVal !== 'todos' || query.length > 0) {
+          clearBtn.classList.remove('hidden');
+          clearBtn.classList.add('inline-flex');
+        } else {
+          clearBtn.classList.add('hidden');
+          clearBtn.classList.remove('inline-flex');
+        }
+      }
+
+      ['nome', 'status', 'categoria'].forEach(f => {
+        const el = document.getElementById('perfis-sort-icon-' + f);
+        if (!el) return;
+        if (state.perfisSort && state.perfisSort.field === f) {
+          el.innerHTML = `<i data-lucide="${state.perfisSort.direction === 'asc' ? 'chevron-up' : 'chevron-down'}" class="w-3.5 h-3.5 text-blue-600"></i>`;
+        } else {
+          el.innerHTML = `<i data-lucide="chevrons-up-down" class="w-3 h-3 text-slate-400 group-hover:text-slate-600"></i>`;
+        }
+      });
+
+      const allItems = [
+        ...state.coordTecnica.map(m => ({ ...m, type: 'coordTecnica', typeLabel: 'Coordenação Técnica', status: m.status || 'Ativo' })),
+        ...state.coordAdmin.map(m => ({ ...m, type: 'coordAdmin', typeLabel: 'Coordenação Administrativa', status: m.status || 'Ativo' })),
+        ...state.adminsTi.map(m => ({ ...m, type: 'adminsTi', typeLabel: 'Administrador de TI', status: m.status || 'Ativo' }))
+      ];
+
+      const filtered = allItems.filter(m => {
+        const matchesFilter = filterVal === 'todos'
+          || (filterVal === 'coordTecnica' && m.type === 'coordTecnica')
+          || (filterVal === 'coordAdmin' && m.type === 'coordAdmin')
+          || (filterVal === 'adminsTi' && m.type === 'adminsTi')
+          || (filterVal === 'Ativo' && m.status === 'Ativo')
+          || (filterVal === 'Inativo' && m.status === 'Inativo');
+
+        const matchesSearch = !query
+          || m.nome.toLowerCase().includes(query)
+          || (m.extra && m.extra.toLowerCase().includes(query))
+          || (m.email && m.email.toLowerCase().includes(query))
+          || (m.telefone && m.telefone.toLowerCase().includes(query))
+          || (m.typeLabel && m.typeLabel.toLowerCase().includes(query))
+          || (m.status && m.status.toLowerCase().includes(query));
+
+        return matchesFilter && matchesSearch;
+      });
+
+      const infoEl = document.getElementById('perfisPaginationInfo');
+      const controlsEl = document.getElementById('perfisPaginationControls');
+      const pageSizeSel = document.getElementById('perfisPageSizeSelect');
+      if (pageSizeSel && pageSizeSel.value !== String(state.perfisPageSize)) {
+        pageSizeSel.value = String(state.perfisPageSize);
+      }
+
+      if (filtered.length === 0) {
+        const emptyTitle = allItems.length === 0 ? 'Nenhum integrante cadastrado' : 'Nenhum integrante encontrado para os filtros aplicados';
+        const emptySub = allItems.length === 0 ? 'Cadastre o primeiro membro da equipe clicando em Cadastrar Membro.' : 'Altere os termos da busca ou selecione outro filtro.';
+        tbody.innerHTML = getTableEmptyStateHtml(5, emptyTitle, emptySub, allItems.length > 0 ? 'resetPerfisFilters()' : null);
+        if (infoEl) infoEl.textContent = 'Exibindo 0 integrantes';
+        if (controlsEl) controlsEl.innerHTML = '';
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      filtered.sort((a, b) => {
+        const field = state.perfisSort ? state.perfisSort.field : 'nome';
+        const dir = state.perfisSort ? state.perfisSort.direction : 'asc';
+        let res = 0;
+        if (field === 'nome') {
+          res = a.nome.localeCompare(b.nome, 'pt-BR');
+        } else if (field === 'status') {
+          res = (a.status || 'Ativo').localeCompare(b.status || 'Ativo', 'pt-BR');
+          if (res === 0) res = a.nome.localeCompare(b.nome, 'pt-BR');
+        } else if (field === 'categoria') {
+          res = a.typeLabel.localeCompare(b.typeLabel, 'pt-BR');
+          if (res === 0) res = a.nome.localeCompare(b.nome, 'pt-BR');
+        }
+        return dir === 'asc' ? res : -res;
+      });
+
+      const totalItems = filtered.length;
+      const pageSize = state.perfisPageSize === 'all' ? totalItems : (parseInt(state.perfisPageSize, 10) || 10);
+      const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+      state.perfisPage = Math.min(Math.max(1, state.perfisPage || 1), totalPages);
+      const startIdx = (state.perfisPage - 1) * pageSize;
+      const endIdx = Math.min(startIdx + pageSize, totalItems);
+      const pageItems = filtered.slice(startIdx, endIdx);
+
+      if (infoEl) {
+        infoEl.textContent = `Exibindo ${startIdx + 1}–${endIdx} de ${totalItems} integrante${totalItems === 1 ? '' : 's'}`;
+      }
+      renderPaginationButtons(controlsEl, state.perfisPage, totalPages, 'goToPerfisPage');
+
+      tbody.innerHTML = pageItems.map(m => {
+        const isAtivo = (m.status || 'Ativo') === 'Ativo';
+        const actionStackHtml = isAtivo
+          ? `<div class="flex flex-col items-end gap-1.5 w-28 ml-auto">
+              <button onclick="openStaffDetailModal('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[11px] shadow-2xs flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                <span>Ficha</span>
+              </button>
+              <button onclick="openStaffEditModal('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span>Editar</span>
+              </button>
+              <button onclick="requestToggleStaffStatus('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg border border-slate-300 hover:border-amber-400 hover:bg-amber-50 text-slate-600 hover:text-amber-800 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="user-x" class="w-3.5 h-3.5 text-amber-600"></i>
+                <span>Inativar</span>
+              </button>
+            </div>`
+          : `<div class="flex flex-col items-end gap-1.5 w-28 ml-auto">
+              <button onclick="openStaffDetailModal('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span>Ficha</span>
+              </button>
+              <button onclick="requestToggleStaffStatus('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg border border-emerald-400 bg-white hover:bg-emerald-50 text-emerald-800 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-emerald-700"></i>
+                <span>Reativar</span>
+              </button>
+              <button onclick="requestDeleteStaffMember('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg border border-red-300 bg-white hover:bg-red-50 text-red-700 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5 text-red-600"></i>
+                <span>Excluir</span>
+              </button>
+            </div>`;
+
+        return `
+          <tr class="hover:bg-slate-50 transition ${isAtivo ? '' : 'bg-slate-50/60'}">
+            <td class="py-3 px-4">
+              <div class="font-bold text-slate-900 leading-snug">${escapeHtml(m.nome)}</div>
+              <div class="text-[11px] font-semibold text-slate-600 mt-0.5">${escapeHtml(m.extra)}</div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="text-slate-800 font-medium">${escapeHtml(m.email)}</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">${escapeHtml(m.telefone || '')}</div>
+            </td>
+            <td class="py-3 px-4">
+              ${isAtivo
+                ? '<span class="font-bold text-emerald-700 whitespace-nowrap">Ativo</span>'
+                : '<span class="font-bold text-slate-500 whitespace-nowrap">Inativo</span>'}
+            </td>
+            <td class="py-3 px-4">
+              <div class="text-[11px] text-slate-700 font-medium leading-snug">${escapeHtml(m.typeLabel)}</div>
+            </td>
+            <td class="py-3 px-4 text-right whitespace-nowrap">
+              ${actionStackHtml}
+            </td>
+          </tr>
+        `;
+      }).join('');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function openStaffCreateModal(type = 'coordTecnica') {
       const cfg = getStaffConfig(type);
       document.getElementById('staffModalType').value = type;
       document.getElementById('staffModalEditId').value = '';
+      const catSel = document.getElementById('staffCategorySelect');
+      if (catSel) {
+        catSel.value = type;
+        catSel.disabled = false;
+      }
+      const stSel = document.getElementById('staffStatus');
+      if (stSel) {
+        stSel.value = 'Ativo';
+      }
       document.getElementById('staffModalCode').textContent = 'EQUIPE';
-      document.getElementById('staffModalStatus').textContent = cfg.title;
-      document.getElementById('staffModalTitle').textContent = `Cadastrar ${cfg.title}`;
-      document.getElementById('staffModalMeta').textContent = 'Preencha os dados cadastrais e de contato para vincular ao perfil de equipe.';
+      document.getElementById('staffModalStatus').textContent = 'Novo Cadastro';
+      document.getElementById('staffModalTitle').textContent = 'Cadastrar Membro da Equipe';
+      document.getElementById('staffModalMeta').textContent = 'Preencha categoria, dados cadastrais e de contato para vincular ao perfil de equipe.';
       document.getElementById('staffExtraFieldLabel').textContent = cfg.extraLabel;
       document.getElementById('staffExtraField').placeholder = cfg.extraPlaceholder;
-      ['staffName', 'staffExtraField', 'staffEmail', 'staffPhone'].forEach(id => { document.getElementById(id).value = ''; document.getElementById(id).disabled = false; });
+      ['staffName', 'staffExtraField', 'staffEmail', 'staffPhone'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.value = '';
+          el.disabled = false;
+          el.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
+        }
+      });
       document.getElementById('staffErrorBox').classList.add('hidden');
       openModal('staffMemberModal');
     }
@@ -6646,40 +7026,145 @@
       if (!member) return;
       document.getElementById('staffModalType').value = type;
       document.getElementById('staffModalEditId').value = id;
-      document.getElementById('staffModalCode').textContent = 'EQUIPE';
-      document.getElementById('staffModalStatus').textContent = cfg.title;
-      document.getElementById('staffModalTitle').textContent = `Editar Contato — ${cfg.title}`;
-      document.getElementById('staffModalMeta').textContent = `${member.nome} • ${member.extra || 'Cadastro institucional'}`;
+      const catSel = document.getElementById('staffCategorySelect');
+      if (catSel) {
+        catSel.value = type;
+        catSel.disabled = true; // category locked on edit to preserve list integrity
+      }
+      const stSel = document.getElementById('staffStatus');
+      if (stSel) {
+        stSel.value = member.status || 'Ativo';
+      }
+      document.getElementById('staffModalCode').textContent = type === 'coordTecnica' ? (member.extra || 'CRP') : 'EQUIPE';
+      document.getElementById('staffModalStatus').textContent = `Edição • ${member.status || 'Ativo'}`;
+      document.getElementById('staffModalTitle').textContent = `Editar Membro — ${member.nome}`;
+      document.getElementById('staffModalMeta').textContent = `${cfg.title} • ${member.extra || 'Cadastro institucional'}`;
       document.getElementById('staffExtraFieldLabel').textContent = cfg.extraLabel;
-      document.getElementById('staffName').value = member.nome; document.getElementById('staffName').disabled = true;
-      document.getElementById('staffExtraField').value = member.extra; document.getElementById('staffExtraField').disabled = (type === 'coordTecnica');
-      document.getElementById('staffEmail').value = member.email;
-      document.getElementById('staffPhone').value = member.telefone;
+      document.getElementById('staffExtraField').placeholder = cfg.extraPlaceholder;
+      document.getElementById('staffName').value = member.nome;
+      document.getElementById('staffName').disabled = true;
+      document.getElementById('staffExtraField').value = member.extra || '';
+      document.getElementById('staffExtraField').disabled = false;
+      document.getElementById('staffEmail').value = member.email || '';
+      document.getElementById('staffPhone').value = member.telefone || '';
+      ['staffName', 'staffExtraField', 'staffEmail', 'staffPhone'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
+      });
       document.getElementById('staffErrorBox').classList.add('hidden');
       openModal('staffMemberModal');
     }
 
     function saveStaffMember() {
       const errBox = document.getElementById('staffErrorBox');
-      const type = document.getElementById('staffModalType').value, editId = document.getElementById('staffModalEditId').value, cfg = getStaffConfig(type);
-      const name = document.getElementById('staffName').value.trim(), extra = document.getElementById('staffExtraField').value.trim(), email = document.getElementById('staffEmail').value.trim(), phone = document.getElementById('staffPhone').value.trim();
+      const type = document.getElementById('staffCategorySelect')?.value || document.getElementById('staffModalType')?.value || 'coordTecnica';
+      const editId = document.getElementById('staffModalEditId').value;
+      const cfg = getStaffConfig(type);
+      const status = document.getElementById('staffStatus')?.value || 'Ativo';
+      const name = document.getElementById('staffName').value.trim();
+      const extra = document.getElementById('staffExtraField').value.trim();
+      const email = document.getElementById('staffEmail').value.trim();
+      const phone = document.getElementById('staffPhone').value.trim();
+
+      ['staffName', 'staffExtraField', 'staffEmail', 'staffPhone'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
+      });
+
       const missing = [];
-      if (!name) missing.push('Nome');
-      if (!extra) missing.push(cfg.extraLabel.replace('*:', '').trim());
-      if (!email || !email.includes('@')) missing.push('E-mail válido');
-      if (phone.replace(/\D/g, '').length < 10) missing.push('Telefone com DDD');
-      if (missing.length > 0) { errBox.textContent = `Preencha: ${missing.join(', ')}.`; errBox.classList.remove('hidden'); return; }
+      if (!name) { missing.push('Nome Completo'); highlightInvalidField('staffName'); }
+      if (!extra) { missing.push(cfg.extraLabel.replace('*:', '').trim()); highlightInvalidField('staffExtraField'); }
+      if (!email || !email.includes('@')) { missing.push('E-mail válido'); highlightInvalidField('staffEmail'); }
+      if (phone.replace(/\D/g, '').length < 10) { missing.push('Telefone / WhatsApp com DDD'); highlightInvalidField('staffPhone'); }
+
+      if (missing.length > 0) {
+        errBox.innerHTML = `Verifique os campos obrigatórios: <strong>${missing.join(', ')}</strong>.`;
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      const actor = getCurrentActorName();
+      const timestamp = getCurrentDateTimeStr();
 
       if (editId) {
         const m = cfg.list.find(x => x.id === editId);
-        if (m) { m.extra = extra; m.email = email; m.telefone = phone; }
+        if (m) {
+          m.status = status;
+          m.extra = extra;
+          m.email = email;
+          m.telefone = phone;
+          state.userAccounts.forEach(acc => {
+            if (acc.displayName === m.nome || acc.linkedId === m.id) {
+              acc.email = email;
+              acc.telefone = phone;
+            }
+          });
+          state.automationLogs.unshift({
+            horario: timestamp,
+            tipo: 'Edição de Equipe',
+            mensagem: `Cadastro de ${m.nome} (${cfg.title}, Status: ${status}) atualizado por ${actor}.`
+          });
+        }
         showToast('Perfil Atualizado', `Dados de ${name} salvos e sincronizados.`, 'success');
       } else {
-        cfg.list.unshift({ id: type.toUpperCase() + Date.now(), nome: name, extra, email, telefone: phone });
-        showToast(`${cfg.title} Cadastrado`, `${name} adicionado(a).`, 'success');
+        cfg.list.unshift({
+          id: type.toUpperCase() + Date.now(),
+          status: status,
+          nome: name,
+          extra: extra,
+          email: email,
+          telefone: phone
+        });
+        state.automationLogs.unshift({
+          horario: timestamp,
+          tipo: 'Cadastro de Equipe',
+          mensagem: `${name} (${cfg.title}, Status: ${status}) cadastrado(a) na equipe por ${actor}.`
+        });
+        showToast(`${cfg.title} Cadastrado`, `${name} adicionado(a) à equipe.`, 'success');
       }
       closeModal('staffMemberModal');
       renderAll();
+    }
+
+    function requestToggleStaffStatus(type, memberId) {
+      const cfg = getStaffConfig(type);
+      const member = cfg.list.find(m => m.id === memberId);
+      if (!member) return;
+      const actor = getCurrentActorName();
+      const timestamp = getCurrentDateTimeStr();
+      const isAtivo = (member.status || 'Ativo') === 'Ativo';
+
+      if (isAtivo) {
+        document.getElementById('confirmActionCode').textContent = 'EQUIPE';
+        document.getElementById('confirmActionStatus').textContent = cfg.title;
+        document.getElementById('confirmActionTitle').textContent = 'Inativar Integrante da Equipe';
+        document.getElementById('confirmActionMeta').textContent = `Integrante: ${member.nome} • Categoria: ${cfg.title}`;
+        document.getElementById('confirmActionText').textContent = `Deseja inativar o cadastro de ${member.nome}? O histórico de atividades e o perfil serão preservados.`;
+        const btn = document.getElementById('confirmActionYesBtn');
+        btn.className = 'px-4 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition';
+        btn.textContent = 'Inativar';
+        btn.onclick = () => {
+          member.status = 'Inativo';
+          state.automationLogs.unshift({
+            horario: getCurrentDateTimeStr(),
+            tipo: 'Inativação de Equipe',
+            mensagem: `${member.nome} (${cfg.title}) inativado(a) da equipe por ${getCurrentActorName()}.`
+          });
+          closeModal('confirmActionModal');
+          showToast('Integrante Inativado', `${member.nome} marcado(a) como Inativo.`, 'info');
+          renderAll();
+        };
+        openModal('confirmActionModal');
+      } else {
+        member.status = 'Ativo';
+        state.automationLogs.unshift({
+          horario: timestamp,
+          tipo: 'Reativação de Equipe',
+          mensagem: `${member.nome} (${cfg.title}) reativado(a) na equipe por ${actor}.`
+        });
+        showToast('Integrante Reativado', `${member.nome} reativado(a) com sucesso.`, 'success');
+        renderAll();
+      }
     }
 
     function requestDeleteStaffMember(type, memberId) {
@@ -6699,6 +7184,7 @@
         if (idx !== -1) cfg.list.splice(idx, 1);
         state.userAccounts = state.userAccounts.filter(acc => acc.id === 'ACC-ADMIN' || acc.displayName !== member.nome);
         closeModal('confirmActionModal');
+        closeModal('staffDetailModal');
         showToast('Membro Excluído', `${member.nome} removido(a).`, 'info');
         renderAll();
       };
