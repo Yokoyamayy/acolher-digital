@@ -843,90 +843,90 @@
 
       <!-- VIEW 7: GESTÃO DE ACESSOS -->
       <section id="view-acessos" class="hidden space-y-4">
-        <div class="bg-white rounded-2xl border border-slate-300 p-5 shadow-sm">
-          <h2 class="text-lg font-bold text-slate-900">Gestão de Acessos</h2>
-          <p class="text-xs text-slate-600 mt-1">
-            Selecione qualquer membro cadastrado (Psicólogo ou integrante de Perfis), crie um login e senha e combine as permissões desejadas.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-300 p-5 shadow-sm space-y-4 text-xs">
-            <h3 class="text-sm font-bold text-slate-900 border-b border-slate-300 pb-2.5 flex items-center gap-2">
-              <i data-lucide="key-round" class="w-4 h-4 text-blue-600"></i>
-              <span>Criar Novo Login de Acesso</span>
-            </h3>
-
-            <div id="accessErrorBox" class="hidden p-3 rounded-xl bg-red-50 border border-red-300 text-red-700 font-semibold"></div>
-
+        <div class="bg-white rounded-2xl border border-slate-300 p-5 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <label class="block font-bold text-slate-700 mb-1">1. Categoria do Membro:</label>
-              <select id="accessGroupSelect" onchange="populateAccessPersonSelect()" class="w-full p-2.5 rounded-xl border border-slate-400 bg-white font-medium">
-                <option value="psicologo">Psicólogo Voluntário</option>
-                <option value="coordTecnica">Coordenação Técnica</option>
-                <option value="coordAdmin">Coordenação Administrativa</option>
-                <option value="adminTi">Administrador de TI</option>
-              </select>
+              <h2 class="text-lg font-bold text-slate-900">Gestão de Acessos</h2>
+              <p class="text-xs text-slate-600 mt-1">Gerencie as contas de login de acesso dos psicólogos e membros da equipe, credenciais e permissões no sistema.</p>
             </div>
-
-            <div>
-              <label class="block font-bold text-slate-700 mb-1">2. Selecionar Pessoa Cadastrada:</label>
-              <select id="accessPersonSelect" class="w-full p-2.5 rounded-xl border border-slate-400 bg-white font-medium"></select>
+            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full sm:w-auto">
+              <button onclick="triggerSimulatedDownload('Contas_Acesso_CACS.xlsx', 'Planilha consolidada de contas de acesso e permissões', false)" class="w-full sm:w-48 h-9 px-3 rounded-xl bg-white border border-slate-400 hover:bg-slate-100 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition whitespace-nowrap">
+                <i data-lucide="upload" class="w-4 h-4 text-blue-600"></i>
+                <span>Exportar Acessos</span>
+              </button>
+              <button onclick="openAccessCreateModal()" class="w-full sm:w-48 h-9 px-3 rounded-xl bg-blue-600 border border-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition whitespace-nowrap">
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                <span>Novo Acesso</span>
+              </button>
             </div>
-
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">3. Usuário (Login) *:</label>
-                <input type="text" id="accessUsernameInput" placeholder="Ex: patrick.psi" class="w-full p-2.5 rounded-xl border border-slate-400" />
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">4. Senha *:</label>
-                <input type="text" id="accessPasswordInput" placeholder="Ex: senha123" class="w-full p-2.5 rounded-xl border border-slate-400" />
-              </div>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-slate-100 border border-slate-300 space-y-2">
-              <div class="font-bold text-slate-800">5. Grupos de Permissão Atribuídos:</div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-300 cursor-pointer font-semibold text-slate-800">
-                  <input type="checkbox" id="perm-psicologo" class="rounded text-blue-600" /><span>Psicólogo Voluntário</span>
-                </label>
-                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-300 cursor-pointer font-semibold text-slate-800">
-                  <input type="checkbox" id="perm-coordTecnica" class="rounded text-blue-600" /><span>Coord. Técnica</span>
-                </label>
-                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-300 cursor-pointer font-semibold text-slate-800">
-                  <input type="checkbox" id="perm-coordAdmin" class="rounded text-blue-600" /><span>Coord. Administrativa</span>
-                </label>
-                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-300 cursor-pointer font-semibold text-slate-800">
-                  <input type="checkbox" id="perm-adminTi" class="rounded text-blue-600" /><span>Admin de TI</span>
-                </label>
-              </div>
-            </div>
-
-            <button onclick="createUserLoginAccount()" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition">
-              <i data-lucide="user-plus" class="w-4 h-4"></i>
-              <span>Criar Usuário e Liberar Acesso</span>
-            </button>
           </div>
 
-          <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden flex flex-col">
-            <div class="p-4 border-b border-slate-300 bg-slate-100/80 flex items-center justify-between">
-              <h3 class="text-sm font-bold text-slate-900">Contas de Acesso Ativas</h3>
-              <span class="text-[11px] font-semibold text-slate-600" id="accountsCountLabel">1 conta</span>
+          <div class="pt-3.5 border-t border-slate-200 flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5">
+            <div class="relative flex-1">
+              <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="accessSearchInput" oninput="onAccessSearchChange()" placeholder="Buscar por nome, usuário, e-mail, telefone ou grupo..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50/50 focus:bg-white transition" />
             </div>
-            <div class="overflow-x-auto flex-1">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-500 bg-slate-50">
-                    <th class="py-3 px-4">Pessoa / Usuário</th>
-                    <th class="py-3 px-4">Senha</th>
-                    <th class="py-3 px-4">Permissões</th>
-                    <th class="py-3 px-4 text-right">Ações</th>
-                  </tr>
-                </thead>
-                <tbody id="accessAccountsTableBody" class="divide-y divide-slate-300 text-xs"></tbody>
-              </table>
+            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+              <div class="relative flex items-center">
+                <i data-lucide="filter" class="w-3.5 h-3.5 text-slate-500 absolute left-3 pointer-events-none"></i>
+                <select id="accessFilterSelect" onchange="setAccessFilter(this.value)" aria-label="Filtrar contas de acesso" class="pl-8 pr-8 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 cursor-pointer appearance-none">
+                  <option value="todos">Todas as Contas</option>
+                  <option value="psicologo">Grupo: Psicólogos Voluntários</option>
+                  <option value="coordTecnica">Grupo: Coordenação Técnica</option>
+                  <option value="coordAdmin">Grupo: Coordenação Administrativa</option>
+                  <option value="adminTi">Grupo: Administradores de TI</option>
+                  <option value="Ativo">Status: Ativo</option>
+                  <option value="Inativo">Status: Inativo</option>
+                </select>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 pointer-events-none"></i>
+              </div>
+              <button type="button" id="accessClearFilterBtn" onclick="resetAccessFilters()" class="hidden px-2.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold items-center gap-1 transition" title="Limpar busca e filtros">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                <span>Limpar</span>
+              </button>
             </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100/80 select-none">
+                  <th onclick="sortAccessBy('displayName')" class="py-3 px-4 cursor-pointer hover:bg-slate-200/70 hover:text-slate-800 transition group" title="Clique para ordenar por Usuário / Responsável">
+                    <div class="inline-flex items-center gap-1.5">
+                      <span>Usuário / Responsável</span>
+                      <span id="access-sort-icon-displayName" class="inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th class="py-3 px-4">Contato / Vínculo</th>
+                  <th onclick="sortAccessBy('status')" class="py-3 px-4 cursor-pointer hover:bg-slate-200/70 hover:text-slate-800 transition group" title="Clique para ordenar por Status">
+                    <div class="inline-flex items-center gap-1.5">
+                      <span>Status</span>
+                      <span id="access-sort-icon-status" class="inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th class="py-3 px-4">Permissões Atribuídas</th>
+                  <th class="py-3 px-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="accessAccountsTableBody" class="divide-y divide-slate-300 text-xs"></tbody>
+            </table>
+          </div>
+          <div id="accessPaginationBar" class="px-4 py-3 bg-slate-50 border-t border-slate-300 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+            <div class="flex flex-wrap items-center gap-3">
+              <span id="accessPaginationInfo" class="font-medium">Exibindo 0–0 de 0 contas</span>
+              <div class="flex items-center gap-1.5">
+                <label for="accessPageSizeSelect" class="text-slate-600 font-medium">Itens por página:</label>
+                <select id="accessPageSizeSelect" onchange="setAccessPageSize(this.value)" class="px-2.5 py-1 rounded-lg border border-slate-400 bg-white text-slate-800 font-semibold text-xs focus:outline-none focus:border-blue-600 cursor-pointer">
+                  <option value="5">5</option>
+                  <option value="10" selected>10</option>
+                  <option value="20">20</option>
+                  <option value="all">Todas</option>
+                </select>
+              </div>
+            </div>
+            <div id="accessPaginationControls" class="flex items-center gap-1"></div>
           </div>
         </div>
       </section>
@@ -1876,6 +1876,171 @@
     </div>
   </div>
 
+  <!-- MODAL 6C: CADASTRAR / EDITAR CONTA DE ACESSO -->
+  <div id="accessModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-400 overflow-hidden">
+      <div class="px-6 py-4 bg-blue-600 text-white flex items-center justify-between gap-3 shrink-0">
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2">
+            <span id="accessModalCode" class="text-xs font-bold px-2.5 py-0.5 rounded bg-white/15 border border-white/30 text-white whitespace-nowrap">ACESSO</span>
+            <span id="accessModalStatus" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-white text-blue-700 whitespace-nowrap">Novo Acesso</span>
+            <h3 id="accessModalTitle" class="text-base font-bold text-white">Criar Conta de Acesso</h3>
+          </div>
+          <p id="accessModalMeta" class="text-xs text-blue-100 mt-1">Defina o integrante vinculado, credenciais e grupos de permissão.</p>
+        </div>
+        <button onclick="requestCloseModal('accessModal')" aria-label="Fechar" class="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-blue-700 shrink-0 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <div class="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4 text-xs">
+        <input type="hidden" id="accessModalEditId" />
+        <div id="accessErrorBox" class="hidden p-3 rounded-xl bg-red-50 border border-red-300 text-red-900 text-xs font-semibold"></div>
+
+        <details open class="rounded-xl border border-slate-300 bg-slate-50/70 overflow-hidden">
+          <summary class="px-4 py-3 cursor-pointer select-none flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition">
+            <span class="flex items-center gap-2"><i data-lucide="user-check" class="w-4 h-4 text-blue-600"></i><span>Identificação e Vínculo Institucional</span></span>
+            <span class="text-[11px] font-semibold text-slate-500">Membro vinculado • Expandir / Recolher</span>
+          </summary>
+          <div class="px-4 pb-4 pt-3 bg-white border-t border-slate-200 space-y-3.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Categoria do Membro *:</label>
+                <select id="accessGroupSelect" onchange="populateAccessPersonSelect()" class="w-full p-2.5 rounded-xl border border-slate-400 bg-white font-medium">
+                  <option value="psicologo">Psicólogo Voluntário</option>
+                  <option value="coordTecnica">Coordenação Técnica</option>
+                  <option value="coordAdmin">Coordenação Administrativa</option>
+                  <option value="adminTi">Administrador de TI</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Status da Conta *:</label>
+                <select id="accessStatusSelect" class="w-full p-2.5 rounded-xl border border-slate-400 bg-white font-medium">
+                  <option value="Ativo" selected>Ativo</option>
+                  <option value="Inativo">Inativo</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Selecionar Pessoa Cadastrada *:</label>
+              <select id="accessPersonSelect" class="w-full p-2.5 rounded-xl border border-slate-400 bg-white font-medium"></select>
+            </div>
+          </div>
+        </details>
+
+        <details open class="rounded-xl border border-slate-300 bg-slate-50/70 overflow-hidden">
+          <summary class="px-4 py-3 cursor-pointer select-none flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition">
+            <span class="flex items-center gap-2"><i data-lucide="key-round" class="w-4 h-4 text-blue-600"></i><span>Credenciais de Autenticação</span></span>
+            <span class="text-[11px] font-semibold text-slate-500">Usuário e senha • Expandir / Recolher</span>
+          </summary>
+          <div class="px-4 pb-4 pt-3 bg-white border-t border-slate-200 space-y-3.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Usuário (Login) *:</label>
+                <input type="text" id="accessUsernameInput" placeholder="Ex: patrick.psi" class="w-full p-2.5 rounded-xl border border-slate-400" />
+                <span class="text-[11px] text-slate-500 mt-1 block">Apenas letras, números, pontos ou traços.</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block font-bold text-slate-700">Senha de Acesso *:</label>
+                  <button type="button" onclick="generateRandomPassword()" class="text-[11px] text-blue-600 hover:text-blue-800 font-semibold inline-flex items-center gap-1">
+                    <i data-lucide="sparkles" class="w-3 h-3"></i>
+                    <span>Gerar Senha</span>
+                  </button>
+                </div>
+                <div class="relative">
+                  <input type="password" id="accessPasswordInput" placeholder="Ex: senha123" class="w-full pl-3 pr-10 py-2.5 rounded-xl border border-slate-400" />
+                  <button type="button" onclick="togglePasswordVisibility('accessPasswordInput', 'accessEyeIcon')" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1" title="Mostrar/ocultar senha">
+                    <i data-lucide="eye" id="accessEyeIcon" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details open class="rounded-xl border border-slate-300 bg-slate-50/70 overflow-hidden">
+          <summary class="px-4 py-3 cursor-pointer select-none flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition">
+            <span class="flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4 text-blue-600"></i><span>Grupos de Permissões no Sistema</span></span>
+            <span class="text-[11px] font-semibold text-slate-500">Controle de autorizações • Expandir / Recolher</span>
+          </summary>
+          <div class="px-4 pb-4 pt-3 bg-white border-t border-slate-200 space-y-3.5">
+            <p class="text-[11px] text-slate-600">Selecione pelo menos um grupo de permissão atribuído a esta conta de acesso:</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <label class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-300 hover:bg-slate-100/70 cursor-pointer transition">
+                <input type="checkbox" id="perm-psicologo" class="rounded text-blue-600 mt-0.5" />
+                <div>
+                  <span class="font-bold text-slate-800 block text-xs">Psicólogo Voluntário</span>
+                  <span class="text-[11px] text-slate-500">Acesso a atendimentos clínicos, prontuários de seus pacientes e agenda.</span>
+                </div>
+              </label>
+              <label class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-300 hover:bg-slate-100/70 cursor-pointer transition">
+                <input type="checkbox" id="perm-coordTecnica" class="rounded text-blue-600 mt-0.5" />
+                <div>
+                  <span class="font-bold text-slate-800 block text-xs">Coordenação Técnica</span>
+                  <span class="text-[11px] text-slate-500">Supervisão clínica, triagem técnica, gestão de voluntários e prontuários.</span>
+                </div>
+              </label>
+              <label class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-300 hover:bg-slate-100/70 cursor-pointer transition">
+                <input type="checkbox" id="perm-coordAdmin" class="rounded text-blue-600 mt-0.5" />
+                <div>
+                  <span class="font-bold text-slate-800 block text-xs">Coordenação Administrativa</span>
+                  <span class="text-[11px] text-slate-500">Fila de espera, acolhimentos, gestão cadastral de pacientes e agenda geral.</span>
+                </div>
+              </label>
+              <label class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-300 hover:bg-slate-100/70 cursor-pointer transition">
+                <input type="checkbox" id="perm-adminTi" class="rounded text-blue-600 mt-0.5" />
+                <div>
+                  <span class="font-bold text-slate-800 block text-xs">Administrador de TI</span>
+                  <span class="text-[11px] text-slate-500">Gestão de acessos, perfis institucionais, logs do sistema e automações.</span>
+                </div>
+              </label>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="px-6 py-3.5 bg-slate-100 border-t border-slate-300 flex flex-wrap items-center justify-end gap-2.5 shrink-0">
+        <button onclick="requestCloseModal('accessModal')" class="px-4 py-1.5 rounded-xl bg-white border border-slate-400 hover:bg-slate-200/60 text-xs font-semibold text-slate-700 transition">Cancelar</button>
+        <button onclick="saveUserLoginAccount()" class="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition">
+          <i data-lucide="save" class="w-3.5 h-3.5"></i>
+          <span>Salvar Acesso</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6D: FICHA DA CONTA DE ACESSO -->
+  <div id="accessDetailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-400 overflow-hidden">
+      <div class="px-6 py-4 bg-blue-600 text-white flex items-center justify-between gap-3 shrink-0">
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2">
+            <span id="accessDetailCode" class="text-xs font-bold px-2.5 py-0.5 rounded bg-white/15 border border-white/30 text-white whitespace-nowrap">ACESSO</span>
+            <span id="accessDetailStatus" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white text-emerald-700 whitespace-nowrap">Ativo</span>
+            <h3 id="accessDetailTitle" class="text-base font-bold text-white">Ficha da Conta de Acesso</h3>
+          </div>
+          <p id="accessDetailMeta" class="text-xs text-blue-100 mt-1"></p>
+        </div>
+        <button onclick="requestCloseModal('accessDetailModal')" aria-label="Fechar" class="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-blue-700 shrink-0 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-6 text-xs flex-1 overflow-y-auto custom-scrollbar space-y-5" id="accessDetailBody"></div>
+      <div class="px-6 py-3.5 bg-slate-100 border-t border-slate-300 flex flex-wrap items-center justify-between gap-2.5 shrink-0">
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btnAccessDetailDownloadPdf" type="button" class="px-3 py-1.5 rounded-xl bg-white border border-slate-400 hover:bg-slate-200/60 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-blue-600"></i>
+            <span>Baixar Ficha PDF</span>
+          </button>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="requestCloseModal('accessDetailModal')" class="px-4 py-1.5 rounded-xl bg-white border border-slate-400 hover:bg-slate-200/60 text-xs font-semibold text-slate-700 transition">Fechar</button>
+          <button id="accessDetailEditBtn" type="button" class="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+            <span>Editar Acesso</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL 7: VISUALIZADOR / FICHA DE TRIAGEM -->
   <div id="docPreviewModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 hidden items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-400 overflow-hidden">
@@ -2149,6 +2314,12 @@
       perfisPage: 1,
       perfisPageSize: 10,
       activeStaffDetailId: null,
+      accessSearch: '',
+      accessFilter: 'todos',
+      accessSort: { field: 'displayName', direction: 'asc' },
+      accessPage: 1,
+      accessPageSize: 10,
+      activeAccessDetailId: null,
       docFilter: 'Todos',
       nextProntCounter: 26,
       tempNewPatientSlots: [],
@@ -2164,9 +2335,40 @@
 
       userAccounts: [
         {
-          id: 'ACC-ADMIN', username: 'admin', password: '1234', displayName: 'Administrador',
-          linkedType: 'admin', linkedId: 'ADMIN', email: 'admin@cacs.org.br', telefone: '(11) 94254-7735',
+          id: 'ACC-ADMIN', username: 'admin', password: '1234', displayName: 'Administrador Geral',
+          linkedType: 'adminTi', linkedId: 'ADMIN', email: 'admin@cacs.org.br', telefone: '(11) 94254-7735',
+          status: 'Ativo', createdAt: '10/01/2026',
           permissions: ['psicologo', 'coordTecnica', 'coordAdmin', 'adminTi']
+        },
+        {
+          id: 'ACC-MARCELO', username: 'marcelo.psi', password: 'cacs2026', displayName: 'Dr. Marcelo Augusto Nogueira',
+          linkedType: 'coordTecnica', linkedId: 'CT1', email: 'marcelo.supervisao@cacs.org.br', telefone: '(11) 98210-4411',
+          status: 'Ativo', createdAt: '15/01/2026',
+          permissions: ['coordTecnica', 'psicologo']
+        },
+        {
+          id: 'ACC-SIMONE', username: 'simone.carvalho', password: 'simone@2026', displayName: 'Dra. Simone Carvalho',
+          linkedType: 'coordTecnica', linkedId: 'CT2', email: 'simone.tecnica@cacs.org.br', telefone: '(11) 98114-5520',
+          status: 'Ativo', createdAt: '20/01/2026',
+          permissions: ['coordTecnica']
+        },
+        {
+          id: 'ACC-MARIANA', username: 'mariana.admin', password: 'mariana@2026', displayName: 'Mariana Penido',
+          linkedType: 'coordAdmin', linkedId: 'CA1', email: 'mariana.penido@cacs.org.br', telefone: '(11) 94254-7735',
+          status: 'Ativo', createdAt: '22/01/2026',
+          permissions: ['coordAdmin']
+        },
+        {
+          id: 'ACC-PATRICK', username: 'patrick.psi', password: 'psi1234', displayName: 'Patrick Souza',
+          linkedType: 'psicologo', linkedId: 'V1', email: 'patrick.psicologo@cacs.org.br', telefone: '(11) 97123-4567',
+          status: 'Ativo', createdAt: '01/02/2026',
+          permissions: ['psicologo']
+        },
+        {
+          id: 'ACC-LUCAS', username: 'lucas.adm', password: 'lucas@2026', displayName: 'Lucas Bezerra',
+          linkedType: 'coordAdmin', linkedId: 'CA2', email: 'lucas.bezerra@cacs.org.br', telefone: '(11) 97722-1100',
+          status: 'Inativo', createdAt: '05/02/2026',
+          permissions: ['coordAdmin']
         }
       ],
 
@@ -2889,6 +3091,13 @@
           errText.textContent = `Usuário ou senha incorretos (${state.failedLoginAttempts}/3 tentativas).`;
           resetBtn.classList.add('hidden');
         }
+        return;
+      }
+
+      if (found.status === 'Inativo') {
+        errBox.classList.remove('hidden');
+        errText.textContent = 'Esta conta de acesso está inativada. Contate a administração da organização.';
+        resetBtn.classList.add('hidden');
         return;
       }
 
@@ -7192,73 +7401,824 @@
     }
 
     // 6. GESTÃO DE ACESSOS (VINCULAÇÃO COM LINKEDTYPE / LINKEDID PARA SINCRONIZAR MEU PERFIL)
-    function populateAccessPersonSelect() {
+    function getAccountCategoryLabel(linkedType) {
+      if (linkedType === 'psicologo') return 'Psicólogo Voluntário';
+      if (linkedType === 'coordTecnica') return 'Coordenação Técnica';
+      if (linkedType === 'coordAdmin') return 'Coordenação Administrativa';
+      if (linkedType === 'adminTi') return 'Administrador de TI';
+      if (linkedType === 'admin') return 'Administrador Geral';
+      return 'Geral';
+    }
+
+    function getLinkedAccountPerson(acc) {
+      if (!acc) return null;
+      if (acc.linkedType === 'psicologo') {
+        return state.volunteers.find(v => v.id === acc.linkedId || v.nome === acc.displayName) || null;
+      }
+      if (acc.linkedType === 'coordTecnica') {
+        return state.coordTecnica.find(m => m.id === acc.linkedId || m.nome === acc.displayName) || null;
+      }
+      if (acc.linkedType === 'coordAdmin') {
+        return state.coordAdmin.find(m => m.id === acc.linkedId || m.nome === acc.displayName) || null;
+      }
+      if (acc.linkedType === 'adminTi') {
+        return state.adminsTi.find(m => m.id === acc.linkedId || m.nome === acc.displayName) || null;
+      }
+      return null;
+    }
+
+    function populateAccessPersonSelect(resetSelection = true) {
       const group = document.getElementById('accessGroupSelect')?.value || 'psicologo';
       const personSel = document.getElementById('accessPersonSelect');
       if (!personSel) return;
       let people = [];
-      if (group === 'psicologo') people = state.volunteers.map(v => ({ id: v.id, nome: v.nome, sub: v.crp }));
-      else if (group === 'coordTecnica') people = state.coordTecnica.map(m => ({ id: m.id, nome: m.nome, sub: m.extra }));
-      else if (group === 'coordAdmin') people = state.coordAdmin.map(m => ({ id: m.id, nome: m.nome, sub: m.extra }));
-      else people = state.adminsTi.map(m => ({ id: m.id, nome: m.nome, sub: m.extra }));
+      if (group === 'psicologo') people = state.volunteers.map(v => ({ id: v.id, nome: v.nome, sub: v.crp, email: v.email, telefone: v.telefone }));
+      else if (group === 'coordTecnica') people = state.coordTecnica.map(m => ({ id: m.id, nome: m.nome, sub: m.extra, email: m.email, telefone: m.telefone }));
+      else if (group === 'coordAdmin') people = state.coordAdmin.map(m => ({ id: m.id, nome: m.nome, sub: m.extra, email: m.email, telefone: m.telefone }));
+      else people = state.adminsTi.map(m => ({ id: m.id, nome: m.nome, sub: m.extra, email: m.email, telefone: m.telefone }));
 
-      personSel.innerHTML = people.map(p => `<option value="${p.id}|${p.nome}">${p.nome} (${p.sub})</option>`).join('');
-      ['psicologo', 'coordTecnica', 'coordAdmin', 'adminTi'].forEach(k => {
-        const cb = document.getElementById('perm-' + k);
-        if (cb) cb.checked = (k === group);
-      });
+      personSel.innerHTML = people.map(p => {
+        const hasAccount = state.userAccounts.some(a => a.linkedId === p.id || a.displayName === p.nome);
+        return `<option value="${p.id}|${p.nome}">${p.nome} (${p.sub})${hasAccount ? ' • [Possui conta]' : ''}</option>`;
+      }).join('');
+
+      if (resetSelection) {
+        ['psicologo', 'coordTecnica', 'coordAdmin', 'adminTi'].forEach(k => {
+          const cb = document.getElementById('perm-' + k);
+          if (cb) cb.checked = (k === group);
+        });
+      }
     }
 
-    function createUserLoginAccount() {
+    function openAccessCreateModal() {
+      document.getElementById('accessModalEditId').value = '';
+      document.getElementById('accessModalTitle').textContent = 'Criar Conta de Acesso';
+      document.getElementById('accessModalStatus').textContent = 'Novo Acesso';
+      document.getElementById('accessModalMeta').textContent = 'Defina o integrante vinculado, credenciais e grupos de permissão.';
+
       const errBox = document.getElementById('accessErrorBox');
+      if (errBox) {
+        errBox.textContent = '';
+        errBox.classList.add('hidden');
+      }
+
+      const groupSel = document.getElementById('accessGroupSelect');
+      if (groupSel) {
+        groupSel.disabled = false;
+        groupSel.value = 'psicologo';
+      }
+
+      const personSel = document.getElementById('accessPersonSelect');
+      if (personSel) personSel.disabled = false;
+
+      const statusSel = document.getElementById('accessStatusSelect');
+      if (statusSel) {
+        statusSel.disabled = false;
+        statusSel.value = 'Ativo';
+      }
+
+      const userInput = document.getElementById('accessUsernameInput');
+      if (userInput) userInput.value = '';
+
+      const passInput = document.getElementById('accessPasswordInput');
+      if (passInput) {
+        passInput.value = '';
+        passInput.type = 'password';
+      }
+
+      const eyeIcon = document.getElementById('accessEyeIcon');
+      if (eyeIcon) eyeIcon.setAttribute('data-lucide', 'eye');
+
+      populateAccessPersonSelect(true);
+      openModal('accessModal');
+    }
+
+    function openAccessEditModal(accId) {
+      const acc = state.userAccounts.find(a => a.id === accId);
+      if (!acc) return;
+
+      document.getElementById('accessModalEditId').value = acc.id;
+      document.getElementById('accessModalTitle').textContent = `Editar Acesso: ${acc.displayName}`;
+      document.getElementById('accessModalStatus').textContent = acc.id === 'ACC-ADMIN' ? 'Administrador' : 'Edição';
+      document.getElementById('accessModalMeta').textContent = 'Atualize credenciais de autenticação, status ou permissões.';
+
+      const errBox = document.getElementById('accessErrorBox');
+      if (errBox) {
+        errBox.textContent = '';
+        errBox.classList.add('hidden');
+      }
+
+      const groupSel = document.getElementById('accessGroupSelect');
+      const personSel = document.getElementById('accessPersonSelect');
+      const statusSel = document.getElementById('accessStatusSelect');
+      const userInput = document.getElementById('accessUsernameInput');
+      const passInput = document.getElementById('accessPasswordInput');
+
+      if (acc.id === 'ACC-ADMIN') {
+        if (groupSel) { groupSel.value = 'adminTi'; groupSel.disabled = true; }
+        if (personSel) {
+          personSel.innerHTML = '<option value="ADMIN|Administrador Geral">Administrador Geral (Sistema)</option>';
+          personSel.disabled = true;
+        }
+        if (statusSel) { statusSel.value = 'Ativo'; statusSel.disabled = true; }
+      } else {
+        if (groupSel) {
+          groupSel.disabled = false;
+          groupSel.value = acc.linkedType || 'psicologo';
+        }
+        populateAccessPersonSelect(false);
+        if (personSel) {
+          personSel.disabled = false;
+          const targetVal = `${acc.linkedId}|${acc.displayName}`;
+          if (Array.from(personSel.options).some(o => o.value === targetVal)) {
+            personSel.value = targetVal;
+          } else {
+            const opt = document.createElement('option');
+            opt.value = targetVal;
+            opt.textContent = `${acc.displayName} (${acc.linkedId})`;
+            personSel.appendChild(opt);
+            personSel.value = targetVal;
+          }
+        }
+        if (statusSel) {
+          statusSel.disabled = false;
+          statusSel.value = acc.status || 'Ativo';
+        }
+      }
+
+      if (userInput) userInput.value = acc.username;
+      if (passInput) {
+        passInput.value = acc.password;
+        passInput.type = 'text';
+      }
+
+      const eyeIcon = document.getElementById('accessEyeIcon');
+      if (eyeIcon) eyeIcon.setAttribute('data-lucide', 'eye-off');
+
+      ['psicologo', 'coordTecnica', 'coordAdmin', 'adminTi'].forEach(k => {
+        const cb = document.getElementById('perm-' + k);
+        if (cb) cb.checked = acc.permissions.includes(k);
+      });
+
+      openModal('accessModal');
+    }
+
+    function generateRandomPassword() {
+      const chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$';
+      let pwd = '';
+      for (let i = 0; i < 8; i++) {
+        pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      const input = document.getElementById('accessPasswordInput');
+      if (input) {
+        input.value = pwd;
+        input.type = 'text';
+        const icon = document.getElementById('accessEyeIcon');
+        if (icon) icon.setAttribute('data-lucide', 'eye-off');
+        if (window.lucide) lucide.createIcons();
+        showToast('Senha Gerada', 'Nova senha preenchida no campo.', 'info');
+      }
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) icon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        input.type = 'password';
+        if (icon) icon.setAttribute('data-lucide', 'eye');
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    let accessDetailPasswordVisible = false;
+    function toggleAccessDetailPassword() {
+      const acc = state.userAccounts.find(a => a.id === state.activeAccessDetailId);
+      if (!acc) return;
+      accessDetailPasswordVisible = !accessDetailPasswordVisible;
+      const valEl = document.getElementById('accessDetailPasswordVal');
+      const labelEl = document.getElementById('accessDetailEyeLabel');
+      const iconEl = document.getElementById('accessDetailEyeIcon');
+      if (valEl) {
+        valEl.textContent = accessDetailPasswordVisible ? acc.password : '••••••••';
+        valEl.className = accessDetailPasswordVisible ? 'font-mono text-blue-700 font-bold text-sm' : 'font-mono text-slate-800 font-bold tracking-widest text-sm';
+      }
+      if (labelEl) labelEl.textContent = accessDetailPasswordVisible ? 'Ocultar Senha' : 'Mostrar Senha';
+      if (iconEl) iconEl.setAttribute('data-lucide', accessDetailPasswordVisible ? 'eye-off' : 'eye');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function saveUserLoginAccount() {
+      const errBox = document.getElementById('accessErrorBox');
+      const editId = document.getElementById('accessModalEditId').value.trim();
       const group = document.getElementById('accessGroupSelect').value;
       const rawVal = document.getElementById('accessPersonSelect').value || '';
       const [linkedId, displayName] = rawVal.split('|');
       const username = document.getElementById('accessUsernameInput').value.trim();
       const password = document.getElementById('accessPasswordInput').value.trim();
+      const status = document.getElementById('accessStatusSelect')?.value || 'Ativo';
       const perms = ['psicologo', 'coordTecnica', 'coordAdmin', 'adminTi'].filter(k => document.getElementById('perm-' + k)?.checked);
 
       const missing = [];
-      if (!displayName) missing.push('Pessoa cadastrada');
-      if (!username) missing.push('Usuário');
+      if (!editId || editId !== 'ACC-ADMIN') {
+        if (!displayName) missing.push('Pessoa cadastrada');
+      }
+      if (!username) missing.push('Usuário (Login)');
       if (!password) missing.push('Senha');
       if (perms.length === 0) missing.push('Pelo menos 1 grupo de permissão');
-      if (missing.length > 0) { errBox.textContent = `Preencha: ${missing.join(', ')}.`; errBox.classList.remove('hidden'); return; }
-      if (state.userAccounts.some(a => a.username.toLowerCase() === username.toLowerCase())) {
-        errBox.textContent = `O usuário "${username}" já existe.`; errBox.classList.remove('hidden'); return;
+
+      if (missing.length > 0) {
+        errBox.textContent = `Preencha os campos obrigatórios: ${missing.join(', ')}.`;
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      const usernameConflict = state.userAccounts.some(a => a.id !== editId && a.username.toLowerCase() === username.toLowerCase());
+      if (usernameConflict) {
+        errBox.textContent = `O usuário "${username}" já está em uso por outra conta. Escolha outro nome de usuário.`;
+        errBox.classList.remove('hidden');
+        return;
       }
 
       errBox.classList.add('hidden');
-      state.userAccounts.push({
-        id: 'ACC-' + Date.now(), username, password, displayName,
-        linkedType: group, linkedId, permissions: perms
-      });
-      document.getElementById('accessUsernameInput').value = '';
-      document.getElementById('accessPasswordInput').value = '';
-      showToast('Acesso Criado!', `Login "${username}" vinculado a ${displayName}. Use o menu no rodapé para sair e testar.`, 'success');
+
+      if (editId) {
+        const acc = state.userAccounts.find(a => a.id === editId);
+        if (!acc) return;
+        acc.username = username;
+        acc.password = password;
+        acc.status = status;
+        acc.permissions = perms;
+
+        if (acc.id !== 'ACC-ADMIN') {
+          acc.linkedType = group;
+          acc.linkedId = linkedId;
+          acc.displayName = displayName;
+          const person = getLinkedAccountPerson(acc);
+          if (person) {
+            if (person.email) acc.email = person.email;
+            if (person.telefone) acc.telefone = person.telefone;
+          }
+        }
+
+        if (state.loggedInUser && state.loggedInUser.id === acc.id) {
+          state.loggedInUser = acc;
+          document.getElementById('currentUserName').textContent = acc.displayName;
+          document.getElementById('currentUserRole').textContent = acc.permissions.map(p => PERM_LABELS[p]).join(' • ');
+          document.getElementById('sidebarUserInitials').textContent = acc.displayName.slice(0, 2).toUpperCase();
+          document.getElementById('dashboardGreeting').textContent = `Bom dia, ${acc.displayName}!`;
+          document.getElementById('footerProfileText').textContent = `Usuário conectado: ${acc.username} (${acc.permissions.map(p => PERM_LABELS[p]).join(', ')})`;
+        }
+
+        closeModal('accessModal');
+        showToast('Acesso Atualizado', `A conta de "${acc.displayName}" foi atualizada com sucesso.`, 'success');
+      } else {
+        let email = '';
+        let telefone = '';
+        if (group === 'psicologo') {
+          const v = state.volunteers.find(x => x.id === linkedId || x.nome === displayName);
+          if (v) { email = v.email || ''; telefone = v.telefone || ''; }
+        } else if (group === 'coordTecnica') {
+          const m = state.coordTecnica.find(x => x.id === linkedId || x.nome === displayName);
+          if (m) { email = m.email || ''; telefone = m.telefone || ''; }
+        } else if (group === 'coordAdmin') {
+          const m = state.coordAdmin.find(x => x.id === linkedId || x.nome === displayName);
+          if (m) { email = m.email || ''; telefone = m.telefone || ''; }
+        } else {
+          const m = state.adminsTi.find(x => x.id === linkedId || x.nome === displayName);
+          if (m) { email = m.email || ''; telefone = m.telefone || ''; }
+        }
+
+        state.userAccounts.push({
+          id: 'ACC-' + Date.now(),
+          username,
+          password,
+          displayName,
+          linkedType: group,
+          linkedId,
+          email,
+          telefone,
+          status,
+          permissions: perms,
+          createdAt: new Date().toLocaleDateString('pt-BR')
+        });
+
+        closeModal('accessModal');
+        showToast('Acesso Criado!', `Login "${username}" vinculado a ${displayName} criado com sucesso.`, 'success');
+      }
+
       renderAccessAccountsSection();
+      if (state.activeAccessDetailId && state.activeAccessDetailId === editId) {
+        openAccessDetailModal(editId);
+      }
+    }
+
+    function createUserLoginAccount() {
+      saveUserLoginAccount();
+    }
+
+    function requestToggleAccessStatus(accId) {
+      if (accId === 'ACC-ADMIN') {
+        showToast('Operação Não Permitida', 'A conta de Administrador Geral não pode ser inativada.', 'warning');
+        return;
+      }
+      const acc = state.userAccounts.find(a => a.id === accId);
+      if (!acc) return;
+
+      const isInactive = acc.status === 'Inativo';
+      document.getElementById('confirmActionCode').textContent = isInactive ? 'REATIVAÇÃO' : 'INATIVAÇÃO';
+      document.getElementById('confirmActionStatus').textContent = isInactive ? 'Reativar' : 'Inativar';
+      document.getElementById('confirmActionTitle').textContent = isInactive ? 'Reativar Conta de Acesso' : 'Inativar Conta de Acesso';
+      document.getElementById('confirmActionMeta').textContent = `Usuário: @${acc.username} (${acc.displayName})`;
+      document.getElementById('confirmActionText').textContent = isInactive
+        ? `Deseja reativar o acesso de "${acc.displayName}" (@${acc.username})? O usuário poderá voltar a se autenticar no sistema.`
+        : `Deseja inativar o acesso de "${acc.displayName}" (@${acc.username})? O login deste usuário será imediatamente bloqueado.`;
+
+      const btn = document.getElementById('confirmActionYesBtn');
+      if (isInactive) {
+        btn.className = 'px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition';
+        btn.textContent = 'Reativar Acesso';
+      } else {
+        btn.className = 'px-4 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition';
+        btn.textContent = 'Inativar Acesso';
+      }
+
+      btn.onclick = () => {
+        acc.status = isInactive ? 'Ativo' : 'Inativo';
+        closeModal('confirmActionModal');
+        const timestamp = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        const actor = (state.loggedInUser && state.loggedInUser.displayName) || 'Administrador';
+        state.automationLogs.unshift({
+          horario: timestamp,
+          tipo: isInactive ? 'Reativação de Acesso' : 'Inativação de Acesso',
+          mensagem: `Conta de acesso @${acc.username} (${acc.displayName}) ${isInactive ? 'reativada' : 'inativada'} por ${actor}.`
+        });
+        showToast(isInactive ? 'Acesso Reativado' : 'Acesso Inativado', `Conta de "${acc.displayName}" foi ${isInactive ? 'reativada' : 'inativada'}.`, isInactive ? 'success' : 'info');
+        renderAccessAccountsSection();
+      };
+      openModal('confirmActionModal');
+    }
+
+    function requestDeleteUserAccount(accId) {
+      if (accId === 'ACC-ADMIN') {
+        showToast('Operação Não Permitida', 'A conta de Administrador Geral não pode ser excluída.', 'warning');
+        return;
+      }
+      const acc = state.userAccounts.find(a => a.id === accId);
+      if (!acc) return;
+
+      document.getElementById('confirmActionCode').textContent = 'EXCLUSÃO';
+      document.getElementById('confirmActionStatus').textContent = 'Revogar Acesso';
+      document.getElementById('confirmActionTitle').textContent = 'Excluir Conta de Acesso';
+      document.getElementById('confirmActionMeta').textContent = `Usuário: @${acc.username} (${acc.displayName})`;
+      document.getElementById('confirmActionText').textContent = `Tem certeza que deseja revogar definitivamente o login de "${acc.displayName}" (@${acc.username})? Esta ação não pode ser desfeita.`;
+
+      const btn = document.getElementById('confirmActionYesBtn');
+      btn.className = 'px-4 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition';
+      btn.textContent = 'Excluir Acesso';
+      btn.onclick = () => {
+        state.userAccounts = state.userAccounts.filter(a => a.id !== accId);
+        closeModal('confirmActionModal');
+        closeModal('accessDetailModal');
+        const timestamp = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        const actor = (state.loggedInUser && state.loggedInUser.displayName) || 'Administrador';
+        state.automationLogs.unshift({
+          horario: timestamp,
+          tipo: 'Revogação de Acesso',
+          mensagem: `Conta de acesso @${acc.username} (${acc.displayName}) excluída por ${actor}.`
+        });
+        showToast('Conta Removida', `O acesso de ${acc.displayName} foi revogado.`, 'info');
+        renderAccessAccountsSection();
+      };
+      openModal('confirmActionModal');
     }
 
     function deleteUserAccount(accId) {
-      if (accId === 'ACC-ADMIN') return;
-      state.userAccounts = state.userAccounts.filter(a => a.id !== accId);
-      showToast('Conta Removida', 'O acesso foi revogado.', 'info');
+      requestDeleteUserAccount(accId);
+    }
+
+    function openAccessDetailModal(accId) {
+      state.activeAccessDetailId = accId;
+      accessDetailPasswordVisible = false;
+      const acc = state.userAccounts.find(a => a.id === accId);
+      if (!acc) return;
+      const person = getLinkedAccountPerson(acc);
+      const isInactive = acc.status === 'Inativo';
+
+      document.getElementById('accessDetailCode').textContent = 'ACESSO';
+      const statusEl = document.getElementById('accessDetailStatus');
+      statusEl.textContent = isInactive ? 'Inativo' : 'Ativo';
+      statusEl.className = isInactive
+        ? 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white text-slate-700 whitespace-nowrap'
+        : 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white text-emerald-700 whitespace-nowrap';
+
+      document.getElementById('accessDetailTitle').textContent = `Conta: ${acc.displayName}`;
+      document.getElementById('accessDetailMeta').textContent = `Usuário @${acc.username} • Categoria: ${getAccountCategoryLabel(acc.linkedType)}`;
+
+      const bodyEl = document.getElementById('accessDetailBody');
+      const roleBadges = acc.permissions.map(p => `
+        <span class="px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 text-xs font-semibold inline-flex items-center gap-1.5">
+          <i data-lucide="shield" class="w-3.5 h-3.5 text-blue-600"></i>
+          <span>${PERM_LABELS[p] || p}</span>
+        </span>
+      `).join('');
+
+      const permDescriptions = {
+        psicologo: 'Acesso clínico completo ao painel de psicologia, agendamento de sessões e prontuários confidenciais.',
+        coordTecnica: 'Supervisão técnica, auditoria clínica, acompanhamento de voluntários e triagens com prioridade.',
+        coordAdmin: 'Gestão da lista de espera (demanda reprimida), cadastro de pacientes e administração institucional.',
+        adminTi: 'Configuração geral de acessos, logs de auditoria, perfis de equipe e parâmetros de automação.'
+      };
+
+      bodyEl.innerHTML = `
+        <div class="p-4 rounded-xl border border-slate-300 bg-slate-50/70 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+            <h4 class="text-xs font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="user-check" class="w-4 h-4 text-blue-600"></i>
+              <span>Identificação e Vínculo Institucional</span>
+            </h4>
+            <span class="text-[11px] font-semibold text-slate-500">ID: ${acc.id}</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div>
+              <span class="text-slate-500 block text-[11px]">Nome do Responsável:</span>
+              <span class="font-bold text-slate-900 text-sm">${escapeHtml(acc.displayName)}</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[11px]">Vínculo Institucional:</span>
+              <span class="font-semibold text-slate-800">${getAccountCategoryLabel(acc.linkedType)}</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[11px]">Status da Conta:</span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${isInactive ? 'bg-slate-100 text-slate-700 border border-slate-300' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}">
+                <span class="w-2 h-2 rounded-full ${isInactive ? 'bg-slate-400' : 'bg-emerald-500'}"></span>
+                ${acc.status || 'Ativo'}
+              </span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[11px]">Registro / Cargo:</span>
+              <span class="font-semibold text-slate-800">${escapeHtml(person?.crp || person?.extra || 'Administrador do Sistema')}</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[11px]">Identificador Vinculado:</span>
+              <span class="font-mono text-slate-700">${acc.linkedId || 'ADMIN'}</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[11px]">Data de Criação:</span>
+              <span class="font-medium text-slate-700">${acc.createdAt || 'Cadastro Inicial'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl border border-slate-300 bg-slate-50/70 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+            <h4 class="text-xs font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="key-round" class="w-4 h-4 text-blue-600"></i>
+              <span>Credenciais de Autenticação</span>
+            </h4>
+            <span class="text-[11px] font-semibold text-slate-500">Segurança de Acesso</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <span class="text-slate-500 block text-[11px]">Usuário de Login:</span>
+              <span class="font-mono font-bold text-blue-700 text-sm">@${escapeHtml(acc.username)}</span>
+            </div>
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500 block text-[11px]">Senha Cadastrada:</span>
+                <button type="button" onclick="toggleAccessDetailPassword()" class="text-[11px] text-blue-600 hover:text-blue-800 font-semibold inline-flex items-center gap-1">
+                  <i data-lucide="eye" id="accessDetailEyeIcon" class="w-3.5 h-3.5"></i>
+                  <span id="accessDetailEyeLabel">Mostrar Senha</span>
+                </button>
+              </div>
+              <span id="accessDetailPasswordVal" class="font-mono text-slate-800 font-bold tracking-widest text-sm">••••••••</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl border border-slate-300 bg-slate-50/70 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+            <h4 class="text-xs font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="phone" class="w-4 h-4 text-blue-600"></i>
+              <span>Informações de Contato</span>
+            </h4>
+            <span class="text-[11px] font-semibold text-slate-500">Comunicação e Notificações</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <span class="text-slate-500 block text-[11px]">E-mail Institucional:</span>
+              <span class="font-medium text-slate-800 text-xs">${escapeHtml(acc.email || person?.email || 'contato@cacs.org.br')}</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[11px]">Telefone / WhatsApp:</span>
+              <span class="font-medium text-slate-800 text-xs">${escapeHtml(acc.telefone || person?.telefone || '(11) 94254-7735')}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl border border-slate-300 bg-slate-50/70 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+            <h4 class="text-xs font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-blue-600"></i>
+              <span>Permissões Atribuídas (${acc.permissions.length})</span>
+            </h4>
+            <span class="text-[11px] font-semibold text-slate-500">Módulos Habilitados</span>
+          </div>
+          <div class="flex flex-wrap gap-2 pt-1">
+            ${roleBadges}
+          </div>
+          <div class="pt-2 border-t border-slate-200 divide-y divide-slate-200">
+            ${acc.permissions.map(p => `
+              <div class="py-2 flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 shrink-0"></span>
+                <div>
+                  <span class="font-bold text-slate-800">${PERM_LABELS[p] || p}:</span>
+                  <span class="text-slate-600 ml-1">${permDescriptions[p] || 'Acesso às funcionalidades do módulo.'}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('btnAccessDetailDownloadPdf').onclick = () => {
+        triggerSimulatedDownload(`Ficha_Acesso_${acc.username}.pdf`, `Ficha cadastral da conta de acesso de ${acc.displayName}`, false);
+      };
+
+      const editBtn = document.getElementById('accessDetailEditBtn');
+      editBtn.onclick = () => {
+        closeModal('accessDetailModal');
+        openAccessEditModal(acc.id);
+      };
+
+      openModal('accessDetailModal');
+    }
+
+    function onAccessSearchChange() {
+      state.accessSearch = document.getElementById('accessSearchInput')?.value || '';
+      state.accessPage = 1;
       renderAccessAccountsSection();
     }
 
+    function setAccessFilter(val) {
+      state.accessFilter = val;
+      state.accessPage = 1;
+      const sel = document.getElementById('accessFilterSelect');
+      if (sel) sel.value = val;
+      renderAccessAccountsSection();
+    }
+
+    function resetAccessFilters() {
+      state.accessSearch = '';
+      state.accessFilter = 'todos';
+      state.accessPage = 1;
+      const input = document.getElementById('accessSearchInput');
+      if (input) input.value = '';
+      const sel = document.getElementById('accessFilterSelect');
+      if (sel) sel.value = 'todos';
+      renderAccessAccountsSection();
+    }
+
+    function sortAccessBy(field) {
+      if (state.accessSort.field === field) {
+        state.accessSort.direction = state.accessSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        state.accessSort.field = field;
+        state.accessSort.direction = 'asc';
+      }
+      renderAccessAccountsSection();
+    }
+
+    function setAccessPageSize(val) {
+      state.accessPageSize = val;
+      state.accessPage = 1;
+      renderAccessAccountsSection();
+    }
+
+    function goToAccessPage(page) {
+      state.accessPage = page;
+      renderAccessAccountsSection();
+    }
+
+    function renderAccessPaginationControls(totalPages) {
+      const container = document.getElementById('accessPaginationControls');
+      if (!container) return;
+      if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+      }
+      const curr = state.accessPage;
+      let html = '';
+      html += `
+        <button onclick="goToAccessPage(${curr - 1})" ${curr === 1 ? 'disabled' : ''} class="px-2 py-1 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition text-xs font-semibold inline-flex items-center gap-0.5">
+          <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+          <span>Ant.</span>
+        </button>
+      `;
+
+      for (let p = 1; p <= totalPages; p++) {
+        const active = p === curr;
+        html += `
+          <button onclick="goToAccessPage(${p})" class="w-7 h-7 rounded-md text-xs font-semibold transition ${active ? 'bg-blue-600 text-white shadow-xs' : 'border border-slate-300 text-slate-700 hover:bg-slate-100'}">
+            ${p}
+          </button>
+        `;
+      }
+
+      html += `
+        <button onclick="goToAccessPage(${curr + 1})" ${curr === totalPages ? 'disabled' : ''} class="px-2 py-1 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition text-xs font-semibold inline-flex items-center gap-0.5">
+          <span>Próx.</span>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        </button>
+      `;
+      container.innerHTML = html;
+      if (window.lucide) lucide.createIcons();
+    }
+
     function renderAccessAccountsSection() {
-      populateAccessPersonSelect();
       const tbody = document.getElementById('accessAccountsTableBody');
       if (!tbody) return;
-      document.getElementById('accountsCountLabel').textContent = `${state.userAccounts.length} conta(s)`;
-      tbody.innerHTML = state.userAccounts.map(acc => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="py-3 px-4"><div class="font-bold text-slate-900">${acc.displayName}</div><div class="text-[11px] text-blue-700 font-mono">Usuário: ${acc.username}</div></td>
-          <td class="py-3 px-4 font-mono text-slate-700">${acc.password}</td>
-          <td class="py-3 px-4"><div class="flex flex-wrap gap-1">${acc.permissions.map(p => `<span class="px-2 py-0.5 rounded bg-slate-100 border border-slate-300 text-slate-800 text-[10px] font-semibold">${PERM_LABELS[p]}</span>`).join('')}</div></td>
-          <td class="py-3 px-4 text-right">${acc.id === 'ACC-ADMIN' ? '<span class="text-[10px] text-slate-500 font-semibold">Padrão</span>' : `<button onclick="deleteUserAccount('${acc.id}')" class="px-2.5 py-1 rounded-lg bg-red-50 border border-red-300 hover:bg-red-100 text-red-700 font-semibold text-[11px]">Remover</button>`}</td>
-        </tr>
-      `).join('');
+
+      let list = [...state.userAccounts];
+
+      // 1. Filtro unificado
+      const filter = state.accessFilter || 'todos';
+      if (filter === 'Ativo') {
+        list = list.filter(a => (a.status || 'Ativo') !== 'Inativo');
+      } else if (filter === 'Inativo') {
+        list = list.filter(a => a.status === 'Inativo');
+      } else if (filter && filter !== 'todos') {
+        list = list.filter(a => (a.permissions && a.permissions.includes(filter)) || a.linkedType === filter);
+      }
+
+      // 2. Busca
+      const q = (state.accessSearch || '').trim().toLowerCase();
+      if (q) {
+        list = list.filter(a => {
+          const person = getLinkedAccountPerson(a);
+          const permLabels = (a.permissions || []).map(p => (PERM_LABELS[p] || '').toLowerCase()).join(' ');
+          const searchHaystack = [
+            a.displayName,
+            a.username,
+            a.email,
+            a.telefone,
+            a.status || 'Ativo',
+            getAccountCategoryLabel(a.linkedType),
+            permLabels,
+            person?.crp,
+            person?.extra,
+            person?.email,
+            person?.telefone
+          ].filter(Boolean).join(' ').toLowerCase();
+          return searchHaystack.includes(q);
+        });
+      }
+
+      // Botão Limpar
+      const clearBtn = document.getElementById('accessClearFilterBtn');
+      if (clearBtn) {
+        clearBtn.classList.toggle('hidden', !q && filter === 'todos');
+        clearBtn.classList.toggle('flex', Boolean(q || filter !== 'todos'));
+      }
+
+      // 3. Ordenação
+      const sort = state.accessSort || { field: 'displayName', direction: 'asc' };
+      list.sort((a, b) => {
+        let vA = (a[sort.field] ?? '').toString().toLowerCase();
+        let vB = (b[sort.field] ?? '').toString().toLowerCase();
+        if (sort.field === 'status') {
+          vA = (a.status || 'Ativo').toLowerCase();
+          vB = (b.status || 'Ativo').toLowerCase();
+        }
+        const cmp = vA.localeCompare(vB, 'pt-BR', { numeric: true });
+        return sort.direction === 'desc' ? -cmp : cmp;
+      });
+
+      // Ícones de ordenação
+      ['displayName', 'status'].forEach(field => {
+        const iconEl = document.getElementById(`access-sort-icon-${field}`);
+        if (iconEl) {
+          if (sort.field === field) {
+            iconEl.innerHTML = sort.direction === 'asc'
+              ? '<i data-lucide="arrow-up" class="w-3.5 h-3.5 text-blue-600"></i>'
+              : '<i data-lucide="arrow-down" class="w-3.5 h-3.5 text-blue-600"></i>';
+          } else {
+            iconEl.innerHTML = '<i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-slate-300 opacity-60 group-hover:opacity-100"></i>';
+          }
+        }
+      });
+
+      const total = list.length;
+      const pageSize = state.accessPageSize === 'all' ? (total || 1) : parseInt(state.accessPageSize || 10, 10);
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      if (state.accessPage > totalPages) state.accessPage = totalPages;
+      if (state.accessPage < 1) state.accessPage = 1;
+
+      const startIdx = (state.accessPage - 1) * pageSize;
+      const pageItems = state.accessPageSize === 'all' ? list : list.slice(startIdx, startIdx + pageSize);
+
+      // Informações de Paginação
+      const infoEl = document.getElementById('accessPaginationInfo');
+      if (infoEl) {
+        if (total === 0) {
+          infoEl.textContent = 'Nenhuma conta encontrada';
+        } else {
+          const from = startIdx + 1;
+          const to = Math.min(startIdx + pageSize, total);
+          infoEl.textContent = `Exibindo ${from}–${to} de ${total} conta${total > 1 ? 's' : ''}`;
+        }
+      }
+
+      // Controles de Paginação
+      renderAccessPaginationControls(totalPages);
+
+      // Empty State
+      if (pageItems.length === 0) {
+        const emptyTitle = state.userAccounts.length === 0 ? 'Nenhuma conta de acesso cadastrada' : 'Nenhuma conta encontrada para os filtros aplicados';
+        const emptySub = state.userAccounts.length === 0 ? 'Crie o primeiro acesso clicando em Novo Acesso.' : 'Altere os termos da busca ou selecione outro filtro.';
+        tbody.innerHTML = getTableEmptyStateHtml(5, emptyTitle, emptySub, state.userAccounts.length > 0 ? 'resetAccessFilters()' : null);
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      tbody.innerHTML = pageItems.map(acc => {
+        const isInactive = acc.status === 'Inativo';
+        const isMasterAdmin = acc.id === 'ACC-ADMIN';
+        const person = getLinkedAccountPerson(acc);
+        const email = acc.email || person?.email || '—';
+        const telefone = acc.telefone || person?.telefone || '—';
+        const categoryLabel = getAccountCategoryLabel(acc.linkedType);
+
+        const permBadges = (acc.permissions || []).map(p => `
+          <span class="px-2 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-800 text-[10px] font-semibold">
+            ${PERM_LABELS[p] || p}
+          </span>
+        `).join('');
+
+        const statusBadge = isInactive
+          ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-300"><span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>Inativo</span>'
+          : '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Ativo</span>';
+
+        const toggleStatusBtn = isMasterAdmin
+          ? '<span class="px-2 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-400 font-semibold text-[11px] cursor-not-allowed select-none" title="A conta mestre não pode ser inativada">Padrão</span>'
+          : isInactive
+            ? `<button onclick="requestToggleAccessStatus('${acc.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-300 hover:bg-emerald-100 text-emerald-700 font-semibold text-[11px] inline-flex items-center gap-1 transition" title="Reativar acesso do usuário"><i data-lucide="check-circle" class="w-3 h-3"></i><span>Reativar</span></button>`
+            : `<button onclick="requestToggleAccessStatus('${acc.id}')" class="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-300 hover:bg-amber-100 text-amber-800 font-semibold text-[11px] inline-flex items-center gap-1 transition" title="Inativar acesso do usuário"><i data-lucide="user-x" class="w-3 h-3"></i><span>Inativar</span></button>`;
+
+        const deleteBtn = isMasterAdmin
+          ? ''
+          : `<button onclick="requestDeleteUserAccount('${acc.id}')" class="px-2 py-1 rounded-lg bg-red-50 border border-red-300 hover:bg-red-100 text-red-700 font-semibold text-[11px] inline-flex items-center gap-1 transition" title="Revogar conta permanentemente"><i data-lucide="trash-2" class="w-3 h-3"></i><span>Excluir</span></button>`;
+
+        const initials = (acc.displayName || 'AC').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center shrink-0 border border-blue-200">
+                  ${initials}
+                </div>
+                <div>
+                  <div class="font-bold text-slate-900">${escapeHtml(acc.displayName)}</div>
+                  <div class="text-[11px] text-blue-700 font-mono font-medium">@${escapeHtml(acc.username)}</div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="space-y-0.5">
+                <div class="text-slate-800 font-medium">${escapeHtml(email)}</div>
+                <div class="text-[11px] text-slate-500">${escapeHtml(telefone)}</div>
+                <span class="inline-block mt-0.5 px-2 py-0.5 rounded bg-slate-100 border border-slate-300 text-slate-700 text-[10px] font-semibold">${categoryLabel}</span>
+              </div>
+            </td>
+            <td class="py-3 px-4">${statusBadge}</td>
+            <td class="py-3 px-4">
+              <div class="flex flex-wrap gap-1 max-w-xs">
+                ${permBadges}
+              </div>
+            </td>
+            <td class="py-3 px-4 text-right">
+              <div class="inline-flex items-center justify-end gap-1.5">
+                <button onclick="openAccessDetailModal('${acc.id}')" class="px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 font-semibold text-[11px] inline-flex items-center gap-1 transition" title="Ver ficha da conta de acesso">
+                  <i data-lucide="file-text" class="w-3 h-3"></i>
+                  <span>Ficha</span>
+                </button>
+                <button onclick="openAccessEditModal('${acc.id}')" class="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-300 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] inline-flex items-center gap-1 transition" title="Editar credenciais ou permissões">
+                  <i data-lucide="edit-3" class="w-3 h-3"></i>
+                  <span>Editar</span>
+                </button>
+                ${toggleStatusBtn}
+                ${deleteBtn}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
     }
 
     // 7. AGENDA (CALENDÁRIO + LISTA EM CARDS GRANDES + DISPONIBILIDADE PACIENTES)
@@ -7718,7 +8678,8 @@
       'patientInterruptModal',
       'queueDismissModal',
       'scheduleSlotModal',
-      'staffMemberModal'
+      'staffMemberModal',
+      'accessModal'
     ]);
 
     function getModalFormSnapshot(modalId) {
