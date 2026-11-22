@@ -670,6 +670,7 @@
                   <option value="todos">Todos os Psicólogos</option>
                   <option value="Ativo">Status: Ativo</option>
                   <option value="Inativo">Status: Inativo</option>
+                  <option value="Pendente">Status: Pendente</option>
                   <option value="Online">Modalidade: Online</option>
                   <option value="Presencial">Modalidade: Presencial (Polo CACS)</option>
                   <option value="Hibrido">Modalidade: Híbrido</option>
@@ -701,6 +702,12 @@
                     </div>
                   </th>
                   <th class="py-3 px-4">Contato</th>
+                  <th onclick="sortVolunteersBy('status')" class="py-3 px-4 cursor-pointer hover:bg-slate-200/70 hover:text-slate-800 transition group" title="Clique para ordenar por Status">
+                    <div class="inline-flex items-center gap-1.5">
+                      <span>Status</span>
+                      <span id="vol-sort-icon-status" class="inline-flex items-center"></span>
+                    </div>
+                  </th>
                   <th onclick="sortVolunteersBy('especialidade')" class="py-3 px-4 cursor-pointer hover:bg-slate-200/70 hover:text-slate-800 transition group" title="Clique para ordenar por Especialidade">
                     <div class="inline-flex items-center gap-1.5">
                       <span>Especialidade</span>
@@ -1572,7 +1579,15 @@
             <div><label class="block font-bold text-slate-700 mb-1">E-mail de Contato *:</label><input type="email" id="volEmail" placeholder="Ex: helena@gmail.com" class="w-full p-2.5 rounded-xl border border-slate-400" /></div>
             <div><label class="block font-bold text-slate-700 mb-1">E-mail da Inscrição (se diferente):</label><input type="email" id="volEmailForm" placeholder="Ex: helena.cadastro@gmail.com" class="w-full p-2.5 rounded-xl border border-slate-400" /></div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Status do Voluntário *:</label>
+              <select id="volStatus" class="w-full p-2.5 rounded-xl border border-slate-400 bg-white font-medium">
+                <option value="Ativo" selected>Ativo</option>
+                <option value="Inativo">Inativo</option>
+                <option value="Pendente">Pendente</option>
+              </select>
+            </div>
             <div>
               <label class="block font-bold text-slate-700 mb-1">Situação do CRP *:</label>
               <select id="volCrpStatus" onchange="onVolCrpStatusChange()" class="w-full p-2.5 rounded-xl border border-slate-400 bg-white font-medium">
@@ -2538,7 +2553,7 @@
           termoAssinado: true, termoArquivo: 'Termo_Voluntariado_Carolina_Mendes.pdf', ocupadas: 0, limite: 1, relatosAtrasados: 0
         },
         {
-          id: 'V13', status: 'Ativo', nome: 'Gustavo Martins', carimboDataHora: `${daysAgoStr(15)} 12:35`, emailFormulario: 'gustavo.martins.psi@gmail.com',
+          id: 'V13', status: 'Inativo', nome: 'Gustavo Martins', carimboDataHora: `${daysAgoStr(15)} 12:35`, emailFormulario: 'gustavo.martins.psi@gmail.com',
           email: 'gustavo.martins.psi@gmail.com', telefone: '(11) 97400-8811', cpf: '431.775.408-36',
           statusCrp: 'CRP Ativo', crp: 'CRP 06/177892', redeSocial: '',
           modalidade: 'Online', especialidade: 'Psicoterapia individual (ACT) e manejo de procrastinação acadêmica',
@@ -2549,7 +2564,7 @@
           termoAssinado: true, termoArquivo: 'Termo_Voluntariado_Gustavo_Martins.pdf', ocupadas: 0, limite: 2, relatosAtrasados: 0
         },
         {
-          id: 'V14', status: 'Ativo', nome: 'Renata Figueiredo', carimboDataHora: `${daysAgoStr(8)} 16:45`, emailFormulario: 'renata.figueiredo@usp.br',
+          id: 'V14', status: 'Pendente', nome: 'Renata Figueiredo', carimboDataHora: `${daysAgoStr(8)} 16:45`, emailFormulario: 'renata.figueiredo@usp.br',
           email: 'renata.figueiredo.psi@gmail.com', telefone: '(11) 96200-7733', cpf: '468.902.118-50',
           statusCrp: 'Graduação concluída — aguardando emissão do CRP', crp: 'Aguardando emissão (Graduação concluída)',
           redeSocial: 'linkedin.com/in/renata-figueiredo-psicologia',
@@ -5500,8 +5515,8 @@
             <div class="pt-4 border-t border-slate-200 space-y-2.5">
               <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Situação Institucional e Vagas</h4>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-2.5">
-                <div><span class="text-slate-500 block text-[10px] uppercase font-bold">Status do Cadastro</span><strong class="${isAtivo ? 'text-emerald-700' : 'text-slate-600'}">${escapeHtml(reg.status)}</strong></div>
-                <div><span class="text-slate-500 block text-[10px] uppercase font-bold">Ocupação Atual</span><strong class="text-slate-900">${isAtivo ? `${ocupadas}/${limite} vagas (${vagasLivres} livre(s))` : `${ocupadas}/${limite} (Cadastro Inativo)`}</strong></div>
+                <div><span class="text-slate-500 block text-[10px] uppercase font-bold">Status do Cadastro</span><strong class="${reg.status === 'Ativo' ? 'text-emerald-700' : (reg.status === 'Pendente' ? 'text-amber-700' : 'text-slate-600')}">${escapeHtml(reg.status)}</strong></div>
+                <div><span class="text-slate-500 block text-[10px] uppercase font-bold">Ocupação Atual</span><strong class="text-slate-900">${isAtivo ? `${ocupadas}/${limite} vagas (${vagasLivres} livre(s))` : `${ocupadas}/${limite} (Cadastro ${escapeHtml(reg.status)})`}</strong></div>
                 <div><span class="text-slate-500 block text-[10px] uppercase font-bold">Relatos Clínicos</span><strong class="${relatosCount > 0 ? 'text-red-700' : 'text-emerald-700'}">${relatosLabel}</strong></div>
               </div>
             </div>
@@ -5527,6 +5542,7 @@
         <div class="p-4 rounded-xl bg-blue-50 border border-blue-300 space-y-2">
           <span class="text-[11px] font-bold uppercase tracking-wider text-blue-800 block">Resumo Clínico &amp; Disponibilidade</span>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
+            <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Status</span><strong class="${reg.status === 'Ativo' ? 'text-emerald-700' : (reg.status === 'Pendente' ? 'text-amber-700' : 'text-slate-600')}">${escapeHtml(reg.status)}</strong></div>
             <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Especialidade</span><strong class="text-slate-900">${escapeHtml(reg.especialidade)}</strong></div>
             <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Público-Alvo</span><strong class="text-slate-900">${escapeHtml(reg.publicoAlvo)}</strong></div>
             <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Horários Disponíveis (${totalMatrixHours}h/sem)</span><strong class="text-slate-900">${escapeHtml(reg.horariosDisponiveis)}</strong></div>
@@ -5643,7 +5659,14 @@
       const vagasLivres = isVolunteerActive(v) ? Math.max(0, (v.limite || 0) - (v.ocupadas || 0)) : 0;
       state.activeVolunteerDetailId = v.id;
       document.getElementById('volDetailCode').textContent = v.crp || 'CRP';
-      document.getElementById('volDetailStatus').textContent = reg.status;
+      const volStatusEl = document.getElementById('volDetailStatus');
+      if (volStatusEl) {
+        volStatusEl.textContent = reg.status;
+        const colorClass = reg.status === 'Ativo'
+          ? 'text-emerald-700'
+          : (reg.status === 'Pendente' ? 'text-amber-700' : 'text-slate-600');
+        volStatusEl.className = `text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white ${colorClass} whitespace-nowrap`;
+      }
       document.getElementById('volDetailTitle').textContent = v.nome;
       document.getElementById('volDetailMeta').textContent = `Modalidade: ${reg.modalidade} • Vagas: ${v.ocupadas || 0}/${v.limite || 0} (${vagasLivres} livre(s)) • Telefone: ${reg.telefone}`;
       document.getElementById('volDetailBody').innerHTML = renderVolunteerDetailsHtml(v);
@@ -5727,7 +5750,7 @@
         }
       }
 
-      ['nome', 'especialidade', 'vagas'].forEach(f => {
+      ['nome', 'status', 'especialidade', 'vagas'].forEach(f => {
         const el = document.getElementById('vol-sort-icon-' + f);
         if (!el) return;
         if (state.volunteerSort && state.volunteerSort.field === f) {
@@ -5738,13 +5761,15 @@
       });
 
       const filtered = state.volunteers.filter(v => {
-        const isAtivo = isVolunteerActive(v);
+        const vStatus = v.status || 'Ativo';
+        const isAtivo = vStatus === 'Ativo';
         const modLower = (v.modalidade || 'Online').toLowerCase();
         const livres = isAtivo ? Math.max(0, v.limite - v.ocupadas) : 0;
 
         const matchesFilter = filterVal === 'todos'
-          || (filterVal === 'Ativo' && isAtivo)
-          || (filterVal === 'Inativo' && !isAtivo)
+          || (filterVal === 'Ativo' && vStatus === 'Ativo')
+          || (filterVal === 'Inativo' && vStatus === 'Inativo')
+          || (filterVal === 'Pendente' && vStatus === 'Pendente')
           || (filterVal === 'Online' && modLower === 'online')
           || (filterVal === 'Presencial' && modLower.includes('presencial') && !modLower.includes('híbrido'))
           || (filterVal === 'Hibrido' && modLower.includes('híbrido'))
@@ -5756,6 +5781,7 @@
 
         const matchesSearch = !query
           || v.nome.toLowerCase().includes(query)
+          || (v.status && v.status.toLowerCase().includes(query))
           || (v.cpf && v.cpf.toLowerCase().includes(query))
           || (v.crp && v.crp.toLowerCase().includes(query))
           || (v.telefone && v.telefone.toLowerCase().includes(query))
@@ -5778,7 +5804,7 @@
       if (filtered.length === 0) {
         const emptyTitle = state.volunteers.length === 0 ? 'Nenhum psicólogo voluntário cadastrado' : 'Nenhum psicólogo encontrado para os filtros aplicados';
         const emptySub = state.volunteers.length === 0 ? 'Cadastre o primeiro psicólogo voluntário para gerenciar vagas e atendimentos.' : 'Altere os termos da pesquisa ou selecione outro filtro.';
-        tbody.innerHTML = getTableEmptyStateHtml(5, emptyTitle, emptySub, state.volunteers.length > 0 ? 'resetVolunteerFilters()' : null);
+        tbody.innerHTML = getTableEmptyStateHtml(6, emptyTitle, emptySub, state.volunteers.length > 0 ? 'resetVolunteerFilters()' : null);
         if (infoEl) infoEl.textContent = 'Exibindo 0 psicólogos';
         if (controlsEl) controlsEl.innerHTML = '';
         if (window.lucide) lucide.createIcons();
@@ -5791,6 +5817,11 @@
         let res = 0;
         if (field === 'nome') {
           res = a.nome.localeCompare(b.nome, 'pt-BR');
+        } else if (field === 'status') {
+          const stA = a.status || 'Ativo';
+          const stB = b.status || 'Ativo';
+          res = stA.localeCompare(stB, 'pt-BR');
+          if (res === 0) res = a.nome.localeCompare(b.nome, 'pt-BR');
         } else if (field === 'especialidade') {
           res = (a.especialidade || 'Clínica geral').localeCompare(b.especialidade || 'Clínica geral', 'pt-BR');
           if (res === 0) res = a.nome.localeCompare(b.nome, 'pt-BR');
@@ -5818,18 +5849,20 @@
       renderPaginationButtons(controlsEl, state.volunteerPage, totalPages, 'goToVolunteerPage');
 
       tbody.innerHTML = pageItems.map(v => {
-        const isAtivo = isVolunteerActive(v);
+        const vStatus = v.status || 'Ativo';
+        const isAtivo = vStatus === 'Ativo';
+        const isPendente = vStatus === 'Pendente';
         const vagasLivres = isAtivo ? Math.max(0, v.limite - v.ocupadas) : 0;
         const isAwaitingCrp = (v.statusCrp || '').toLowerCase().includes('aguardando') || (v.crp || '').toLowerCase().includes('aguardando');
-        const statusSuffix = isAtivo ? '' : ' <span class="text-[11px] font-semibold text-slate-500">• Inativo</span>';
         const vagasMainHtml = !isAtivo
-          ? `<div class="font-semibold text-slate-500 whitespace-nowrap">Cadastro Inativo</div>`
+          ? `<div class="font-semibold text-slate-500 whitespace-nowrap">Cadastro ${escapeHtml(vStatus)}</div>`
           : v.ocupadas > 0
           ? `<button type="button" onclick="viewVolunteerPatients('${escapeHtml(v.id)}')" title="Ver pacientes ativos deste psicólogo" class="font-bold text-slate-900 hover:text-blue-700 hover:underline whitespace-nowrap text-left transition cursor-pointer">${v.ocupadas}/${v.limite} <span class="font-semibold ${vagasLivres > 0 ? 'text-blue-700' : 'text-slate-500'}">• ${vagasLivres} livre(s)</span></button>`
           : `<div class="font-bold text-slate-900 whitespace-nowrap">${v.ocupadas}/${v.limite} <span class="font-semibold ${vagasLivres > 0 ? 'text-blue-700' : 'text-slate-500'}">• ${vagasLivres} livre(s)</span></div>`;
 
-        const actionStackHtml = isAtivo
-          ? `<div class="flex flex-col items-end gap-1.5 w-28 ml-auto">
+        let actionStackHtml = '';
+        if (isAtivo) {
+          actionStackHtml = `<div class="flex flex-col items-end gap-1.5 w-28 ml-auto">
               <button onclick="openVolunteerDetailModal('${escapeHtml(v.id)}')" class="w-28 h-7 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[11px] shadow-2xs flex items-center justify-center gap-1 whitespace-nowrap transition">
                 <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                 <span>Ficha</span>
@@ -5842,8 +5875,24 @@
                 <i data-lucide="user-x" class="w-3.5 h-3.5 text-amber-600"></i>
                 <span>Inativar</span>
               </button>
-            </div>`
-          : `<div class="flex flex-col items-end gap-1.5 w-28 ml-auto">
+            </div>`;
+        } else if (isPendente) {
+          actionStackHtml = `<div class="flex flex-col items-end gap-1.5 w-28 ml-auto">
+              <button onclick="openVolunteerDetailModal('${escapeHtml(v.id)}')" class="w-28 h-7 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[11px] shadow-2xs flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                <span>Ficha</span>
+              </button>
+              <button onclick="requestToggleVolunteerStatus('${escapeHtml(v.id)}')" class="w-28 h-7 rounded-lg border border-emerald-400 bg-white hover:bg-emerald-50 text-emerald-800 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-700"></i>
+                <span>Ativar</span>
+              </button>
+              <button onclick="openEditVolunteerModal('${escapeHtml(v.id)}')" class="w-28 h-7 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span>Editar</span>
+              </button>
+            </div>`;
+        } else {
+          actionStackHtml = `<div class="flex flex-col items-end gap-1.5 w-28 ml-auto">
               <button onclick="openVolunteerDetailModal('${escapeHtml(v.id)}')" class="w-28 h-7 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
                 <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-500"></i>
                 <span>Ficha</span>
@@ -5857,16 +5906,26 @@
                 <span>Excluir</span>
               </button>
             </div>`;
+        }
+
+        const statusCellHtml = isAtivo
+          ? `<span class="font-bold text-emerald-700 whitespace-nowrap">Ativo</span>`
+          : isPendente
+          ? `<span class="font-bold text-amber-700 whitespace-nowrap">Pendente</span>`
+          : `<span class="font-bold text-slate-500 whitespace-nowrap">Inativo</span>`;
 
         return `
-          <tr class="hover:bg-slate-50 transition ${isAtivo ? '' : 'bg-slate-50/60'}">
+          <tr class="hover:bg-slate-50 transition ${isAtivo ? '' : (isPendente ? 'bg-amber-50/20' : 'bg-slate-50/60')}">
             <td class="py-3 px-4">
-              <div class="font-bold text-slate-900 leading-snug">${escapeHtml(v.nome)}${statusSuffix}</div>
+              <div class="font-bold text-slate-900 leading-snug">${escapeHtml(v.nome)}</div>
               <div class="text-[11px] font-semibold mt-0.5 ${isAwaitingCrp ? 'text-amber-700' : 'text-slate-600'}">${escapeHtml(v.crp)}</div>
             </td>
             <td class="py-3 px-4">
               <div class="text-slate-800 font-medium">${escapeHtml(v.email)}</div>
               <div class="text-[11px] text-slate-500 mt-0.5">${escapeHtml(v.telefone || '')}</div>
+            </td>
+            <td class="py-3 px-4">
+              ${statusCellHtml}
             </td>
             <td class="py-3 px-4">
               <div class="text-[11px] text-slate-700 font-medium max-w-xs leading-snug">${escapeHtml(v.especialidade || 'Clínica geral')}</div>
@@ -6171,6 +6230,7 @@
       if (availWidget) availWidget.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
       const nameLockHint = document.getElementById('volNameLockHint');
       if (nameLockHint) nameLockHint.classList.add('hidden');
+      if (document.getElementById('volStatus')) document.getElementById('volStatus').value = 'Ativo';
       if (document.getElementById('volCrpStatus')) document.getElementById('volCrpStatus').value = 'CRP Ativo';
       if (document.getElementById('volModalidade')) document.getElementById('volModalidade').value = 'Online';
 
@@ -6217,6 +6277,7 @@
       document.getElementById('volPhone').value = v.telefone || '';
       document.getElementById('volEmail').value = v.email || '';
       document.getElementById('volEmailForm').value = (v.emailFormulario && v.emailFormulario !== v.email) ? v.emailFormulario : '';
+      if (document.getElementById('volStatus')) document.getElementById('volStatus').value = v.status || 'Ativo';
       document.getElementById('volCrpStatus').value = reg.statusCrp;
       document.getElementById('volCrp').value = v.crp || '';
       document.getElementById('volCrp').disabled = false;
@@ -6243,6 +6304,7 @@
     function saveVolunteerModal() {
       const errBox = document.getElementById('newVolErrorBox');
       const editId = document.getElementById('volEditId').value;
+      const status = document.getElementById('volStatus') ? document.getElementById('volStatus').value : 'Ativo';
       const name = document.getElementById('volName').value.trim(),
             cpf = document.getElementById('volCpf').value.trim(),
             phone = document.getElementById('volPhone').value.trim(),
@@ -6324,6 +6386,15 @@
         syncVolunteerOccupiedCounts();
         const v = state.volunteers.find(item => item.id === editId);
         if (v) {
+          if (v.status === 'Ativo' && (status === 'Inativo' || status === 'Pendente')) {
+            const activePatients = state.patients.filter(p => p.status === 'Ativo' && p.psicologo === v.nome);
+            if (activePatients.length > 0) {
+              highlightInvalidField('volStatus');
+              errBox.innerHTML = `Não é possível alterar o status para <strong>${escapeHtml(status)}</strong>: ${escapeHtml(v.nome)} possui <strong>${activePatients.length}</strong> paciente(s) ativo(s). Remaneje ou conclua os atendimentos antes de inativar ou colocar em pendência o cadastro.`;
+              errBox.classList.remove('hidden');
+              return;
+            }
+          }
           if (parsedSlots < (v.ocupadas || 0)) {
             highlightInvalidField('volMaxSlots');
             errBox.innerHTML = `Não é possível reduzir para <strong>${parsedSlots}</strong> vaga(s): ${escapeHtml(v.nome)} possui <strong>${v.ocupadas}</strong> paciente(s) ativo(s). Remaneje os pacientes antes de reduzir o limite.`;
@@ -6331,6 +6402,7 @@
             return;
           }
           errBox.classList.add('hidden');
+          v.status = status;
           v.cpf = cpf;
           v.telefone = phone;
           v.email = email;
@@ -6370,7 +6442,7 @@
         const carimboDataHora = `${formatDateBr(now)} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
         state.volunteers.unshift({
           id: 'V' + Date.now(),
-          status: 'Ativo',
+          status: status,
           nome: name,
           carimboDataHora,
           emailFormulario: emailForm || email,
@@ -6443,13 +6515,16 @@
         };
         openModal('confirmActionModal');
       } else {
+        const prevStatus = v.status || 'Inativo';
         v.status = 'Ativo';
+        const actionType = prevStatus === 'Pendente' ? 'Ativação de Voluntário' : 'Reativação de Voluntário';
+        const toastTitle = prevStatus === 'Pendente' ? 'Psicólogo Ativado' : 'Psicólogo Reativado';
         state.automationLogs.unshift({
           horario: timestamp,
-          tipo: 'Reativação de Voluntário',
-          mensagem: `${v.nome} (${v.crp}) reativado(a) no corpo clínico por ${actor}.`
+          tipo: actionType,
+          mensagem: `${v.nome} (${v.crp}) ${prevStatus === 'Pendente' ? 'ativado(a)' : 'reativado(a)'} no corpo clínico por ${actor}.`
         });
-        showToast('Psicólogo Reativado', `${v.nome} reativado(a) para receber novos vínculos.`, 'success');
+        showToast(toastTitle, `${v.nome} ativado(a) para receber novos vínculos.`, 'success');
         renderAll();
       }
     }
