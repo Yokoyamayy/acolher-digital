@@ -363,8 +363,9 @@
                   <option value="Alta">Prioridade: Alto</option>
                   <option value="Média">Prioridade: Médio</option>
                   <option value="Baixa">Prioridade: Baixo</option>
-                  <option value="TCLE_Pendente">Documentação: Pendente</option>
+                  <option value="Docs_Aprovados">Documentação: Aprovada</option>
                   <option value="TCLE_Assinado">Documentação: Assinado</option>
+                  <option value="TCLE_Pendente">Documentação: Pendente</option>
                   <option value="CRAS">Origem: Encaminhamento CRAS</option>
                   <option value="Assistente_Social">Origem: Assistente Social</option>
                   <option value="Espontanea">Origem: Inscrição Espontânea</option>
@@ -550,89 +551,117 @@
         </div>
       </section>
 
-      <!-- VIEW 4: AGENDA (CALENDÁRIO + VISUALIZAÇÃO EM LISTA COM CARDS GRANDES) -->
+      <!-- VIEW 4: AGENDA (CALENDÁRIO SEMANAL + VISUALIZAÇÃO EM LISTA) -->
       <section id="view-agenda" class="hidden space-y-4">
-        <div class="bg-white rounded-2xl border border-slate-300 p-5 shadow-sm flex flex-col xl:flex-row xl:items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-300 text-blue-600 flex items-center justify-center shrink-0">
-              <i data-lucide="calendar-clock" class="w-5 h-5"></i>
+        <div class="bg-white rounded-2xl border border-slate-300 p-5 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-300 text-blue-600 flex items-center justify-center shrink-0">
+                <i data-lucide="calendar-clock" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h2 class="text-lg font-bold text-slate-900">Agenda</h2>
+                <p class="text-xs text-slate-600 mt-0.5">
+                  Gestão integrada de consultas, horários e atendimentos clínicos em formato semanal ou em lista.
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 class="text-lg font-bold text-slate-900">Agenda</h2>
-              <p class="text-xs text-slate-600 mt-0.5">
-                Consulte atendimentos em calendário ou lista, ou confira a disponibilidade dos pacientes da fila.
-              </p>
+
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+              <button onclick="triggerSimulatedDownload('Agenda_Atendimentos_CACS.xlsx', 'Grade de atendimentos da agenda clínica', false)" class="w-full sm:w-auto h-9 px-3 rounded-xl bg-white border border-slate-400 hover:bg-slate-100 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition whitespace-nowrap">
+                <i data-lucide="upload" class="w-4 h-4 text-blue-600"></i>
+                <span>Exportar Agenda</span>
+              </button>
+              <button id="btnAgendaNewAction" onclick="openScheduleSlotModal('', '', '', false)" class="w-full sm:w-auto h-9 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition shrink-0">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Novo Agendamento</span>
+              </button>
             </div>
           </div>
 
-          <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 shrink-0">
-            <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-300 shrink-0">
-              <button onclick="setAgendaViewMode('psicologos')" id="agendaMode-psicologos" class="w-40 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 border border-slate-300 shadow-2xs transition text-center">
-                Agenda Psicólogos
-              </button>
-              <button onclick="setAgendaViewMode('pacientes')" id="agendaMode-pacientes" class="w-44 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent transition text-center">
-                Disponibilidade Pacientes
-              </button>
+          <div class="pt-3.5 border-t border-slate-200 flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5">
+            <div class="relative flex-1">
+              <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="agendaSearchInput" oninput="onAgendaSearchChange()" placeholder="Buscar por paciente, psicólogo, dia, horário ou status..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50/50 focus:bg-white transition" />
             </div>
-
-            <div class="flex items-center gap-2 shrink-0">
-              <select id="agendaPsychFilter" onchange="renderAgendaGrid()" class="w-48 px-3 py-2 rounded-xl border border-slate-400 text-xs font-medium bg-white text-slate-800 focus:outline-none focus:border-blue-600"></select>
-              <select id="agendaPatientFilter" onchange="renderAgendaGrid()" class="hidden w-48 px-3 py-2 rounded-xl border border-slate-400 text-xs font-medium bg-white text-slate-800 focus:outline-none focus:border-blue-600"></select>
-
-              <button id="btnAgendaNewAction" onclick="openScheduleSlotModal('', '', '', false)" class="w-36 py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition shrink-0">
-                <i data-lucide="plus" class="w-4 h-4"></i>
-                <span>Agendar</span>
+            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+              <div class="relative flex items-center">
+                <i data-lucide="filter" class="w-3.5 h-3.5 text-slate-500 absolute left-3 pointer-events-none"></i>
+                <select id="agendaFilterSelect" onchange="setAgendaFilter(this.value)" aria-label="Filtrar agenda de atendimentos" class="pl-8 pr-8 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 cursor-pointer appearance-none">
+                  <option value="todos">Todos os Atendimentos</option>
+                  <optgroup label="Filtrar por Status">
+                    <option value="status:Agendada">Status: Agendada</option>
+                    <option value="status:Realizada">Status: Realizada</option>
+                    <option value="status:Falta Justificada">Status: F. Justificada</option>
+                    <option value="status:Falta Injustificada">Status: F. Injustificada</option>
+                  </optgroup>
+                </select>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 pointer-events-none"></i>
+              </div>
+              <button type="button" id="agendaClearFilterBtn" onclick="resetAgendaFilters()" class="hidden px-2.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold items-center gap-1 transition" title="Limpar busca e filtros">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                <span>Limpar</span>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Barra de Navegação + Alternador Calendário / Lista + Legenda -->
-        <div class="bg-white rounded-2xl border border-slate-300 p-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3">
-          <div class="flex flex-wrap items-center gap-3">
-            <div id="agendaWeekNavControls" class="flex items-center gap-2">
-              <button onclick="changeAgendaWeek(-1)" class="p-1.5 rounded-lg border border-slate-400 hover:bg-slate-100 text-slate-700" title="Semana anterior">
+        <!-- Barra de Navegação + Alternador Calendário / Lista + Legenda (Estilo MS Teams / Outlook) -->
+        <div class="bg-white rounded-2xl border border-slate-300 p-3.5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button onclick="resetAgendaWeek()" class="px-3.5 py-1.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition shadow-2xs" title="Ir para a semana atual">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-blue-600"></i>
+              <span>Hoje</span>
+            </button>
+            <div id="agendaWeekNavControls" class="inline-flex items-center rounded-xl border border-slate-300 bg-white p-0.5 shadow-2xs">
+              <button onclick="changeAgendaWeek(-1)" class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-600 transition" title="Semana anterior">
                 <i data-lucide="chevron-left" class="w-4 h-4"></i>
               </button>
-              <button onclick="resetAgendaWeek()" class="px-3 py-1.5 rounded-lg border border-slate-400 hover:bg-slate-100 text-slate-800 text-xs font-semibold">Hoje</button>
-              <button onclick="changeAgendaWeek(1)" class="p-1.5 rounded-lg border border-slate-400 hover:bg-slate-100 text-slate-700" title="Próxima semana">
+              <button onclick="changeAgendaWeek(1)" class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-600 transition" title="Próxima semana">
                 <i data-lucide="chevron-right" class="w-4 h-4"></i>
               </button>
-              <span id="dynamicWeekRangeLabel" class="ml-1 px-3 py-1 rounded-lg bg-slate-100 border border-slate-300 text-slate-800 text-xs font-semibold">Semana Atual</span>
             </div>
-
-            <!-- Toggle Calendário vs Lista (Cards Grandes) -->
-            <div id="agendaLayoutToggleBox" class="inline-flex p-0.5 rounded-lg bg-slate-100 border border-slate-300">
-              <button onclick="setAgendaLayout('calendario')" id="layoutBtn-calendario" class="px-2.5 py-1 rounded-md text-xs font-bold bg-white text-blue-700 border border-slate-300 flex items-center gap-1.5 transition">
-                <i data-lucide="calendar-days" class="w-3.5 h-3.5"></i>
-                <span>Calendário</span>
-              </button>
-              <button onclick="setAgendaLayout('lista')" id="layoutBtn-lista" class="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent flex items-center gap-1.5 transition">
-                <i data-lucide="layout-list" class="w-3.5 h-3.5"></i>
-                <span>Lista</span>
-              </button>
-            </div>
-
-            <div id="agendaPatientsInfoBanner" class="hidden text-xs font-semibold text-slate-700 flex items-center gap-2">
-              <i data-lucide="info" class="w-4 h-4 text-blue-600"></i>
-              <span>Grade fixa por dia da semana — clique em um paciente para vincular (Match)</span>
+            <div class="flex items-center gap-2 pl-1">
+              <span id="dynamicWeekRangeLabel" class="text-sm font-bold text-slate-900 tracking-tight">Novembro 2026</span>
+              <span id="dynamicWeekBadge" class="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">Semana Atual</span>
             </div>
           </div>
 
-          <div id="agendaLegendBox" class="flex flex-wrap items-center gap-3 text-xs font-semibold"></div>
+          <div class="flex flex-wrap items-center gap-3">
+            <!-- Toggle Calendário (MS Teams) vs Lista (Outlook) -->
+            <div id="agendaLayoutToggleBox" class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-300 shrink-0">
+              <button onclick="setAgendaLayout('calendario')" id="layoutBtn-calendario" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 border border-slate-300 shadow-2xs flex items-center gap-1.5 transition">
+                <i data-lucide="calendar-days" class="w-3.5 h-3.5"></i>
+                <span>Semana (MS Teams)</span>
+              </button>
+              <button onclick="setAgendaLayout('lista')" id="layoutBtn-lista" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent flex items-center gap-1.5 transition">
+                <i data-lucide="layout-list" class="w-3.5 h-3.5"></i>
+                <span>Lista (Outlook)</span>
+              </button>
+            </div>
+
+            <div id="agendaLegendBox" class="flex flex-wrap items-center gap-2.5 text-xs font-medium pl-1">
+              <span class="flex items-center gap-1.5 text-blue-800 text-[11px] font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span> Agendada</span>
+              <span class="flex items-center gap-1.5 text-emerald-800 text-[11px] font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Realizada</span>
+              <span class="flex items-center gap-1.5 text-amber-800 text-[11px] font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> F. Justificada</span>
+              <span class="flex items-center gap-1.5 text-red-800 text-[11px] font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> F. Injustificada</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Container Calendário -->
+        <!-- Container Calendário Semanal (Inspirado no MS Teams) -->
         <div id="agendaCalendarContainer" class="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden">
-          <table class="w-full table-fixed border-collapse">
-            <thead>
-              <tr id="agendaDaysHeaderRow" class="border-b border-slate-300 bg-slate-100/90 text-left"></tr>
-            </thead>
-            <tbody id="agendaGridBody" class="divide-y divide-slate-300 text-xs"></tbody>
-          </table>
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full min-w-[860px] table-fixed border-collapse">
+              <thead>
+                <tr id="agendaDaysHeaderRow" class="border-b border-slate-200 bg-white text-center select-none"></tr>
+              </thead>
+              <tbody id="agendaGridBody" class="divide-y divide-slate-200 text-xs"></tbody>
+            </table>
+          </div>
         </div>
 
-        <!-- Container Lista em Cards Grandes -->
+        <!-- Container Lista de Atendimentos (Inspirado no Outlook) -->
         <div id="agendaListContainer" class="hidden space-y-4"></div>
       </section>
 
@@ -843,90 +872,209 @@
 
       <!-- VIEW 7: GESTÃO DE ACESSOS -->
       <section id="view-acessos" class="hidden space-y-4">
+        <!-- Top Sub-Navigation Header -->
         <div class="bg-white rounded-2xl border border-slate-300 p-5 shadow-sm space-y-4">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <h2 class="text-lg font-bold text-slate-900">Gestão de Acessos</h2>
-              <p class="text-xs text-slate-600 mt-1">Gerencie as contas de login de acesso dos psicólogos e membros da equipe, credenciais e permissões no sistema.</p>
+              <h2 class="text-lg font-bold text-slate-900">Gestão de Acessos e Permissões</h2>
+              <p class="text-xs text-slate-600 mt-1">
+                Controle de credenciais de usuários e matriz de permissões por perfil (RBAC), em conformidade com as diretrizes do CFP e a LGPD.
+              </p>
             </div>
-            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full sm:w-auto">
-              <button onclick="triggerSimulatedDownload('Contas_Acesso_CACS.xlsx', 'Planilha consolidada de contas de acesso e permissões', false)" class="w-full sm:w-48 h-9 px-3 rounded-xl bg-white border border-slate-400 hover:bg-slate-100 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition whitespace-nowrap">
-                <i data-lucide="upload" class="w-4 h-4 text-blue-600"></i>
-                <span>Exportar Acessos</span>
+            <!-- Subtab switcher -->
+            <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-300 shrink-0">
+              <button onclick="setAccessSubtab('contas')" id="accessTabBtn-contas" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 border border-slate-300 shadow-2xs transition flex items-center gap-1.5">
+                <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
+                <span>Contas de Acesso</span>
               </button>
-              <button onclick="openAccessCreateModal()" class="w-full sm:w-48 h-9 px-3 rounded-xl bg-blue-600 border border-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition whitespace-nowrap">
-                <i data-lucide="user-plus" class="w-4 h-4"></i>
-                <span>Novo Acesso</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="pt-3.5 border-t border-slate-200 flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5">
-            <div class="relative flex-1">
-              <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
-              <input type="text" id="accessSearchInput" oninput="onAccessSearchChange()" placeholder="Buscar por nome, usuário, e-mail, telefone ou grupo..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50/50 focus:bg-white transition" />
-            </div>
-            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
-              <div class="relative flex items-center">
-                <i data-lucide="filter" class="w-3.5 h-3.5 text-slate-500 absolute left-3 pointer-events-none"></i>
-                <select id="accessFilterSelect" onchange="setAccessFilter(this.value)" aria-label="Filtrar contas de acesso" class="pl-8 pr-8 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 cursor-pointer appearance-none">
-                  <option value="todos">Todas as Contas</option>
-                  <option value="psicologo">Grupo: Psicólogos Voluntários</option>
-                  <option value="coordTecnica">Grupo: Coordenação Técnica</option>
-                  <option value="coordAdmin">Grupo: Coordenação Administrativa</option>
-                  <option value="adminTi">Grupo: Administradores de TI</option>
-                  <option value="Ativo">Status: Ativo</option>
-                  <option value="Inativo">Status: Inativo</option>
-                </select>
-                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 pointer-events-none"></i>
-              </div>
-              <button type="button" id="accessClearFilterBtn" onclick="resetAccessFilters()" class="hidden px-2.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold items-center gap-1 transition" title="Limpar busca e filtros">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-                <span>Limpar</span>
+              <button onclick="setAccessSubtab('permissoes')" id="accessTabBtn-permissoes" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent transition flex items-center gap-1.5">
+                <i data-lucide="shield-check" class="w-4 h-4 text-slate-500"></i>
+                <span>Configuração de Permissões (RBAC)</span>
               </button>
             </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100/80 select-none">
-                  <th onclick="sortAccessBy('displayName')" class="py-3 px-4 cursor-pointer hover:bg-slate-200/70 hover:text-slate-800 transition group" title="Clique para ordenar por Usuário / Responsável">
-                    <div class="inline-flex items-center gap-1.5">
-                      <span>Usuário / Responsável</span>
-                      <span id="access-sort-icon-displayName" class="inline-flex items-center"></span>
-                    </div>
-                  </th>
-                  <th class="py-3 px-4">Contato / Vínculo</th>
-                  <th onclick="sortAccessBy('status')" class="py-3 px-4 cursor-pointer hover:bg-slate-200/70 hover:text-slate-800 transition group" title="Clique para ordenar por Status">
-                    <div class="inline-flex items-center gap-1.5">
-                      <span>Status</span>
-                      <span id="access-sort-icon-status" class="inline-flex items-center"></span>
-                    </div>
-                  </th>
-                  <th class="py-3 px-4">Permissões Atribuídas</th>
-                  <th class="py-3 px-4 text-right">Ações</th>
-                </tr>
-              </thead>
-              <tbody id="accessAccountsTableBody" class="divide-y divide-slate-300 text-xs"></tbody>
-            </table>
-          </div>
-          <div id="accessPaginationBar" class="px-4 py-3 bg-slate-50 border-t border-slate-300 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
-            <div class="flex flex-wrap items-center gap-3">
-              <span id="accessPaginationInfo" class="font-medium">Exibindo 0–0 de 0 contas</span>
-              <div class="flex items-center gap-1.5">
-                <label for="accessPageSizeSelect" class="text-slate-600 font-medium">Itens por página:</label>
-                <select id="accessPageSizeSelect" onchange="setAccessPageSize(this.value)" class="px-2.5 py-1 rounded-lg border border-slate-400 bg-white text-slate-800 font-semibold text-xs focus:outline-none focus:border-blue-600 cursor-pointer">
-                  <option value="5">5</option>
-                  <option value="10" selected>10</option>
-                  <option value="20">20</option>
-                  <option value="all">Todas</option>
-                </select>
+        <!-- SUB-ABA 1: CONTAS DE ACESSO -->
+        <div id="accessSection-contas" class="space-y-4">
+          <div class="bg-white rounded-2xl border border-slate-300 p-4 shadow-sm space-y-3.5">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Usuários e Credenciais Ativas</h3>
+                <p class="text-xs text-slate-600">Cadastre e gerencie logins, senhas e grupos de autorização vinculados aos membros.</p>
+              </div>
+              <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full sm:w-auto">
+                <button onclick="triggerSimulatedDownload('Contas_Acesso_CACS.xlsx', 'Planilha consolidada de contas de acesso e permissões', false)" class="w-full sm:w-48 h-9 px-3 rounded-xl bg-white border border-slate-400 hover:bg-slate-100 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition whitespace-nowrap">
+                  <i data-lucide="upload" class="w-4 h-4 text-blue-600"></i>
+                  <span>Exportar Acessos</span>
+                </button>
+                <button onclick="openAccessCreateModal()" class="w-full sm:w-48 h-9 px-3 rounded-xl bg-blue-600 border border-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition whitespace-nowrap">
+                  <i data-lucide="user-plus" class="w-4 h-4"></i>
+                  <span>Novo Acesso</span>
+                </button>
               </div>
             </div>
-            <div id="accessPaginationControls" class="flex items-center gap-1"></div>
+
+            <div class="pt-3 border-t border-slate-200 flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5">
+              <div class="relative flex-1">
+                <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="accessSearchInput" oninput="onAccessSearchChange()" placeholder="Buscar por nome, usuário, e-mail, telefone ou grupo..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50/50 focus:bg-white transition" />
+              </div>
+              <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+                <div class="relative flex items-center">
+                  <i data-lucide="filter" class="w-3.5 h-3.5 text-slate-500 absolute left-3 pointer-events-none"></i>
+                  <select id="accessFilterSelect" onchange="setAccessFilter(this.value)" aria-label="Filtrar contas de acesso" class="pl-8 pr-8 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 cursor-pointer appearance-none">
+                    <option value="todos">Todas as Contas</option>
+                    <option value="psicologo">Grupo: Psicólogos Voluntários</option>
+                    <option value="coordTecnica">Grupo: Coordenação Técnica</option>
+                    <option value="coordAdmin">Grupo: Coordenação Administrativa</option>
+                    <option value="adminTi">Grupo: Administradores de TI</option>
+                    <option value="Ativo">Status: Ativo</option>
+                    <option value="Inativo">Status: Inativo</option>
+                  </select>
+                  <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 pointer-events-none"></i>
+                </div>
+                <button type="button" id="accessClearFilterBtn" onclick="resetAccessFilters()" class="hidden px-2.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold items-center gap-1 transition" title="Limpar busca e filtros">
+                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                  <span>Limpar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100/80 select-none">
+                    <th onclick="sortAccessBy('displayName')" class="py-3 px-4 cursor-pointer hover:bg-slate-200/70 hover:text-slate-800 transition group" title="Clique para ordenar por Usuário">
+                      <div class="inline-flex items-center gap-1.5">
+                        <span>Usuário</span>
+                        <span id="access-sort-icon-displayName" class="inline-flex items-center"></span>
+                      </div>
+                    </th>
+                    <th class="py-3 px-4">Vínculo</th>
+                    <th onclick="sortAccessBy('status')" class="py-3 px-4 cursor-pointer hover:bg-slate-200/70 hover:text-slate-800 transition group" title="Clique para ordenar por Status">
+                      <div class="inline-flex items-center gap-1.5">
+                        <span>Status</span>
+                        <span id="access-sort-icon-status" class="inline-flex items-center"></span>
+                      </div>
+                    </th>
+                    <th class="py-3 px-4">Permissões Atribuídas</th>
+                    <th class="py-3 px-4 text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="accessAccountsTableBody" class="divide-y divide-slate-300 text-xs"></tbody>
+              </table>
+            </div>
+            <div id="accessPaginationBar" class="px-4 py-3 bg-slate-50 border-t border-slate-300 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+              <div class="flex flex-wrap items-center gap-3">
+                <span id="accessPaginationInfo" class="font-medium">Exibindo 0–0 de 0 contas</span>
+                <div class="flex items-center gap-1.5">
+                  <label for="accessPageSizeSelect" class="text-slate-600 font-medium">Itens por página:</label>
+                  <select id="accessPageSizeSelect" onchange="setAccessPageSize(this.value)" class="px-2.5 py-1 rounded-lg border border-slate-400 bg-white text-slate-800 font-semibold text-xs focus:outline-none focus:border-blue-600 cursor-pointer">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="all">Todas</option>
+                  </select>
+                </div>
+              </div>
+              <div id="accessPaginationControls" class="flex items-center gap-1"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 2: CONFIGURAÇÃO DE PERMISSÕES (RBAC) -->
+        <div id="accessSection-permissoes" class="hidden space-y-4">
+          <!-- Top Control Card -->
+          <div class="bg-white rounded-2xl border border-slate-300 p-5 shadow-sm space-y-4">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold px-2 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-700">RBAC</span>
+                  <h3 class="text-base font-bold text-slate-900">Matriz de Permissões Documentais e Papéis</h3>
+                </div>
+                <p class="text-xs text-slate-600 mt-1">
+                  Definição normativa dos privilégios de acesso aos documentos e diretrizes operacionais de cada perfil conforme a Especificação do CACS.
+                </p>
+              </div>
+              <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full sm:w-auto">
+                <button onclick="exportRbacMatrixData()" class="w-full sm:w-44 h-9 px-3 rounded-xl bg-white border border-slate-400 hover:bg-slate-100 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition whitespace-nowrap">
+                  <i data-lucide="upload" class="w-4 h-4 text-blue-600"></i>
+                  <span>Exportar Matriz</span>
+                </button>
+                <button onclick="resetRbacMatrixToDefault()" class="w-full sm:w-44 h-9 px-3 rounded-xl bg-white border border-slate-400 hover:bg-slate-100 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition whitespace-nowrap">
+                  <i data-lucide="rotate-ccw" class="w-4 h-4 text-slate-600"></i>
+                  <span>Restaurar Padrão</span>
+                </button>
+                <button onclick="saveRbacPermissions()" class="w-full sm:w-44 h-9 px-3 rounded-xl bg-blue-600 border border-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition whitespace-nowrap">
+                  <i data-lucide="save" class="w-4 h-4"></i>
+                  <span>Salvar Matriz</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="pt-3.5 border-t border-slate-200 flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5">
+              <div class="relative flex-1">
+                <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="rbacSearchInput" oninput="onRbacSearchChange()" placeholder="Buscar documento por nome, categoria ou norma..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50/50 focus:bg-white transition" />
+              </div>
+              <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+                <div class="relative flex items-center">
+                  <i data-lucide="filter" class="w-3.5 h-3.5 text-slate-500 absolute left-3 pointer-events-none"></i>
+                  <select id="rbacProfileFilterSelect" onchange="setRbacProfileFilter(this.value)" aria-label="Visualizar perfil na matriz" class="pl-8 pr-8 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 cursor-pointer appearance-none">
+                    <option value="todos">Visualizar: Todos os Perfis</option>
+                    <option value="adminTi">Perfil: Administrador de TI</option>
+                    <option value="coordTecnica">Perfil: Coordenação Técnica</option>
+                    <option value="coordAdmin">Perfil: Coordenação Administrativa</option>
+                    <option value="psicologo">Perfil: Psicólogo Voluntário</option>
+                  </select>
+                  <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 pointer-events-none"></i>
+                </div>
+                <button type="button" id="rbacClearFilterBtn" onclick="resetRbacFilters()" class="hidden px-2.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold items-center gap-1 transition" title="Limpar busca e filtros">
+                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                  <span>Limpar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Matriz Table Card -->
+          <div class="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden" id="rbacTableCard">
+            <div class="p-4 border-b border-slate-300 bg-slate-100/80 flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <i data-lucide="table" class="w-4 h-4 text-blue-600"></i>
+                <h4 id="rbacTableTitle" class="text-xs font-bold uppercase tracking-wider text-slate-800">Matriz de Permissões Documentais (9 Documentos Oficiais)</h4>
+              </div>
+              <span id="rbacTableSubtitle" class="text-[11px] font-semibold text-slate-600">Preencher/Upload • Visualizar • Editar • Download</span>
+            </div>
+
+            <div class="overflow-x-auto" id="rbacTableContainer">
+              <!-- Renderizado dinamicamente por renderRbacMatrixSection() -->
+            </div>
+
+            <!-- Legend Bar -->
+            <div class="p-3 bg-slate-50 border-t border-slate-300 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600">
+              <div class="flex flex-wrap items-center gap-4">
+                <span class="flex items-center gap-1.5 text-emerald-800 font-semibold">
+                  <span class="w-5 h-5 rounded bg-emerald-100 border border-emerald-300 text-emerald-700 flex items-center justify-center font-bold text-[10px]"><i data-lucide="check" class="w-3 h-3"></i></span>
+                  <span>Permitido (True)</span>
+                </span>
+                <span class="flex items-center gap-1.5 text-slate-600 font-semibold">
+                  <span class="w-5 h-5 rounded bg-slate-100 border border-slate-300 text-slate-400 flex items-center justify-center font-bold text-[10px]"><i data-lucide="x" class="w-3 h-3"></i></span>
+                  <span>Bloqueado (False)</span>
+                </span>
+                <span class="flex items-center gap-1.5 text-rose-800 font-semibold">
+                  <span class="px-1.5 py-0.5 rounded bg-rose-50 border border-rose-200 text-rose-700 text-[10px] font-bold">403 Forbidden</span>
+                  <span>Sigilo Deontológico Estrito (CFP / LGPD)</span>
+                </span>
+                <span class="flex items-center gap-1.5 text-blue-800 font-semibold">
+                  <span class="px-1.5 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-bold">Até 60d</span>
+                  <span>Janela de Retificação (RN-08)</span>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1764,9 +1912,9 @@
     </div>
   </div>
 
-  <!-- MODAL 6: CADASTRAR / EDITAR PERFIL DA EQUIPE -->
+  <!-- MODAL 6: CADASTRAR / EDITAR PERFIL DA EQUIPE (UNIFICADO COM DADOS DA FICHA) -->
   <div id="staffMemberModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-400 overflow-hidden">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-400 overflow-hidden">
       <div class="px-6 py-4 bg-blue-600 text-white flex items-center justify-between gap-3 shrink-0">
         <div class="min-w-0">
           <div class="flex flex-wrap items-center gap-2">
@@ -1774,7 +1922,7 @@
             <span id="staffModalStatus" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-white text-blue-700 whitespace-nowrap">Cadastro</span>
             <h3 id="staffModalTitle" class="text-base font-bold text-white">Cadastrar Membro</h3>
           </div>
-          <p id="staffModalMeta" class="text-xs text-blue-100 mt-1">Dados cadastrais e de contato do integrante da equipe.</p>
+          <p id="staffModalMeta" class="text-xs text-blue-100 mt-1">Dados cadastrais, contato, permissões de acesso e histórico institucional.</p>
         </div>
         <button onclick="requestCloseModal('staffMemberModal')" aria-label="Fechar" class="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-blue-700 shrink-0 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
@@ -1835,10 +1983,21 @@
             </div>
           </div>
         </details>
+
+        <!-- SEÇÕES DINÂMICAS: ACESSO E PERMISSÕES DO SISTEMA + RESUMO INSTITUCIONAL (TRANSFERIDOS DA FICHA) -->
+        <div id="staffModalDynamicSections" class="space-y-4"></div>
       </div>
-      <div class="px-6 py-3.5 bg-slate-100 border-t border-slate-300 flex flex-wrap items-center justify-end gap-2.5 shrink-0">
-        <button onclick="requestCloseModal('staffMemberModal')" class="px-4 py-1.5 rounded-xl bg-white border border-slate-400 hover:bg-slate-200/60 text-xs font-semibold text-slate-700 transition">Cancelar</button>
-        <button onclick="saveStaffMember()" class="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition"><i data-lucide="save" class="w-3.5 h-3.5"></i><span>Salvar</span></button>
+      <div class="px-6 py-3.5 bg-slate-100 border-t border-slate-300 flex flex-wrap items-center justify-between gap-2.5 shrink-0">
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btnStaffMemberDownloadPdf" type="button" class="px-3 py-1.5 rounded-xl bg-white border border-slate-400 hover:bg-slate-200/60 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-blue-600"></i>
+            <span>Baixar Ficha PDF</span>
+          </button>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button onclick="requestCloseModal('staffMemberModal')" class="px-4 py-1.5 rounded-xl bg-white border border-slate-400 hover:bg-slate-200/60 text-xs font-semibold text-slate-700 transition">Cancelar</button>
+          <button onclick="saveStaffMember()" class="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition"><i data-lucide="save" class="w-3.5 h-3.5"></i><span>Salvar Alterações</span></button>
+        </div>
       </div>
     </div>
   </div>
@@ -2063,7 +2222,7 @@
         </button>
         <div class="flex items-center gap-2">
           <button onclick="requestCloseModal('docPreviewModal')" class="px-4 py-1.5 rounded-xl bg-white border border-slate-400 hover:bg-slate-200/60 text-xs font-semibold text-slate-700 transition">Fechar</button>
-          <button id="docPreviewSaveBtn" onclick="saveTriagemInitialNotes()" class="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition"><i data-lucide="save" class="w-3.5 h-3.5"></i><span>Salvar Triagem</span></button>
+          <button id="docPreviewSaveBtn" onclick="saveTriagemInitialNotes()" class="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition"><i data-lucide="save" class="w-3.5 h-3.5"></i><span>Salvar Prioridade e Triagem</span></button>
         </div>
       </div>
     </div>
@@ -2253,7 +2412,15 @@
         ? `Semana: ${first.dayNum} a ${last.dayNum} de ${last.monthName} de ${last.year}`
         : `Semana: ${first.dayNum}/${first.monthNum} a ${last.dayNum}/${last.monthNum}/${last.year}`;
 
-      return { dateStr, bannerStr, activeGridDay, todayWeekIdx, weekDays, weekRangeStr, year: now.getFullYear() };
+      const monthYearTitle = first.monthName === last.monthName
+        ? `${first.monthName} de ${first.year}`
+        : `${first.monthName} / ${last.monthName} de ${last.year}`;
+
+      const targetDate = new Date(monday.valueOf() + 3 * 86400000);
+      const firstThursday = new Date(targetDate.getFullYear(), 0, 4);
+      const weekNum = 1 + Math.round(((targetDate - firstThursday) / 86400000 - 3 + (firstThursday.getDay() + 6) % 7) / 7);
+
+      return { dateStr, bannerStr, activeGridDay, todayWeekIdx, weekDays, weekRangeStr, monthYearTitle, weekNum, year: now.getFullYear() };
     }
 
     function getRelativeWeekday(offsetFromToday) {
@@ -2287,6 +2454,179 @@
       adminTi: 'Admin de TI'
     };
 
+    // MATRIZ RBAC DOCUMENTAL OFICIAL (CONFORME ESPECIFICAÇÃO DE REQUISITOS DO CACS)
+    const RBAC_DEFAULT_MATRIX = [
+      {
+        docId: 'tcle',
+        nome: 'Termo de Consentimento (TCLE)',
+        categoria: 'Clínico / Regulatório',
+        obs: 'Obrigatório pré-atendimento (RN-06)',
+        adminTi:       { upload: false, view: false, edit: false, download: false },
+        coordTecnica:  { upload: true,  view: true,  edit: false, download: false },
+        coordAdmin:    { upload: true,  view: true,  edit: false, download: false },
+        psicologo:     { upload: false, view: true,  edit: false, download: false }
+      },
+      {
+        docId: 'triagem',
+        nome: 'Ficha de Acolhimento / Triagem',
+        categoria: 'Triagem / Entrada',
+        obs: 'Priorização manual da supervisão (RN-16)',
+        adminTi:       { upload: false, view: false, edit: false, download: false },
+        coordTecnica:  { upload: true,  view: true,  edit: true,  download: false },
+        coordAdmin:    { upload: false, view: false, edit: false, download: false },
+        psicologo:     { upload: false, view: true,  edit: false, download: false }
+      },
+      {
+        docId: 'anamnese',
+        nome: 'Ficha de Anamnese',
+        categoria: 'Clínico / Sigiloso',
+        obs: 'Sigilo estrito CFP / LGPD (RN-01)',
+        adminTi:       { upload: false, view: false, edit: false, download: false },
+        coordTecnica:  { upload: true,  view: true,  edit: true,  download: false },
+        coordAdmin:    { upload: false, view: false, edit: false, download: false },
+        psicologo:     { upload: true,  view: true,  edit: false, download: false }
+      },
+      {
+        docId: 'evolucao',
+        nome: 'Evolução do Paciente ("Breves Relatos")',
+        categoria: 'Clínico / Sigiloso',
+        obs: 'Retificar até 60d (RN-08)',
+        adminTi:       { upload: false, view: false, edit: false, download: false },
+        coordTecnica:  { upload: false, view: true,  edit: false, download: false },
+        coordAdmin:    { upload: false, view: false, edit: false, download: false },
+        psicologo:     { upload: true,  view: true,  edit: true,  download: false, note: 'Retificar até 60d' }
+      },
+      {
+        docId: 'crp',
+        nome: 'Carteira do CRP (Registro)',
+        categoria: 'Voluntariado / Administrativo',
+        obs: 'Validação prévia obrigatória (RF-07)',
+        adminTi:       { upload: false, view: false, edit: false, download: false },
+        coordTecnica:  { upload: false, view: true,  edit: false, download: true },
+        coordAdmin:    { upload: true,  view: true,  edit: false, download: true },
+        psicologo:     { upload: false, view: true,  edit: false, download: false }
+      },
+      {
+        docId: 'adesao',
+        nome: 'Termo de Adesão ao Voluntariado',
+        categoria: 'Voluntariado / Administrativo',
+        obs: 'Homologação administrativa (RF-07)',
+        adminTi:       { upload: false, view: false, edit: false, download: false },
+        coordTecnica:  { upload: false, view: true,  edit: false, download: true },
+        coordAdmin:    { upload: true,  view: true,  edit: false, download: true },
+        psicologo:     { upload: false, view: true,  edit: false, download: false }
+      },
+      {
+        docId: 'templates',
+        nome: 'Modelos em Branco (Templates)',
+        categoria: 'Institucional / Documental',
+        obs: 'Repositório oficial autenticado (RF-19)',
+        adminTi:       { upload: false, view: true,  edit: false, download: true },
+        coordTecnica:  { upload: true,  view: true,  edit: true,  download: true },
+        coordAdmin:    { upload: true,  view: true,  edit: true,  download: true },
+        psicologo:     { upload: false, view: true,  edit: false, download: true }
+      },
+      {
+        docId: 'logsTecnicos',
+        nome: 'Logs Técnicos de Sistema',
+        categoria: 'Governança / Infraestrutura',
+        obs: 'Sem dados clínicos sensíveis (RNF-14)',
+        adminTi:       { upload: true,  view: true,  edit: false, download: true },
+        coordTecnica:  { upload: false, view: false, edit: false, download: false },
+        coordAdmin:    { upload: false, view: false, edit: false, download: false },
+        psicologo:     { upload: false, view: false, edit: false, download: false }
+      },
+      {
+        docId: 'logsAuditoria',
+        nome: 'Logs de Auditoria de Acesso e Negócio',
+        categoria: 'Governança / Auditoria',
+        obs: 'Rastreabilidade e integridade (RF-02)',
+        adminTi:       { upload: false, view: true,  edit: false, download: true },
+        coordTecnica:  { upload: false, view: true,  edit: false, download: true },
+        coordAdmin:    { upload: false, view: true,  edit: false, download: false },
+        psicologo:     { upload: false, view: false, edit: false, download: false }
+      }
+    ];
+
+    // DEFINIÇÃO DETALHADA DOS PAPÉIS (O QUE PODE E O QUE NÃO PODE FAZER)
+    const ROLE_DEFINITIONS = [
+      {
+        id: 'adminTi',
+        nome: 'Administrador de TI',
+        icon: 'server',
+        badgeClass: 'bg-purple-50 text-purple-700 border-purple-200',
+        descricao: 'Suporte técnico, governança de infraestrutura e gestão da aplicação.',
+        podeFazer: [
+          'Gerenciar credenciais de acesso (suspender ou disparar links de reset);',
+          'Configurar variáveis de ambiente e chaves institucionais de API;',
+          'Auditar logs de erros técnicos do servidor e de infraestrutura;',
+          'Operar sob MFA obrigatório e aprovação em dupla (four-eyes principle) para concessão de privilégios.'
+        ],
+        naoPodeFazer: [
+          'Acesso clínico e documental estritamente proibido na aplicação: Não visualiza a fila de espera, não acessa pastas de pacientes;',
+          'Não pode ler ou baixar nenhum PDF clínico (retorno compulsório HTTP 403 Forbidden);',
+          'Nota: o RBAC atua na camada da aplicação; a segregação de infraestrutura é assegurada pelo RNF-13.'
+        ]
+      },
+      {
+        id: 'coordTecnica',
+        nome: 'Coordenação Técnica',
+        icon: 'stethoscope',
+        badgeClass: 'bg-blue-50 text-blue-700 border-blue-200',
+        descricao: 'Supervisão clínica do acolhimento e dos ciclos de psicoterapia breve.',
+        podeFazer: [
+          'Acesso integral às pastas institucionais de prontuários, Fichas do Paciente e histórico de evolução clínica;',
+          'Triagem clínica da fila com filtros de prioridade e modalidade;',
+          'Gestão de vínculos (match) e remanejamento;',
+          'Concessão exclusiva de exceções clínicas (override) e extensão de ciclo além das 12 sessões;',
+          'Concessão de alta terapêutica, interrupção e arquivamento.'
+        ],
+        naoPodeFazer: [
+          'Não realiza atendimento clínico individual, não possui carteira de pacientes próprios (conforme RN-12);',
+          'Não acessa painéis de infraestrutura de TI (variáveis de ambiente do servidor e chaves de API).'
+        ]
+      },
+      {
+        id: 'coordAdmin',
+        nome: 'Coordenação Administrativa',
+        icon: 'briefcase',
+        badgeClass: 'bg-amber-50 text-amber-800 border-amber-200',
+        descricao: 'Gestão de voluntários, fluxos operacionais e coordenação geral do acolhimento.',
+        podeFazer: [
+          'Processamento de onboarding de voluntários (conferência documental de CRP e Termo de Adesão);',
+          'Visualização operacional da fila de espera;',
+          'Acompanhamento de métricas operacionais agregadas;',
+          'Recebimento de alertas de estagnação e pendências de fluxo;',
+          'Visão consolidada dos três grupos de voluntários.'
+        ],
+        naoPodeFazer: [
+          'Sigilo ético estritamente proibido: Não lê o conteúdo textual das evoluções clínicas, não visualiza anamneses e não realiza download de prontuários (HTTP 403 Forbidden);',
+          'Não possui permissão de override ou extensão de ciclos clínicos (exclusivos da Coordenação Técnica).'
+        ]
+      },
+      {
+        id: 'psicologo',
+        nome: 'Psicólogo Voluntário',
+        icon: 'heart-handshake',
+        badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        descricao: 'Atendimento clínico na ponta do serviço de psicoterapia breve.',
+        podeFazer: [
+          'Visualização isolada e restrita exclusivamente aos seus pacientes atribuídos;',
+          'Leitura da Ficha do Paciente de seus assistidos;',
+          'Registro de presenças/faltas e preenchimento da Evolução do Paciente sessão a sessão;',
+          'Retificação de registros clínicos (até 60 dias, preservando histórico e versão original);',
+          'Parametrização de horário semanal e modalidade;',
+          'Solicitação fundamentada de extensão do ciclo de 12 sessões.'
+        ],
+        naoPodeFazer: [
+          'Não visualiza pacientes ou prontuários de outros voluntários;',
+          'Não acessa a fila geral da ONG;',
+          'Não pode saltar sessões (trava sequencial ativa);',
+          'Não visualiza métricas globais da entidade.'
+        ]
+      }
+    ];
+
     const state = {
       currentTab: 'painel',
       failedLoginAttempts: 0,
@@ -2295,6 +2635,9 @@
       agendaViewMode: 'psicologos',
       agendaLayout: 'calendario', // 'calendario' | 'lista'
       agendaWeekOffset: 0,
+      agendaFilter: 'todos',
+      agendaSearch: '',
+      agendaOutlookSelectedDay: 'todos',
       queueFilter: 'todas',
       queueSort: { field: 'prioridade', direction: 'desc' },
       queuePage: 1,
@@ -2314,12 +2657,15 @@
       perfisPage: 1,
       perfisPageSize: 10,
       activeStaffDetailId: null,
+      accessSubtab: 'contas',
       accessSearch: '',
       accessFilter: 'todos',
       accessSort: { field: 'displayName', direction: 'asc' },
       accessPage: 1,
       accessPageSize: 10,
       activeAccessDetailId: null,
+      rbacProfileFilter: 'todos',
+      rbacMatrix: JSON.parse(JSON.stringify(RBAC_DEFAULT_MATRIX)),
       docFilter: 'Todos',
       nextProntCounter: 26,
       tempNewPatientSlots: [],
@@ -2330,6 +2676,7 @@
       pendingVolDetailUploadDocId: null,
       activeTriagemQueueId: null,
       initialTriagemNotes: '',
+      initialTriagemPriority: '',
       pendingTriagemUploadDocId: null,
       automationChannels: { email: true, whatsapp: false, driveBackup: true },
 
@@ -3289,6 +3636,16 @@
       renderPerfisTable();
     }
 
+    function resetAgendaFilters() {
+      const input = document.getElementById('agendaSearchInput');
+      if (input) input.value = '';
+      state.agendaFilter = 'todos';
+      state.agendaOutlookSelectedDay = 'todos';
+      const sel = document.getElementById('agendaFilterSelect');
+      if (sel) sel.value = 'todos';
+      renderAgendaGrid();
+    }
+
     function resetDocFilters() {
       const input = document.getElementById('docSearchInput');
       if (input) input.value = '';
@@ -3338,7 +3695,12 @@
       const viewWeekInfo = getTodayInfo(state.agendaWeekOffset);
       document.getElementById('dynamicTodayBannerText').textContent = todayInfo.bannerStr;
       document.getElementById('dynamicTodaySessionsTitle').textContent = `Sessões de Hoje (${todayInfo.activeGridDay}, ${todayInfo.dateStr})`;
-      document.getElementById('dynamicWeekRangeLabel').textContent = viewWeekInfo.weekRangeStr;
+      const weekLabelEl = document.getElementById('dynamicWeekRangeLabel');
+      if (weekLabelEl) weekLabelEl.textContent = viewWeekInfo.monthYearTitle;
+      const weekBadgeEl = document.getElementById('dynamicWeekBadge');
+      if (weekBadgeEl) {
+        weekBadgeEl.textContent = state.agendaWeekOffset === 0 ? 'Semana Atual' : (state.agendaWeekOffset > 0 ? `+${state.agendaWeekOffset} sem. (Sem. ${viewWeekInfo.weekNum})` : `${state.agendaWeekOffset} sem. (Sem. ${viewWeekInfo.weekNum})`);
+      }
 
       updateDynamicAgendaFilters();
       updateGlobalCounters();
@@ -3348,6 +3710,7 @@
       renderVolunteersTable();
       renderPerfisTable();
       renderAccessAccountsSection();
+      renderRbacMatrixSection();
       renderAgendaGrid();
       renderDocumentsGrid();
       renderAutomationLogs();
@@ -3357,11 +3720,25 @@
     }
 
     function updateDynamicAgendaFilters() {
-      const psychSel = document.getElementById('agendaPsychFilter');
-      if (psychSel) {
-        const cur = psychSel.value || 'todos';
-        psychSel.innerHTML = [`<option value="todos">Todos os Psicólogos (${state.volunteers.length})</option>`, ...state.volunteers.map(v => `<option value="${v.nome}">Psic. ${v.nome}</option>`)].join('');
-        psychSel.value = (state.volunteers.some(v => v.nome === cur) || cur === 'todos') ? cur : 'todos';
+      const filterSel = document.getElementById('agendaFilterSelect');
+      if (filterSel) {
+        const cur = state.agendaFilter || 'todos';
+        const psychOptions = state.volunteers.map(v => `<option value="psicologo:${escapeHtml(v.nome)}">Psic.: ${escapeHtml(v.nome)}</option>`).join('');
+        filterSel.innerHTML = `
+          <option value="todos">Todos os Atendimentos</option>
+          <optgroup label="Filtrar por Status">
+            <option value="status:Agendada">Status: Agendada</option>
+            <option value="status:Realizada">Status: Realizada</option>
+            <option value="status:Falta Justificada">Status: F. Justificada</option>
+            <option value="status:Falta Injustificada">Status: F. Injustificada</option>
+          </optgroup>
+          <optgroup label="Filtrar por Psicólogo">
+            ${psychOptions}
+          </optgroup>
+        `;
+        const hasOpt = Array.from(filterSel.options).some(o => o.value === cur);
+        state.agendaFilter = hasOpt ? cur : 'todos';
+        filterSel.value = state.agendaFilter;
       }
       const patPsychSel = document.getElementById('patientPsychFilterSelect');
       if (patPsychSel) {
@@ -3370,12 +3747,6 @@
         const validPsych = curPatPsych === 'todos' || state.volunteers.some(v => v.nome === curPatPsych) || state.patients.some(p => p.psicologo === curPatPsych);
         state.patientPsychFilter = validPsych ? curPatPsych : 'todos';
         patPsychSel.value = state.patientPsychFilter;
-      }
-      const patSel = document.getElementById('agendaPatientFilter');
-      if (patSel) {
-        const curP = patSel.value || 'todos';
-        patSel.innerHTML = [`<option value="todos">Todos os Pacientes (${state.waitingQueue.length})</option>`, ...state.waitingQueue.map(q => `<option value="${q.id}">${q.nome}</option>`)].join('');
-        patSel.value = (state.waitingQueue.some(q => q.id === curP) || curP === 'todos') ? curP : 'todos';
       }
     }
 
@@ -3630,19 +4001,21 @@
 
     function ensureQueueDocuments(item) {
       if (!item) return [];
-      const tcleStatus = item.tcleAssinado ? 'Assinado' : 'Pendente';
+      const tcleStatus = item.documentosAprovados ? 'Aprovado' : (item.tcleAssinado ? 'Assinado' : 'Pendente');
       const tcleFile = item.tcleAssinado ? `Termo_Responsabilidade_${item.prontuario}.pdf` : '';
       if (!Array.isArray(item.documentos)) {
         item.documentos = [
           { id: 'termo_responsabilidade', nome: 'Termo de Responsabilidade', status: tcleStatus, arquivo: tcleFile },
-          { id: 'ficha_completa', nome: 'Ficha Completa de Inscrição', status: 'Anexado', arquivo: `Ficha_Completa_${item.prontuario}.pdf` },
-          { id: 'doc_identidade', nome: 'Documento de Identificação (RG / CPF)', status: item.tcleAssinado ? 'Anexado' : 'Pendente', arquivo: item.tcleAssinado ? `Documento_ID_${item.prontuario}.pdf` : '' },
-          { id: 'comprovante_origem', nome: (item.origem && item.origem.toLowerCase().includes('cras')) ? 'Guia de Encaminhamento CRAS' : 'Comprovante de Residência', status: 'Anexado', arquivo: `Comprovante_${item.prontuario}.pdf` }
+          { id: 'ficha_completa', nome: 'Ficha Completa de Inscrição', status: item.documentosAprovados ? 'Aprovado' : 'Anexado', arquivo: `Ficha_Completa_${item.prontuario}.pdf` },
+          { id: 'doc_identidade', nome: 'Documento de Identificação (RG / CPF)', status: item.documentosAprovados ? 'Aprovado' : (item.tcleAssinado ? 'Anexado' : 'Pendente'), arquivo: item.tcleAssinado ? `Documento_ID_${item.prontuario}.pdf` : '' },
+          { id: 'comprovante_origem', nome: (item.origem && item.origem.toLowerCase().includes('cras')) ? 'Guia de Encaminhamento CRAS' : 'Comprovante de Residência', status: item.documentosAprovados ? 'Aprovado' : 'Anexado', arquivo: `Comprovante_${item.prontuario}.pdf` }
         ];
       } else {
         const termo = item.documentos.find(d => d.id === 'termo_responsabilidade');
         if (termo) {
-          termo.status = tcleStatus;
+          if (termo.status !== 'Aprovado') {
+            termo.status = tcleStatus;
+          }
           if (item.tcleAssinado && !termo.arquivo) termo.arquivo = tcleFile;
         }
       }
@@ -3768,6 +4141,7 @@
           || (state.queueFilter === 'CRAS' && origemLower.includes('cras'))
           || (state.queueFilter === 'Assistente_Social' && origemLower.includes('assistente social'))
           || (state.queueFilter === 'Espontanea' && (origemLower.includes('espontânea') || origemLower.includes('espontanea') || origemLower.includes('portal')))
+          || (state.queueFilter === 'Docs_Aprovados' && (item.documentosAprovados || (Array.isArray(item.documentos) && item.documentos.length > 0 && item.documentos.every(d => d.status === 'Aprovado'))))
           || (state.queueFilter === 'TCLE_Pendente' && !item.tcleAssinado)
           || (state.queueFilter === 'TCLE_Assinado' && !!item.tcleAssinado)
           || item.prioridade === state.queueFilter;
@@ -3866,17 +4240,28 @@
         const daysWaiting = getDaysWaiting(item.dataInscricao);
         const waitText = daysWaiting === 0 ? 'Inscrito hoje' : (daysWaiting === 1 ? 'Há 1 dia' : `Há ${daysWaiting} dias`);
 
-        const prioText = item.prioridade === 'Muito Alta' ? '<span class="font-bold text-red-700 whitespace-nowrap">Muito Alto</span>'
-          : item.prioridade === 'Alta' ? '<span class="font-bold text-orange-700 whitespace-nowrap">Alto</span>'
-          : item.prioridade === 'Média' ? '<span class="font-bold text-amber-700 whitespace-nowrap">Médio</span>'
-          : '<span class="font-bold text-emerald-700 whitespace-nowrap">Baixo</span>';
+        const prioInfo = getPriorityBadgeInfo(item.prioridade);
+        const prioActor = item.prioridadeDefinidaPor || item.triagemRegistradaPor || item.triador || '';
+        const prioSubText = prioActor
+          ? `<div class="text-[10px] text-slate-500 font-medium truncate max-w-[130px]" title="Definida por ${escapeHtml(prioActor)}">Por: ${escapeHtml(prioActor)}</div>`
+          : '';
+        const prioText = `<div>
+          <span class="font-bold whitespace-nowrap ${prioInfo.textClass}">${prioInfo.label}</span>
+          ${prioSubText}
+        </div>`;
+
+        const qDocs = ensureQueueDocuments(item);
+        const allApproved = qDocs.length > 0 && qDocs.every(d => d.status === 'Aprovado');
+        const approvedCount = qDocs.filter(d => d.status === 'Aprovado').length;
 
         const origemText = `<span class="font-medium text-slate-700 leading-snug">${item.origem || 'Não informada'}</span>`;
 
         if (isDismissedView) {
-          const docStatusPlain = item.tcleAssinado
-            ? '<div class="font-semibold text-emerald-700 whitespace-nowrap">Assinado</div>'
-            : '<div class="font-semibold text-amber-700 whitespace-nowrap">Pendente</div>';
+          const docStatusPlain = allApproved
+            ? '<div class="font-bold text-emerald-700 whitespace-nowrap flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i> Aprovada</div>'
+            : (item.tcleAssinado
+              ? '<div class="font-semibold text-emerald-700 whitespace-nowrap">Assinado</div>'
+              : '<div class="font-semibold text-amber-700 whitespace-nowrap">Pendente</div>');
           const outcomeLine = `<div class="text-[11px] text-rose-700 font-medium mt-0.5 leading-snug">${item.desfechoMotivo || 'Saída registrada'}</div>`;
           const outcomeActorLine = `<div class="text-[11px] text-slate-500 font-medium mt-0.5">Por: ${item.desfechoRegistradoPor || 'Equipe'}</div>`;
           const dateSub = `<div class="text-[11px] mt-0.5 text-slate-500 font-medium">Encerrado: ${item.desfechoData || 'Registrado'}</div>`;
@@ -3908,9 +4293,17 @@
           </tr>`;
         }
 
-        const docText = item.tcleAssinado
-          ? '<span class="font-semibold text-emerald-700 whitespace-nowrap">Assinado</span>'
-          : `<button onclick="toggleQueueTcle('${item.id}')" title="Clique para homologar" class="tcle-btn font-semibold text-amber-700 hover:text-blue-700 hover:underline whitespace-nowrap transition cursor-pointer"><span class="tcle-default-label">Pendente</span><span class="tcle-hover-label">Homologar</span></button>`;
+        let docText = '';
+        if (allApproved) {
+          docText = `<span class="font-bold text-emerald-700 whitespace-nowrap flex items-center gap-1" title="Todos os documentos foram conferidos e aprovados pela coordenação"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i> Aprovada</span>`;
+        } else if (item.tcleAssinado) {
+          docText = `<div class="flex items-center gap-1.5 flex-wrap">
+            <span class="font-semibold text-blue-700 whitespace-nowrap flex items-center gap-1" title="${approvedCount} de ${qDocs.length} documentos aprovados"><i data-lucide="file-check" class="w-3.5 h-3.5 text-blue-600"></i> ${approvedCount > 0 ? `${approvedCount}/${qDocs.length} Aprovados` : 'Assinado'}</span>
+            <button onclick="openQueueTriagemPreview('${item.id}')" title="Conferir e aprovar documentos na triagem" class="text-[10px] text-emerald-700 hover:text-emerald-900 font-bold underline cursor-pointer">Aprovar</button>
+          </div>`;
+        } else {
+          docText = `<button onclick="toggleQueueTcle('${item.id}')" title="Clique para homologar" class="tcle-btn font-semibold text-amber-700 hover:text-blue-700 hover:underline whitespace-nowrap transition cursor-pointer"><span class="tcle-default-label">Pendente</span><span class="tcle-hover-label">Homologar</span></button>`;
+        }
 
         return `<tr class="hover:bg-slate-50/80 transition">
           <td class="py-2.5 px-3">
@@ -4057,28 +4450,204 @@
       triggerSimulatedDownload(`Documentos_Triagem_${item.prontuario}.zip`, `Pacote completo com ${available.length} documento(s) de ${item.nome}`, true);
     }
 
+    function getPriorityBadgeInfo(prio) {
+      if (prio === 'Muito Alta') {
+        return {
+          label: 'Muito Alto',
+          bgClass: 'bg-red-50',
+          textClass: 'text-red-800',
+          borderClass: 'border-red-300',
+          dotClass: 'bg-red-600',
+          description: 'Urgência / Risco Iminente / Vulnerabilidade Extrema'
+        };
+      }
+      if (prio === 'Alta') {
+        return {
+          label: 'Alto',
+          bgClass: 'bg-orange-50',
+          textClass: 'text-orange-800',
+          borderClass: 'border-orange-300',
+          dotClass: 'bg-orange-500',
+          description: 'Sofrimento Severo / Demanda Prioritária'
+        };
+      }
+      if (prio === 'Média') {
+        return {
+          label: 'Médio',
+          bgClass: 'bg-amber-50',
+          textClass: 'text-amber-800',
+          borderClass: 'border-amber-300',
+          dotClass: 'bg-amber-500',
+          description: 'Sofrimento Moderado / Padrão de Fila'
+        };
+      }
+      return {
+        label: 'Baixo',
+        bgClass: 'bg-emerald-50',
+        textClass: 'text-emerald-800',
+        borderClass: 'border-emerald-300',
+        dotClass: 'bg-emerald-600',
+        description: 'Acolhimento Preventivo / Baixa Vulnerabilidade'
+      };
+    }
+
+    function onTriagemPriorityChange(val) {
+      const info = getPriorityBadgeInfo(val);
+      const badgeEl = document.getElementById('triagemPriorityLiveBadge');
+      if (badgeEl) {
+        badgeEl.className = `px-2.5 py-1 rounded-lg border text-xs font-bold inline-flex items-center gap-1.5 ${info.bgClass} ${info.borderClass} ${info.textClass}`;
+        badgeEl.innerHTML = `<span class="w-2 h-2 rounded-full ${info.dotClass}"></span><span>${info.label}</span>`;
+      }
+      const descEl = document.getElementById('triagemPriorityDesc');
+      if (descEl) descEl.textContent = info.description;
+
+      const headerStatusEl = document.getElementById('docPreviewStatus');
+      if (headerStatusEl) {
+        headerStatusEl.textContent = val;
+      }
+    }
+
     function refreshTriagemDocsSummaryMeta(item) {
       const metaEl = document.getElementById('triagemDocsSummaryMeta');
       if (!metaEl || !item) return;
       const docs = ensureQueueDocuments(item);
+      const approvedCount = docs.filter(d => d.status === 'Aprovado').length;
       const availableCount = docs.filter(d => Boolean(d.arquivo)).length;
-      metaEl.textContent = `${availableCount} de ${docs.length} disponível(is) • Expandir / Recolher`;
+      metaEl.textContent = `${approvedCount}/${docs.length} aprovado(s) • ${availableCount} anexado(s) • Expandir / Recolher`;
+    }
+
+    function approveTriagemDoc(queueId, docId) {
+      const item = findQueueItemById(queueId);
+      if (!item) return;
+      const docs = ensureQueueDocuments(item);
+      const doc = docs.find(d => d.id === docId);
+      if (!doc) return;
+
+      const actor = getCurrentActorName();
+      const timestamp = getCurrentDateTimeStr();
+
+      doc.status = 'Aprovado';
+      doc.aprovadoPor = actor;
+      doc.aprovadoEm = timestamp;
+      if (!doc.arquivo) {
+        doc.arquivo = `${doc.nome.replace(/\s+/g, '_')}_${item.prontuario}.pdf`;
+      }
+      if (doc.id === 'termo_responsabilidade') {
+        item.tcleAssinado = true;
+      }
+
+      const allApproved = docs.length > 0 && docs.every(d => d.status === 'Aprovado');
+      item.documentosAprovados = allApproved;
+      if (allApproved) {
+        item.documentosAprovadosPor = actor;
+        item.documentosAprovadosEm = timestamp;
+      }
+
+      state.automationLogs.unshift({
+        horario: timestamp,
+        tipo: 'Validação Documental',
+        mensagem: `Documento "${doc.nome}" de ${item.nome} (${item.prontuario}) conferido e aprovado por ${actor}.`
+      });
+      renderAutomationLogs();
+
+      showToast('Documento Aprovado', `"${doc.nome}" foi aprovado com sucesso por ${actor}.`, 'success');
+      renderAll();
+
+      const docSec = document.getElementById('triagemDocSection');
+      if (docSec) docSec.innerHTML = renderTriagemDocSectionHtml(item);
+      refreshTriagemDocsSummaryMeta(item);
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function approveAllTriagemDocs(queueId) {
+      const item = findQueueItemById(queueId);
+      if (!item) return;
+      const docs = ensureQueueDocuments(item);
+      const actor = getCurrentActorName();
+      const timestamp = getCurrentDateTimeStr();
+
+      docs.forEach(doc => {
+        doc.status = 'Aprovado';
+        doc.aprovadoPor = actor;
+        doc.aprovadoEm = timestamp;
+        if (!doc.arquivo) {
+          doc.arquivo = `${doc.nome.replace(/\s+/g, '_')}_${item.prontuario}.pdf`;
+        }
+      });
+
+      item.tcleAssinado = true;
+      item.documentosAprovados = true;
+      item.documentosAprovadosPor = actor;
+      item.documentosAprovadosEm = timestamp;
+
+      state.automationLogs.unshift({
+        horario: timestamp,
+        tipo: 'Validação Documental',
+        mensagem: `Todos os documentos de ${item.nome} (${item.prontuario}) foram aprovados e homologados por ${actor}.`
+      });
+      renderAutomationLogs();
+
+      showToast('Documentação Aprovada', `Todos os documentos de ${item.nome} foram conferidos e aprovados por ${actor}.`, 'success');
+      renderAll();
+
+      const docSec = document.getElementById('triagemDocSection');
+      if (docSec) docSec.innerHTML = renderTriagemDocSectionHtml(item);
+      refreshTriagemDocsSummaryMeta(item);
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function revokeTriagemDocApproval(queueId, docId) {
+      const item = findQueueItemById(queueId);
+      if (!item) return;
+      const docs = ensureQueueDocuments(item);
+      const doc = docs.find(d => d.id === docId);
+      if (!doc) return;
+
+      doc.status = (doc.id === 'termo_responsabilidade' && item.tcleAssinado) ? 'Assinado' : (doc.arquivo ? 'Anexado' : 'Pendente');
+      doc.aprovadoPor = null;
+      doc.aprovadoEm = null;
+
+      item.documentosAprovados = false;
+      renderAll();
+
+      const docSec = document.getElementById('triagemDocSection');
+      if (docSec) docSec.innerHTML = renderTriagemDocSectionHtml(item);
+      refreshTriagemDocsSummaryMeta(item);
+      if (window.lucide) lucide.createIcons();
+      showToast('Aprovação Revogada', `Aprovação de "${doc.nome}" revogada para reanálise.`, 'info');
     }
 
     function renderTriagemDocSectionHtml(item) {
       const docs = ensureQueueDocuments(item);
       const availableCount = docs.filter(d => Boolean(d.arquivo)).length;
+      const approvedCount = docs.filter(d => d.status === 'Aprovado').length;
+      const allApproved = docs.length > 0 && docs.every(d => d.status === 'Aprovado');
+
       const rowsHtml = docs.map(doc => {
-        const statusCls = doc.status === 'Pendente' ? 'text-amber-700' : 'text-emerald-700';
+        let statusBadge = '';
+        if (doc.status === 'Aprovado') {
+          statusBadge = `<span class="px-2 py-0.5 rounded-full border border-emerald-300 bg-emerald-50 text-emerald-800 font-bold text-[11px] flex items-center gap-1 whitespace-nowrap"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i> Aprovado</span>`;
+        } else if (doc.status === 'Anexado' || doc.status === 'Assinado') {
+          statusBadge = `<span class="px-2 py-0.5 rounded-full border border-blue-300 bg-blue-50 text-blue-800 font-semibold text-[11px] flex items-center gap-1 whitespace-nowrap"><i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-600"></i> Anexado</span>`;
+        } else {
+          statusBadge = `<span class="px-2 py-0.5 rounded-full border border-amber-300 bg-amber-50 text-amber-800 font-semibold text-[11px] flex items-center gap-1 whitespace-nowrap"><i data-lucide="clock" class="w-3.5 h-3.5 text-amber-600"></i> Pendente</span>`;
+        }
+
         const subMeta = [];
         if (doc.arquivo) subMeta.push(escapeHtml(doc.arquivo));
         else subMeta.push('Pendente de envio');
-        if (doc.enviadoPor) subMeta.push(`Enviado por ${escapeHtml(doc.enviadoPor)}${doc.enviadoEm ? ' em ' + escapeHtml(doc.enviadoEm) : ''}`);
+        if (doc.aprovadoPor) {
+          subMeta.push(`<span class="text-emerald-700 font-semibold">Aprovado por ${escapeHtml(doc.aprovadoPor)}${doc.aprovadoEm ? ' em ' + escapeHtml(doc.aprovadoEm) : ''}</span>`);
+        } else if (doc.enviadoPor) {
+          subMeta.push(`Enviado por ${escapeHtml(doc.enviadoPor)}${doc.enviadoEm ? ' em ' + escapeHtml(doc.enviadoEm) : ''}`);
+        }
         const subLine = `<div class="text-[11px] text-slate-500 mt-0.5">${subMeta.join(' • ')}</div>`;
 
         const actionBtns = [];
-        if (doc.id === 'termo_responsabilidade' && doc.status === 'Pendente') {
-          actionBtns.push(`<button type="button" onclick="homologateTcleFromTriagemModal('${escapeHtml(item.id)}')" class="px-2.5 py-1 rounded-lg border border-amber-400 bg-white hover:bg-amber-50 text-amber-800 font-semibold text-[11px] transition">Homologar</button>`);
+        if (doc.status === 'Aprovado') {
+          actionBtns.push(`<button type="button" onclick="revokeTriagemDocApproval('${escapeHtml(item.id)}', '${escapeHtml(doc.id)}')" title="Revogar aprovação para reavaliação" class="px-2 py-1 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-800 font-semibold text-[10px] transition">Reavaliar</button>`);
+        } else {
+          actionBtns.push(`<button type="button" onclick="approveTriagemDoc('${escapeHtml(item.id)}', '${escapeHtml(doc.id)}')" title="Aprovar e validar documento" class="px-2.5 py-1 rounded-lg border border-emerald-600 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[11px] flex items-center gap-1 transition shadow-2xs"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i><span>Aprovar</span></button>`);
         }
         if (doc.status === 'Pendente') {
           actionBtns.push(`<button type="button" onclick="triggerTriagemDocUpload('${escapeHtml(doc.id)}')" class="px-2.5 py-1 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-[11px] flex items-center gap-1 transition"><i data-lucide="upload" class="w-3 h-3 text-blue-600"></i><span>Upload</span></button>`);
@@ -4095,7 +4664,7 @@
             ${subLine}
           </div>
           <div class="flex items-center gap-2.5 shrink-0">
-            <span class="font-semibold text-[11px] whitespace-nowrap ${statusCls}">${escapeHtml(doc.status)}</span>
+            ${statusBadge}
             ${actionBtns.join('')}
           </div>
         </div>`;
@@ -4105,14 +4674,44 @@
         ? `<button type="button" id="triagemDownloadAllDocsBtn" onclick="downloadAllQueueDocuments('${escapeHtml(item.id)}')" class="px-2.5 py-1 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-[11px] flex items-center gap-1 transition"><i data-lucide="download" class="w-3 h-3 text-blue-600"></i><span>Baixar Todos</span></button>`
         : '';
 
-      return `<div class="space-y-2">
-        <div class="flex flex-wrap items-center justify-between gap-2 pb-1">
-          <span class="text-[11px] text-slate-500">Documentos listados na inscrição e na fila de triagem</span>
+      const validationBannerHtml = allApproved
+        ? `<div class="p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                <i data-lucide="check-check" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-emerald-900">Documentação Validada e Aprovada</div>
+                <div class="text-[11px] text-emerald-700">Todos os ${docs.length} documentos da inscrição foram conferidos e aprovados pela coordenação.</div>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-[11px] whitespace-nowrap self-start sm:self-center">Pronto para Vinculação</span>
+          </div>`
+        : `<div class="p-3 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-amber-900">Validação Documental em Andamento</div>
+                <div class="text-[11px] text-amber-700">${approvedCount} de ${docs.length} documento(s) aprovados pela coordenação administrativa/técnica.</div>
+              </div>
+            </div>
+            <button type="button" onclick="approveAllTriagemDocs('${escapeHtml(item.id)}')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 transition shadow-2xs self-start sm:self-center shrink-0">
+              <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
+              <span>Aprovar Todos os Documentos</span>
+            </button>
+          </div>`;
+
+      return `<div class="space-y-3">
+        ${validationBannerHtml}
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-1 border-b border-slate-200">
+          <span class="text-[11px] font-semibold text-slate-500">Documentos da inscrição submetidos para conferência</span>
           <div class="flex items-center gap-2">
             ${downloadAllBtnHtml}
             <button type="button" onclick="triggerTriagemDocUpload()" class="px-3 py-1 rounded-lg border border-slate-400 bg-white hover:bg-slate-100 text-slate-800 font-semibold text-[11px] flex items-center gap-1.5 transition">
               <i data-lucide="upload" class="w-3.5 h-3.5 text-blue-600"></i>
-              <span>Enviar Documento</span>
+              <span>Anexar Novo Arquivo</span>
             </button>
           </div>
           <input type="file" id="triagemDocUploadInput" class="hidden" onchange="handleTriagemDocUpload(this)" />
@@ -4196,13 +4795,23 @@
     }
 
     function renderTriagemAuthorMetaHtml(item) {
+      const currentActor = getCurrentActorName();
+      const prioAuthor = item.prioridadeDefinidaPor || item.triagemRegistradaPor || item.triador;
+      const prioDate = item.prioridadeDefinidaEm || item.triagemAtualizadaEm;
+
+      const prioLine = prioAuthor
+        ? `<div class="text-[11px] text-slate-700">Prioridade <strong>"${item.prioridade || 'Média'}"</strong> atribuída por: <strong class="text-slate-900">${escapeHtml(prioAuthor)}</strong>${prioDate ? ' em ' + escapeHtml(prioDate) : ''}.</div>`
+        : `<div class="text-[11px] text-slate-500">Prioridade inicial aguardando confirmação técnica. Ao salvar, <strong>${escapeHtml(currentActor)}</strong> será registrado como validador.</div>`;
+
       const lastLine = item.triagemRegistradaPor
-        ? `<div class="text-[11px] text-slate-600">Último registro salvo por: <strong class="text-slate-900">${item.triagemRegistradaPor}</strong>${item.triagemAtualizadaEm ? ' em ' + item.triagemAtualizadaEm : ''}</div>`
-        : `<div class="text-[11px] text-slate-500">Nenhum registro salvo ainda. Ao salvar, o usuário logado será registrado.</div>`;
+        ? `<div class="text-[11px] text-slate-600 mt-1">Última atualização da triagem por: <strong class="text-slate-900">${escapeHtml(item.triagemRegistradaPor)}</strong>${item.triagemAtualizadaEm ? ' em ' + escapeHtml(item.triagemAtualizadaEm) : ''}.</div>`
+        : `<div class="text-[11px] text-slate-500 mt-1">Nenhum parecer anterior salvo. Ao salvar, o usuário logado será vinculado à justificativa.</div>`;
+
       const histItems = (Array.isArray(item.triagemHistorico) && item.triagemHistorico.length > 0)
-        ? `<div class="mt-1.5 text-[11px] text-slate-500 space-y-0.5"><div class="font-semibold text-slate-600">Histórico de registros:</div>${item.triagemHistorico.map(h => `<div>• ${h.usuario} — ${h.dataHora}</div>`).join('')}</div>`
+        ? `<div class="mt-2 text-[11px] text-slate-500 space-y-1 border-t border-slate-200 pt-2"><div class="font-semibold text-slate-700">Histórico de revisões e pareceres:</div>${item.triagemHistorico.map(h => `<div>• <strong>${escapeHtml(h.usuario)}</strong> — ${escapeHtml(h.dataHora)}${h.prioridade ? ' — Prioridade: <span class="font-bold text-slate-800">' + escapeHtml(h.prioridade) + '</span>' : ''}${h.justificativa ? '<div class="pl-3 text-slate-600 italic">"' + escapeHtml(h.justificativa.slice(0, 120)) + (h.justificativa.length > 120 ? '...' : '') + '"</div>' : ''}</div>`).join('')}</div>`
         : '';
-      return `${lastLine}${histItems}`;
+
+      return `<div class="space-y-1">${prioLine}${lastLine}${histItems}</div>`;
     }
 
     function saveTriagemInitialNotes() {
@@ -4210,42 +4819,68 @@
       if (!item) return;
       const notesEl = document.getElementById('triagemInitialNotesInput');
       const text = notesEl ? notesEl.value.trim() : '';
+      const prioSel = document.getElementById('triagemPrioritySelect');
+      const newPriority = prioSel ? prioSel.value : (item.prioridade || 'Média');
       const actor = getCurrentActorName();
       const timestamp = getCurrentDateTimeStr();
+
+      if (!text) {
+        showToast('Justificativa Obrigatória', 'Por favor, preencha o campo Triagem Inicial informando a justificativa da prioridade.', 'warning');
+        if (notesEl) notesEl.focus();
+        return;
+      }
+
+      const priorityChanged = newPriority !== item.prioridade;
+      item.prioridade = newPriority;
+      item.prioridadeDefinidaPor = actor;
+      item.prioridadeDefinidaEm = timestamp;
 
       item.anamnese = text;
       item.triagemRegistradaPor = actor;
       item.triagemAtualizadaEm = timestamp;
+
       if (!Array.isArray(item.triagemHistorico)) item.triagemHistorico = [];
-      item.triagemHistorico.unshift({ usuario: actor, dataHora: timestamp });
+      item.triagemHistorico.unshift({
+        usuario: actor,
+        dataHora: timestamp,
+        prioridade: newPriority,
+        justificativa: text
+      });
+
+      const logMsg = priorityChanged
+        ? `Triagem inicial de ${item.nome} (${item.prontuario}) salva por ${actor}. Prioridade alterada para "${newPriority}".`
+        : `Triagem inicial de ${item.nome} (${item.prontuario}) salva por ${actor}. Prioridade confirmada como "${newPriority}".`;
 
       state.automationLogs.unshift({
         horario: timestamp,
         tipo: 'Triagem Inicial',
-        mensagem: `Triagem inicial de ${item.nome} (${item.prontuario}) salva por ${actor}.`
+        mensagem: logMsg
       });
       renderAutomationLogs();
 
-      const authorEl = document.getElementById('triagemAuthorMeta');
-      if (authorEl) authorEl.innerHTML = renderTriagemAuthorMetaHtml(item);
-
       state.initialTriagemNotes = text;
+      state.initialTriagemPriority = newPriority;
       state.activeTriagemQueueId = null;
       closeModal('docPreviewModal');
-      showToast('Triagem Salva', `Triagem inicial de ${item.nome} salva por ${actor}.`, 'success');
+      renderAll();
+      showToast('Triagem e Prioridade Salvas', `Prioridade definida como "${newPriority}" e justificativa registrada por ${actor}.`, 'success');
     }
 
     function safeCloseTriagemModal() {
       const notesEl = document.getElementById('triagemInitialNotesInput');
+      const prioEl = document.getElementById('triagemPrioritySelect');
       const currentNotes = notesEl ? notesEl.value : '';
+      const currentPrio = prioEl ? prioEl.value : '';
       const initialNotes = state.initialTriagemNotes || '';
-      if (notesEl && currentNotes !== initialNotes) {
-        if (!confirm('Você possui alterações não salvas na triagem inicial. Deseja fechar sem salvar?')) {
+      const initialPrio = state.initialTriagemPriority || '';
+      if ((notesEl && currentNotes !== initialNotes) || (prioEl && currentPrio !== initialPrio)) {
+        if (!confirm('Você possui alterações não salvas na prioridade ou justificativa da triagem. Deseja fechar sem salvar?')) {
           return;
         }
       }
       state.activeTriagemQueueId = null;
       state.initialTriagemNotes = '';
+      state.initialTriagemPriority = '';
       state.pendingTriagemUploadDocId = null;
       closeModal('docPreviewModal');
     }
@@ -4255,12 +4890,14 @@
       if (!item) return;
       state.activeTriagemQueueId = item.id;
       state.initialTriagemNotes = item.anamnese || '';
+      state.initialTriagemPriority = item.prioridade || 'Média';
       state.pendingTriagemUploadDocId = null;
       const daysWaiting = getDaysWaiting(item.dataInscricao);
       const waitText = daysWaiting === 0 ? 'Inscrito hoje' : (daysWaiting === 1 ? 'Há 1 dia' : `Há ${daysWaiting} dias`);
       const reg = getNormalizedRegistrationData(item);
       const docs = ensureQueueDocuments(item);
       const availDocs = docs.filter(d => Boolean(d.arquivo)).length;
+      const approvedDocs = docs.filter(d => d.status === 'Aprovado').length;
 
       const codeEl = document.getElementById('docPreviewCode');
       if (codeEl) codeEl.textContent = item.prontuario;
@@ -4287,16 +4924,87 @@
           </div>`
         : '';
 
+      const currentActor = getCurrentActorName();
+      const currentActorRole = (state.loggedInUser && state.loggedInUser.permissions && state.loggedInUser.permissions.includes('coordTecnica'))
+        ? 'Coordenação Técnica'
+        : ((state.loggedInUser && state.loggedInUser.permissions && state.loggedInUser.permissions.includes('coordAdmin'))
+          ? 'Coordenação Administrativa'
+          : 'Coordenação Técnica / Administrativa');
+
+      const prioAuthor = item.prioridadeDefinidaPor || item.triagemRegistradaPor || item.triador;
+      const prioDate = item.prioridadeDefinidaEm || item.triagemAtualizadaEm;
+      const authorDisplayText = prioAuthor
+        ? `Definido por: <strong>${escapeHtml(prioAuthor)}</strong>${prioDate ? ' em ' + escapeHtml(prioDate) : ''}`
+        : `Pendente de validação técnica • Usuário atual: <strong>${escapeHtml(currentActor)}</strong>`;
+
+      const currentPrio = item.prioridade || 'Média';
+      const prioBadgeInfo = getPriorityBadgeInfo(currentPrio);
+
       const saveBtn = document.getElementById('docPreviewSaveBtn');
       const triagemSectionHtml = state.clinicalRestricted
         ? `<div class="p-4 rounded-xl bg-red-50 border border-red-300 text-red-950 space-y-1.5">
             <div class="flex items-center gap-2 text-red-700 font-bold text-xs"><i data-lucide="shield-ban" class="w-4 h-4"></i><span>Acesso Restrito — Triagem Inicial</span></div>
             <p class="text-xs leading-relaxed">O conteúdo clínico da triagem inicial está oculto para o seu perfil atual.</p>
           </div>`
-        : `<div class="p-4 rounded-2xl border-2 border-blue-200 bg-white space-y-3">
-            <label for="triagemInitialNotesInput" class="text-xs font-bold text-blue-900 flex items-center gap-1.5"><i data-lucide="file-edit" class="w-4 h-4 text-blue-600"></i><span>Triagem Inicial</span></label>
-            <textarea id="triagemInitialNotesInput" rows="5" placeholder="Registre as observações, impressões clínicas e encaminhamentos da triagem inicial..." class="w-full p-3 rounded-xl border border-slate-400 bg-white text-slate-800 text-xs leading-relaxed focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 resize-y"></textarea>
-            <div id="triagemAuthorMeta">${renderTriagemAuthorMetaHtml(item)}</div>
+        : `<div class="p-5 rounded-2xl border-2 border-blue-200 bg-white space-y-4 shadow-2xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+              <div>
+                <h4 class="text-xs font-bold text-blue-950 uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="clipboard-check" class="w-4 h-4 text-blue-600"></i>
+                  <span>Triagem Inicial &amp; Atribuição de Prioridade</span>
+                </h4>
+                <p class="text-[11px] text-slate-500 mt-0.5">Validação da inscrição pela coordenação administrativa/técnica, definição do nível de prioridade e parecer para atendimento.</p>
+              </div>
+            </div>
+
+            <!-- Seleção / Edição do Nível de Prioridade -->
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <label for="triagemPrioritySelect" class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <i data-lucide="activity" class="w-3.5 h-3.5 text-blue-600"></i>
+                  <span>Nível de Prioridade da Fila de Espera *:</span>
+                </label>
+                <div id="triagemPriorityLiveBadge" class="px-2.5 py-1 rounded-lg border text-xs font-bold inline-flex items-center gap-1.5 ${prioBadgeInfo.bgClass} ${prioBadgeInfo.borderClass} ${prioBadgeInfo.textClass}">
+                  <span class="w-2 h-2 rounded-full ${prioBadgeInfo.dotClass}"></span>
+                  <span>${prioBadgeInfo.label}</span>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <select id="triagemPrioritySelect" onchange="onTriagemPriorityChange(this.value)" class="sm:col-span-2 w-full p-2.5 rounded-xl border border-slate-400 bg-white text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 cursor-pointer">
+                  <option value="Muito Alta" ${currentPrio === 'Muito Alta' ? 'selected' : ''}>Muito Alto — Urgência / Risco Agudo / Vulnerabilidade Extrema</option>
+                  <option value="Alta" ${currentPrio === 'Alta' ? 'selected' : ''}>Alto — Sofrimento Severo / Demanda Prioritária</option>
+                  <option value="Média" ${currentPrio === 'Média' ? 'selected' : ''}>Médio — Sofrimento Moderado / Padrão de Fila</option>
+                  <option value="Baixa" ${currentPrio === 'Baixa' ? 'selected' : ''}>Baixo — Acolhimento Preventivo / Baixa Vulnerabilidade</option>
+                </select>
+                <div id="triagemPriorityDesc" class="sm:col-span-1 p-2 rounded-xl bg-white border border-slate-200 text-[11px] text-slate-600 flex items-center">
+                  ${prioBadgeInfo.description}
+                </div>
+              </div>
+
+              <!-- Identificação do Usuário que fez a seleção da Prioridade -->
+              <div class="pt-2 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="user-check" class="w-4 h-4 text-blue-600 shrink-0"></i>
+                  <span class="text-slate-600">Usuário da seleção de prioridade: <span id="triagemPriorityAuthorDisplay" class="font-bold text-slate-900">${authorDisplayText}</span></span>
+                </div>
+                <div class="text-[11px] text-slate-500 font-medium">
+                  Atuando como: <strong class="text-blue-700">${escapeHtml(currentActor)} (${escapeHtml(currentActorRole)})</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Justificativa da Prioridade / Triagem Inicial -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between gap-2">
+                <label for="triagemInitialNotesInput" class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <i data-lucide="file-edit" class="w-4 h-4 text-blue-600"></i>
+                  <span>Triagem Inicial (Justificativa da Prioridade e Parecer Clínico) *</span>
+                </label>
+                <span class="text-[11px] text-slate-500 font-medium">Campo obrigatório para justificar a prioridade</span>
+              </div>
+              <textarea id="triagemInitialNotesInput" rows="5" placeholder="Descreva detalhadamente a justificativa para a atribuição da prioridade, histórico que fundamenta a urgência/classificação, queixas clínicas e parecer para a equipe..." class="w-full p-3 rounded-xl border border-slate-400 bg-white text-slate-800 text-xs leading-relaxed focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 resize-y"></textarea>
+              <div id="triagemAuthorMeta" class="pt-1">${renderTriagemAuthorMetaHtml(item)}</div>
+            </div>
           </div>`;
 
       if (saveBtn) saveBtn.classList.toggle('hidden', !!state.clinicalRestricted);
@@ -4311,10 +5019,10 @@
             ${renderPatientRegistrationDetailsHtml(item, { waitText })}
           </div>
         </details>
-        <details id="triagemDocumentsDetails" class="rounded-xl border border-slate-300 bg-slate-50/70 overflow-hidden">
+        <details id="triagemDocumentsDetails" class="rounded-xl border border-slate-300 bg-slate-50/70 overflow-hidden" open>
           <summary class="px-4 py-3 cursor-pointer select-none flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition">
-            <span class="flex items-center gap-2"><i data-lucide="folder-open" class="w-4 h-4 text-blue-600"></i><span>Documentos</span></span>
-            <span id="triagemDocsSummaryMeta" class="text-[11px] font-semibold text-slate-500">${availDocs} de ${docs.length} disponível(is) • Expandir / Recolher</span>
+            <span class="flex items-center gap-2"><i data-lucide="folder-open" class="w-4 h-4 text-blue-600"></i><span>Validação de Documentos da Inscrição</span></span>
+            <span id="triagemDocsSummaryMeta" class="text-[11px] font-semibold text-slate-500">${approvedDocs}/${docs.length} aprovado(s) • ${availDocs} anexado(s) • Expandir / Recolher</span>
           </summary>
           <div id="triagemDocSection" class="px-4 py-3.5 bg-white border-t border-slate-200">${renderTriagemDocSectionHtml(item)}</div>
         </details>
@@ -4329,6 +5037,10 @@
       const triagemEl = document.getElementById('triagemInitialNotesInput');
       if (triagemEl) triagemEl.value = item.anamnese || '';
 
+      const prioSel = document.getElementById('triagemPrioritySelect');
+      if (prioSel) prioSel.value = item.prioridade || 'Média';
+
+      if (window.lucide) lucide.createIcons();
       openModal('docPreviewModal');
     }
 
@@ -4588,6 +5300,8 @@
         qualProgramaSocial: participaProgramaSocial === 'Sim' ? qualProgramaSocial : '',
         trabalhandoAtualmente: trabalhando || 'Não informado',
         prioridade: prio,
+        prioridadeDefinidaPor: triador || actor,
+        prioridadeDefinidaEm: timestamp,
         origem: origin,
         motivoTerapia: motivoTerapia,
         maioresQueixas: maioresQueixas,
@@ -7014,31 +7728,8 @@
     }
 
     function openStaffDetailModal(type, id) {
-      const cfg = getStaffConfig(type);
-      const member = cfg.list.find(m => m.id === id);
-      if (!member) return;
-      state.activeStaffDetailId = { type, id };
-      const isAtivo = (member.status || 'Ativo') === 'Ativo';
-      document.getElementById('staffDetailCode').textContent = type === 'coordTecnica' ? (member.extra || 'CRP') : 'EQUIPE';
-      const stEl = document.getElementById('staffDetailStatus');
-      if (stEl) {
-        stEl.textContent = isAtivo ? 'Ativo' : 'Inativo';
-        stEl.className = `text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white ${isAtivo ? 'text-emerald-700' : 'text-slate-600'} whitespace-nowrap`;
-      }
-      document.getElementById('staffDetailTitle').textContent = member.nome;
-      document.getElementById('staffDetailMeta').textContent = `${cfg.title} • ${member.extra || 'Cadastro institucional'} • ${member.telefone || ''}`;
-      document.getElementById('staffDetailBody').innerHTML = renderStaffDetailsHtml(member, type);
-      const safeFileSlug = (member.nome || 'Membro').replace(/[^a-zA-Z0-9_-]+/g, '_');
-      const pdfBtn = document.getElementById('btnStaffDetailDownloadPdf');
-      if (pdfBtn) pdfBtn.onclick = () => triggerSimulatedDownload(`Ficha_Equipe_${safeFileSlug}.pdf`, `Ficha completa de ${member.nome} (${cfg.title})`, true);
-      const editBtn = document.getElementById('staffDetailEditBtn');
-      if (editBtn) {
-        editBtn.onclick = () => {
-          closeModal('staffDetailModal');
-          openStaffEditModal(type, id);
-        };
-      }
-      openModal('staffDetailModal');
+      // Redireciona para o modal unificado de edição e dados cadastrais
+      openStaffEditModal(type, id);
     }
 
     function renderPerfisTable() {
@@ -7143,12 +7834,8 @@
         const isAtivo = (m.status || 'Ativo') === 'Ativo';
         const actionStackHtml = isAtivo
           ? `<div class="flex flex-col items-end gap-1.5 w-28 ml-auto">
-              <button onclick="openStaffDetailModal('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[11px] shadow-2xs flex items-center justify-center gap-1 whitespace-nowrap transition">
-                <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-                <span>Ficha</span>
-              </button>
-              <button onclick="openStaffEditModal('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
-                <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-500"></i>
+              <button onclick="openStaffEditModal('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[11px] shadow-2xs flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                 <span>Editar</span>
               </button>
               <button onclick="requestToggleStaffStatus('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg border border-slate-300 hover:border-amber-400 hover:bg-amber-50 text-slate-600 hover:text-amber-800 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
@@ -7157,9 +7844,9 @@
               </button>
             </div>`
           : `<div class="flex flex-col items-end gap-1.5 w-28 ml-auto">
-              <button onclick="openStaffDetailModal('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
-                <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-500"></i>
-                <span>Ficha</span>
+              <button onclick="openStaffEditModal('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span>Editar</span>
               </button>
               <button onclick="requestToggleStaffStatus('${m.type}', '${escapeHtml(m.id)}')" class="w-28 h-7 rounded-lg border border-emerald-400 bg-white hover:bg-emerald-50 text-emerald-800 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-emerald-700"></i>
@@ -7226,7 +7913,21 @@
         }
       });
       document.getElementById('staffErrorBox').classList.add('hidden');
+
+      const dynContainer = document.getElementById('staffModalDynamicSections');
+      if (dynContainer) {
+        dynContainer.innerHTML = `
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-xs flex items-center gap-3">
+            <i data-lucide="info" class="w-4 h-4 text-blue-600 shrink-0"></i>
+            <span>Após concluir este cadastro, você poderá emitir a ficha cadastral em PDF, gerar credenciais de login e gerenciar permissões RBAC na aba Gestão de Acessos.</span>
+          </div>
+        `;
+      }
+      const dlBtn = document.getElementById('btnStaffMemberDownloadPdf');
+      if (dlBtn) dlBtn.classList.add('hidden');
+
       openModal('staffMemberModal');
+      if (window.lucide) lucide.createIcons();
     }
 
     function openStaffEditModal(type, id) {
@@ -7244,10 +7945,11 @@
       if (stSel) {
         stSel.value = member.status || 'Ativo';
       }
+      const isAtivo = (member.status || 'Ativo') === 'Ativo';
       document.getElementById('staffModalCode').textContent = type === 'coordTecnica' ? (member.extra || 'CRP') : 'EQUIPE';
       document.getElementById('staffModalStatus').textContent = `Edição • ${member.status || 'Ativo'}`;
       document.getElementById('staffModalTitle').textContent = `Editar Membro — ${member.nome}`;
-      document.getElementById('staffModalMeta').textContent = `${cfg.title} • ${member.extra || 'Cadastro institucional'}`;
+      document.getElementById('staffModalMeta').textContent = `${cfg.title} • ${member.extra || 'Cadastro institucional'} • ${member.telefone || ''}`;
       document.getElementById('staffExtraFieldLabel').textContent = cfg.extraLabel;
       document.getElementById('staffExtraField').placeholder = cfg.extraPlaceholder;
       document.getElementById('staffName').value = member.nome;
@@ -7261,7 +7963,87 @@
         if (el) el.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
       });
       document.getElementById('staffErrorBox').classList.add('hidden');
+
+      // Elementos transferidos da Ficha (staffDetailModal):
+      const linkedAccount = state.userAccounts.find(acc => acc.displayName === member.nome || acc.linkedId === member.id);
+      const permsList = linkedAccount ? linkedAccount.permissions : [];
+      const permsBadges = permsList.length > 0
+        ? permsList.map(p => `<span class="px-2 py-0.5 rounded-md bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-semibold">${escapeHtml(PERM_LABELS[p] || p)}</span>`).join(' ')
+        : '<span class="text-slate-500 italic">Nenhuma permissão específica configurada</span>';
+
+      const dynContainer = document.getElementById('staffModalDynamicSections');
+      if (dynContainer) {
+        dynContainer.innerHTML = `
+          <!-- SEÇÃO A: ACESSO E PERMISSÕES DO SISTEMA (TRANSFERIDO DA FICHA) -->
+          <details open class="rounded-xl border border-slate-300 bg-slate-50/70 overflow-hidden">
+            <summary class="px-4 py-3 cursor-pointer select-none flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition">
+              <span class="flex items-center gap-2"><i data-lucide="key-round" class="w-4 h-4 text-blue-600"></i><span>Acesso e Permissões do Sistema</span></span>
+              <span class="text-[11px] font-semibold text-slate-500">${linkedAccount ? `Usuário: ${escapeHtml(linkedAccount.username)}` : 'Sem usuário vinculado'} • Expandir / Recolher</span>
+            </summary>
+            <div class="px-4 pb-4 pt-3 bg-white border-t border-slate-200 space-y-3.5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+                <div>
+                  <span class="text-slate-500 block text-[10px] uppercase font-bold">Conta de Login</span>
+                  <strong class="text-slate-900">${linkedAccount ? escapeHtml(linkedAccount.username) : 'Nenhuma conta cadastrada'}</strong>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px] uppercase font-bold">Status do Acesso</span>
+                  <strong class="${linkedAccount ? 'text-emerald-700' : 'text-amber-700'}">${linkedAccount ? 'Habilitado' : 'Aguardando criação na aba Acessos'}</strong>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px] uppercase font-bold">Autenticação em Duas Etapas (MFA)</span>
+                  <span class="inline-flex items-center gap-1 text-[11px] font-semibold ${linkedAccount && linkedAccount.mfaEnabled ? 'text-emerald-700' : 'text-slate-600'}">
+                    <i data-lucide="${linkedAccount && linkedAccount.mfaEnabled ? 'shield-check' : 'shield-alert'}" class="w-3.5 h-3.5"></i>
+                    <span>${linkedAccount && linkedAccount.mfaEnabled ? 'Ativo (RF-01)' : 'Padrão da Plataforma'}</span>
+                  </span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px] uppercase font-bold">Perfil RBAC Associado</span>
+                  <strong class="text-slate-900">${escapeHtml(linkedAccount ? linkedAccount.profileLabel : cfg.title)}</strong>
+                </div>
+                <div class="sm:col-span-2">
+                  <span class="text-slate-500 block text-[10px] uppercase font-bold mb-1">Permissões Habilitadas no Sistema</span>
+                  <div class="flex flex-wrap gap-1.5">${permsBadges}</div>
+                </div>
+              </div>
+              <div class="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+                <span class="text-[11px] text-slate-500">As credenciais e permissões granulares são gerenciadas na aba Gestão de Acessos.</span>
+                <button type="button" onclick="closeModal('staffMemberModal'); navigateToView('acessos');" class="px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 font-semibold text-[11px] inline-flex items-center gap-1 transition">
+                  <i data-lucide="external-link" class="w-3 h-3"></i>
+                  <span>Abrir na Gestão de Acessos</span>
+                </button>
+              </div>
+            </div>
+          </details>
+
+          <!-- SEÇÃO B: RESUMO INSTITUCIONAL DA FICHA (TRANSFERIDO DA FICHA) -->
+          <div class="p-4 rounded-xl bg-blue-50 border border-blue-300 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-blue-800 block">Resumo Institucional da Ficha</span>
+              <span class="text-[10px] font-semibold text-blue-600 flex items-center gap-1"><i data-lucide="shield" class="w-3 h-3"></i><span>Cadastro Oficial CACS</span></span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
+              <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Papel na ONG</span><strong class="text-slate-900">${escapeHtml(cfg.title)}</strong></div>
+              <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Status Atual</span><strong class="${isAtivo ? 'text-emerald-700' : 'text-slate-600'}">${escapeHtml(member.status || 'Ativo')}</strong></div>
+              <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Identificação</span><strong class="text-slate-900">${escapeHtml(member.extra || '-')}</strong></div>
+              <div><span class="text-slate-600 block text-[10px] uppercase font-bold">Contato Rápido</span><strong class="text-slate-900">${escapeHtml(member.telefone || '-')}</strong></div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Botão de download do PDF no footer do modal de edição (transferido da ficha):
+      const safeFileSlug = (member.nome || 'Membro').replace(/[^a-zA-Z0-9_-]+/g, '_');
+      const dlBtn = document.getElementById('btnStaffMemberDownloadPdf');
+      if (dlBtn) {
+        dlBtn.classList.remove('hidden');
+        dlBtn.onclick = () => {
+          triggerSimulatedDownload(`Ficha_Equipe_${safeFileSlug}.pdf`, `Ficha cadastral completa de ${member.nome} (${cfg.title})`, true);
+        };
+      }
+
       openModal('staffMemberModal');
+      if (window.lucide) lucide.createIcons();
     }
 
     function saveStaffMember() {
@@ -8147,72 +8929,66 @@
       tbody.innerHTML = pageItems.map(acc => {
         const isInactive = acc.status === 'Inativo';
         const isMasterAdmin = acc.id === 'ACC-ADMIN';
-        const person = getLinkedAccountPerson(acc);
-        const email = acc.email || person?.email || '—';
-        const telefone = acc.telefone || person?.telefone || '—';
         const categoryLabel = getAccountCategoryLabel(acc.linkedType);
+        const permsText = (acc.permissions || []).map(p => PERM_LABELS[p] || p).join(', ') || 'Nenhuma';
 
-        const permBadges = (acc.permissions || []).map(p => `
-          <span class="px-2 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-800 text-[10px] font-semibold">
-            ${PERM_LABELS[p] || p}
-          </span>
-        `).join('');
+        let actionStackHtml = '';
+        if (!isInactive) {
+          const inativarBtn = isMasterAdmin
+            ? `<span class="w-28 h-7 rounded-lg bg-slate-100 border border-slate-200 text-slate-400 font-semibold text-[11px] flex items-center justify-center cursor-not-allowed select-none" title="A conta mestre não pode ser inativada">Padrão</span>`
+            : `<button onclick="requestToggleAccessStatus('${acc.id}')" class="w-28 h-7 rounded-lg border border-slate-300 hover:border-amber-400 hover:bg-amber-50 text-slate-600 hover:text-amber-800 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="user-x" class="w-3.5 h-3.5 text-amber-600"></i>
+                <span>Inativar</span>
+              </button>`;
 
-        const statusBadge = isInactive
-          ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-300"><span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>Inativo</span>'
-          : '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Ativo</span>';
-
-        const toggleStatusBtn = isMasterAdmin
-          ? '<span class="px-2 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-400 font-semibold text-[11px] cursor-not-allowed select-none" title="A conta mestre não pode ser inativada">Padrão</span>'
-          : isInactive
-            ? `<button onclick="requestToggleAccessStatus('${acc.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-300 hover:bg-emerald-100 text-emerald-700 font-semibold text-[11px] inline-flex items-center gap-1 transition" title="Reativar acesso do usuário"><i data-lucide="check-circle" class="w-3 h-3"></i><span>Reativar</span></button>`
-            : `<button onclick="requestToggleAccessStatus('${acc.id}')" class="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-300 hover:bg-amber-100 text-amber-800 font-semibold text-[11px] inline-flex items-center gap-1 transition" title="Inativar acesso do usuário"><i data-lucide="user-x" class="w-3 h-3"></i><span>Inativar</span></button>`;
-
-        const deleteBtn = isMasterAdmin
-          ? ''
-          : `<button onclick="requestDeleteUserAccount('${acc.id}')" class="px-2 py-1 rounded-lg bg-red-50 border border-red-300 hover:bg-red-100 text-red-700 font-semibold text-[11px] inline-flex items-center gap-1 transition" title="Revogar conta permanentemente"><i data-lucide="trash-2" class="w-3 h-3"></i><span>Excluir</span></button>`;
-
-        const initials = (acc.displayName || 'AC').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+          actionStackHtml = `
+            <div class="flex flex-col items-end gap-1.5 w-28 ml-auto">
+              <button onclick="openAccessEditModal('${acc.id}')" class="w-28 h-7 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[11px] shadow-2xs flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                <span>Editar</span>
+              </button>
+              ${inativarBtn}
+            </div>
+          `;
+        } else {
+          actionStackHtml = `
+            <div class="flex flex-col items-end gap-1.5 w-28 ml-auto">
+              <button onclick="openAccessEditModal('${acc.id}')" class="w-28 h-7 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span>Editar</span>
+              </button>
+              <button onclick="requestToggleAccessStatus('${acc.id}')" class="w-28 h-7 rounded-lg border border-emerald-400 bg-white hover:bg-emerald-50 text-emerald-800 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-emerald-700"></i>
+                <span>Reativar</span>
+              </button>
+              ${isMasterAdmin ? '' : `
+                <button onclick="requestDeleteUserAccount('${acc.id}')" class="w-28 h-7 rounded-lg border border-red-300 bg-white hover:bg-red-50 text-red-700 font-semibold text-[11px] flex items-center justify-center gap-1 whitespace-nowrap transition">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5 text-red-600"></i>
+                  <span>Excluir</span>
+                </button>
+              `}
+            </div>
+          `;
+        }
 
         return `
           <tr class="hover:bg-slate-50 transition">
             <td class="py-3 px-4">
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center shrink-0 border border-blue-200">
-                  ${initials}
-                </div>
-                <div>
-                  <div class="font-bold text-slate-900">${escapeHtml(acc.displayName)}</div>
-                  <div class="text-[11px] text-blue-700 font-mono font-medium">@${escapeHtml(acc.username)}</div>
-                </div>
-              </div>
+              <div class="font-bold text-slate-900 leading-snug">${escapeHtml(acc.displayName)}</div>
             </td>
             <td class="py-3 px-4">
-              <div class="space-y-0.5">
-                <div class="text-slate-800 font-medium">${escapeHtml(email)}</div>
-                <div class="text-[11px] text-slate-500">${escapeHtml(telefone)}</div>
-                <span class="inline-block mt-0.5 px-2 py-0.5 rounded bg-slate-100 border border-slate-300 text-slate-700 text-[10px] font-semibold">${categoryLabel}</span>
-              </div>
+              <div class="text-slate-700 font-medium leading-snug">${escapeHtml(categoryLabel)}</div>
             </td>
-            <td class="py-3 px-4">${statusBadge}</td>
             <td class="py-3 px-4">
-              <div class="flex flex-wrap gap-1 max-w-xs">
-                ${permBadges}
-              </div>
+              ${isInactive
+                ? '<span class="font-bold text-slate-500 whitespace-nowrap">Inativo</span>'
+                : '<span class="font-bold text-emerald-700 whitespace-nowrap">Ativo</span>'}
             </td>
-            <td class="py-3 px-4 text-right">
-              <div class="inline-flex items-center justify-end gap-1.5">
-                <button onclick="openAccessDetailModal('${acc.id}')" class="px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 font-semibold text-[11px] inline-flex items-center gap-1 transition" title="Ver ficha da conta de acesso">
-                  <i data-lucide="file-text" class="w-3 h-3"></i>
-                  <span>Ficha</span>
-                </button>
-                <button onclick="openAccessEditModal('${acc.id}')" class="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-300 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] inline-flex items-center gap-1 transition" title="Editar credenciais ou permissões">
-                  <i data-lucide="edit-3" class="w-3 h-3"></i>
-                  <span>Editar</span>
-                </button>
-                ${toggleStatusBtn}
-                ${deleteBtn}
-              </div>
+            <td class="py-3 px-4">
+              <div class="text-[11px] text-slate-700 font-medium leading-snug max-w-xs">${escapeHtml(permsText)}</div>
+            </td>
+            <td class="py-3 px-4 text-right whitespace-nowrap">
+              ${actionStackHtml}
             </td>
           </tr>
         `;
@@ -8221,34 +8997,364 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    // 7. AGENDA (CALENDÁRIO + LISTA EM CARDS GRANDES + DISPONIBILIDADE PACIENTES)
-    function setAgendaViewMode(mode) {
-      state.agendaViewMode = mode;
-      const btnP = document.getElementById('agendaMode-psicologos');
-      const btnC = document.getElementById('agendaMode-pacientes');
-      const psychSel = document.getElementById('agendaPsychFilter');
-      const patSel = document.getElementById('agendaPatientFilter');
-      const weekNav = document.getElementById('agendaWeekNavControls');
-      const layoutBox = document.getElementById('agendaLayoutToggleBox');
-      const patBanner = document.getElementById('agendaPatientsInfoBanner');
-      const newBtn = document.getElementById('btnAgendaNewAction');
-      const legendBox = document.getElementById('agendaLegendBox');
+    // 6B. CONFIGURAÇÃO DE PERMISSÕES RBAC (MATRIZ DE ACESSO DOCUMENTAL & PAPÉIS)
+    function setAccessSubtab(subtab) {
+      state.accessSubtab = subtab;
+      const btnContas = document.getElementById('accessTabBtn-contas');
+      const btnPerms = document.getElementById('accessTabBtn-permissoes');
+      const secContas = document.getElementById('accessSection-contas');
+      const secPerms = document.getElementById('accessSection-permissoes');
 
-      if (mode === 'psicologos') {
-        btnP.className = 'w-40 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 border border-slate-300 shadow-2xs transition text-center';
-        btnC.className = 'w-44 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent transition text-center';
-        psychSel.classList.remove('hidden'); patSel.classList.add('hidden');
-        weekNav.classList.remove('hidden'); layoutBox.classList.remove('hidden'); patBanner.classList.add('hidden');
-        newBtn.classList.remove('invisible');
-        legendBox.innerHTML = `<span class="flex items-center gap-1.5 text-emerald-700"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Realizada</span><span class="flex items-center gap-1.5 text-blue-700"><span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span> Agendada</span><span class="flex items-center gap-1.5 text-amber-800"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> F. Justificada</span><span class="flex items-center gap-1.5 text-red-700"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> F. Injustificada</span>`;
+      if (subtab === 'contas') {
+        if (btnContas) btnContas.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 border border-slate-300 shadow-2xs transition flex items-center gap-1.5';
+        if (btnPerms) btnPerms.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent transition flex items-center gap-1.5';
+        if (secContas) secContas.classList.remove('hidden');
+        if (secPerms) secPerms.classList.add('hidden');
+        renderAccessAccountsSection();
       } else {
-        btnC.className = 'w-44 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 border border-slate-300 shadow-2xs transition text-center';
-        btnP.className = 'w-40 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent transition text-center';
-        psychSel.classList.add('hidden'); patSel.classList.remove('hidden');
-        weekNav.classList.add('hidden'); layoutBox.classList.add('hidden'); patBanner.classList.remove('hidden');
-        newBtn.classList.add('invisible');
-        legendBox.innerHTML = `<span class="flex items-center gap-1.5 text-red-700"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Muito Alta</span><span class="flex items-center gap-1.5 text-orange-700"><span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span> Alta</span><span class="flex items-center gap-1.5 text-amber-800"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Média</span><span class="flex items-center gap-1.5 text-emerald-700"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Baixa</span>`;
+        if (btnPerms) btnPerms.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 border border-slate-300 shadow-2xs transition flex items-center gap-1.5';
+        if (btnContas) btnContas.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent transition flex items-center gap-1.5';
+        if (secContas) secContas.classList.add('hidden');
+        if (secPerms) secPerms.classList.remove('hidden');
+        renderRbacMatrixSection();
       }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function setRbacProfileFilter(profileKey) {
+      state.rbacProfileFilter = profileKey;
+      const sel = document.getElementById('rbacProfileFilterSelect');
+      if (sel && sel.value !== profileKey) sel.value = profileKey;
+      renderRbacMatrixSection();
+    }
+
+    function onRbacSearchChange() {
+      state.rbacSearch = (document.getElementById('rbacSearchInput')?.value || '').toLowerCase().trim();
+      renderRbacMatrixSection();
+    }
+
+    function resetRbacFilters() {
+      state.rbacSearch = '';
+      state.rbacProfileFilter = 'todos';
+      const input = document.getElementById('rbacSearchInput');
+      if (input) input.value = '';
+      const sel = document.getElementById('rbacProfileFilterSelect');
+      if (sel) sel.value = 'todos';
+      renderRbacMatrixSection();
+    }
+
+    function toggleRbacPermission(docId, roleKey, actionKey) {
+      const doc = state.rbacMatrix.find(d => d.docId === docId);
+      if (!doc || !doc[roleKey]) return;
+      doc[roleKey][actionKey] = !doc[roleKey][actionKey];
+      renderRbacMatrixSection();
+      const actionLabels = { upload: 'Preencher/Upload', view: 'Visualizar', edit: 'Editar', download: 'Download' };
+      const statusLabel = doc[roleKey][actionKey] ? 'concedida (True)' : 'revogada (False)';
+      showToast('Permissão Alterada', `${doc.nome} • ${getAccountCategoryLabel(roleKey)}: ${actionLabels[actionKey] || actionKey} ${statusLabel}. Clique em "Salvar Matriz" para persistir.`, 'info');
+    }
+
+    function resetRbacMatrixToDefault() {
+      state.rbacMatrix = JSON.parse(JSON.stringify(RBAC_DEFAULT_MATRIX));
+      renderRbacMatrixSection();
+      showToast('Padrão Restaurado', 'A matriz de permissões RBAC foi restaurada para a especificação original do CACS.', 'info');
+    }
+
+    function saveRbacPermissions() {
+      const timestamp = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      const actor = (state.loggedInUser && state.loggedInUser.displayName) || 'Administrador Geral';
+      state.automationLogs.unshift({
+        horario: timestamp,
+        tipo: 'Atualização de Matriz RBAC',
+        mensagem: `Matriz de permissões documentais e papéis atualizada por ${actor}.`
+      });
+      showToast('Matriz RBAC Salva!', 'As definições de permissão por perfil foram salvas com sucesso no sistema.', 'success');
+    }
+
+    function exportRbacMatrixData() {
+      triggerSimulatedDownload('Matriz_Permissoes_RBAC.xlsx', 'Matriz consolidada de permissões e restrições por perfil (RBAC)', false);
+    }
+
+    function renderRbacMatrixSection() {
+      const filterVal = state.rbacProfileFilter || 'todos';
+      const sel = document.getElementById('rbacProfileFilterSelect');
+      if (sel && sel.value !== filterVal) sel.value = filterVal;
+
+      const query = (state.rbacSearch || '').toLowerCase().trim();
+      const clearBtn = document.getElementById('rbacClearFilterBtn');
+      if (clearBtn) {
+        const hasActiveFilter = filterVal !== 'todos' || query.length > 0;
+        clearBtn.classList.toggle('hidden', !hasActiveFilter);
+        clearBtn.classList.toggle('inline-flex', hasActiveFilter);
+      }
+
+      const titleEl = document.getElementById('rbacTableTitle');
+      const subtitleEl = document.getElementById('rbacTableSubtitle');
+      const roleLabels = {
+        todos: 'Todos os Perfis (Matriz Completa)',
+        adminTi: 'Administrador de TI',
+        coordTecnica: 'Coordenação Técnica',
+        coordAdmin: 'Coordenação Administrativa',
+        psicologo: 'Psicólogo Voluntário'
+      };
+      if (titleEl) {
+        titleEl.textContent = filterVal === 'todos'
+          ? 'Matriz de Permissões Documentais (9 Documentos Oficiais)'
+          : `Matriz de Permissões — ${roleLabels[filterVal] || filterVal}`;
+      }
+      if (subtitleEl) {
+        subtitleEl.textContent = filterVal === 'todos'
+          ? 'Preencher/Upload • Visualizar • Editar • Download'
+          : `Visualização focada no perfil ${roleLabels[filterVal] || filterVal}`;
+      }
+
+      const filteredDocs = (state.rbacMatrix || []).filter(doc => {
+        if (!query) return true;
+        return doc.nome.toLowerCase().includes(query)
+          || (doc.categoria && doc.categoria.toLowerCase().includes(query))
+          || (doc.obs && doc.obs.toLowerCase().includes(query));
+      });
+
+      const container = document.getElementById('rbacTableContainer');
+      if (container) {
+        if (filteredDocs.length === 0) {
+          container.innerHTML = getTableEmptyStateHtml(
+            filterVal === 'todos' ? 17 : 6,
+            'Nenhum documento encontrado',
+            'Altere os termos de busca ou selecione outro perfil.',
+            'resetRbacFilters()'
+          );
+        } else if (filterVal === 'todos') {
+          // Visão completa dos 4 perfis
+          container.innerHTML = `
+            <table class="w-full text-left border-collapse min-w-[960px]">
+              <thead>
+                <tr class="text-[11px] font-bold uppercase tracking-wider text-slate-600 bg-slate-100/90 border-b border-slate-300">
+                  <th rowspan="2" class="py-3 px-4 w-64 align-bottom bg-slate-50">Documento Específico</th>
+                  <th colspan="4" class="py-2 px-2 text-center bg-purple-50 text-purple-900 border-l border-r border-slate-200 font-bold">
+                    <div class="inline-flex items-center gap-1.5"><i data-lucide="server" class="w-3.5 h-3.5 text-purple-700"></i><span>Admin de TI</span></div>
+                  </th>
+                  <th colspan="4" class="py-2 px-2 text-center bg-blue-50 text-blue-900 border-r border-slate-200 font-bold">
+                    <div class="inline-flex items-center gap-1.5"><i data-lucide="stethoscope" class="w-3.5 h-3.5 text-blue-700"></i><span>Coord. Técnica</span></div>
+                  </th>
+                  <th colspan="4" class="py-2 px-2 text-center bg-amber-50 text-amber-900 border-r border-slate-200 font-bold">
+                    <div class="inline-flex items-center gap-1.5"><i data-lucide="briefcase" class="w-3.5 h-3.5 text-amber-800"></i><span>Coord. Administrativa</span></div>
+                  </th>
+                  <th colspan="4" class="py-2 px-2 text-center bg-emerald-50 text-emerald-900 font-bold">
+                    <div class="inline-flex items-center gap-1.5"><i data-lucide="heart-handshake" class="w-3.5 h-3.5 text-emerald-700"></i><span>Psicólogo Voluntário</span></div>
+                  </th>
+                </tr>
+                <tr class="text-[10px] font-bold text-slate-600 border-b border-slate-300 bg-slate-50">
+                  <!-- Admin TI -->
+                  <th class="py-1.5 px-1.5 text-center border-l border-slate-200" title="Preencher / Fazer Upload">Upload</th>
+                  <th class="py-1.5 px-1.5 text-center" title="Visualizar Documento">Ver</th>
+                  <th class="py-1.5 px-1.5 text-center" title="Editar / Retificar">Editar</th>
+                  <th class="py-1.5 px-1.5 text-center border-r border-slate-200" title="Download do Arquivo">Baixar</th>
+
+                  <!-- Coord Técnica -->
+                  <th class="py-1.5 px-1.5 text-center" title="Preencher / Fazer Upload">Upload</th>
+                  <th class="py-1.5 px-1.5 text-center" title="Visualizar Documento">Ver</th>
+                  <th class="py-1.5 px-1.5 text-center" title="Editar / Retificar">Editar</th>
+                  <th class="py-1.5 px-1.5 text-center border-r border-slate-200" title="Download do Arquivo">Baixar</th>
+
+                  <!-- Coord Admin -->
+                  <th class="py-1.5 px-1.5 text-center" title="Preencher / Fazer Upload">Upload</th>
+                  <th class="py-1.5 px-1.5 text-center" title="Visualizar Documento">Ver</th>
+                  <th class="py-1.5 px-1.5 text-center" title="Editar / Retificar">Editar</th>
+                  <th class="py-1.5 px-1.5 text-center border-r border-slate-200" title="Download do Arquivo">Baixar</th>
+
+                  <!-- Psicólogo Voluntário -->
+                  <th class="py-1.5 px-1.5 text-center border-l border-slate-200" title="Preencher / Fazer Upload">Upload</th>
+                  <th class="py-1.5 px-1.5 text-center" title="Visualizar Documento">Ver</th>
+                  <th class="py-1.5 px-1.5 text-center" title="Editar / Retificar">Editar</th>
+                  <th class="py-1.5 px-1.5 text-center" title="Download do Arquivo">Baixar</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 text-xs">
+                ${filteredDocs.map(doc => {
+                  const renderCell = (role, action, isBorderL = false, isBorderR = false) => {
+                    const isAllowed = Boolean(doc[role] && doc[role][action]);
+                    const borderCls = (isBorderL ? 'border-l border-slate-200 ' : '') + (isBorderR ? 'border-r border-slate-200 ' : '');
+                    const isEvolucaoPsiEdit = doc.docId === 'evolucao' && role === 'psicologo' && action === 'edit';
+                    const isSigiloBlocked = (doc.docId === 'evolucao' || doc.docId === 'anamnese') && (role === 'adminTi' || role === 'coordAdmin') && !isAllowed;
+
+                    let badge = '';
+                    if (isAllowed) {
+                      badge = `
+                        <button onclick="toggleRbacPermission('${doc.docId}', '${role}', '${action}')" class="w-6 h-6 rounded-md bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 text-emerald-800 font-bold inline-flex items-center justify-center transition shadow-2xs cursor-pointer" title="${PERM_LABELS[role]}: ${action} PERMITIDO para ${doc.nome}">
+                          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                        </button>
+                      `;
+                    } else if (isSigiloBlocked) {
+                      badge = `
+                        <button onclick="toggleRbacPermission('${doc.docId}', '${role}', '${action}')" class="w-6 h-6 rounded-md bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-700 font-bold inline-flex items-center justify-center transition cursor-pointer" title="${PERM_LABELS[role]}: BLOQUEADO por Sigilo Deontológico Estrito (HTTP 403 Forbidden)">
+                          <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+                        </button>
+                      `;
+                    } else {
+                      badge = `
+                        <button onclick="toggleRbacPermission('${doc.docId}', '${role}', '${action}')" class="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-400 font-bold inline-flex items-center justify-center transition cursor-pointer" title="${PERM_LABELS[role]}: ${action} Bloqueado">
+                          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                        </button>
+                      `;
+                    }
+
+                    if (isEvolucaoPsiEdit) {
+                      return `
+                        <td class="py-2 px-1 text-center ${borderCls}">
+                          <div class="flex flex-col items-center">
+                            ${badge}
+                            <span class="text-[9px] font-bold text-blue-700 tracking-tighter mt-0.5">60d</span>
+                          </div>
+                        </td>
+                      `;
+                    }
+
+                    return `<td class="py-2 px-1 text-center ${borderCls}"><div class="flex items-center justify-center">${badge}</div></td>`;
+                  };
+
+                  return `
+                    <tr class="hover:bg-slate-50 transition">
+                      <td class="py-2.5 px-4 bg-slate-50/50">
+                        <div class="font-bold text-slate-900">${escapeHtml(doc.nome)}</div>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                          <span class="text-[10px] text-slate-500 font-medium">${doc.categoria}</span>
+                          ${doc.obs ? `<span class="px-1.5 py-0.2 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[9px] font-semibold">${doc.obs}</span>` : ''}
+                        </div>
+                      </td>
+
+                      <!-- Admin TI -->
+                      ${renderCell('adminTi', 'upload', true, false)}
+                      ${renderCell('adminTi', 'view', false, false)}
+                      ${renderCell('adminTi', 'edit', false, false)}
+                      ${renderCell('adminTi', 'download', false, true)}
+
+                      <!-- Coord Técnica -->
+                      ${renderCell('coordTecnica', 'upload', false, false)}
+                      ${renderCell('coordTecnica', 'view', false, false)}
+                      ${renderCell('coordTecnica', 'edit', false, false)}
+                      ${renderCell('coordTecnica', 'download', false, true)}
+
+                      <!-- Coord Admin -->
+                      ${renderCell('coordAdmin', 'upload', false, false)}
+                      ${renderCell('coordAdmin', 'view', false, false)}
+                      ${renderCell('coordAdmin', 'edit', false, false)}
+                      ${renderCell('coordAdmin', 'download', false, true)}
+
+                      <!-- Psicólogo Voluntário -->
+                      ${renderCell('psicologo', 'upload', true, false)}
+                      ${renderCell('psicologo', 'view', false, false)}
+                      ${renderCell('psicologo', 'edit', false, false)}
+                      ${renderCell('psicologo', 'download', false, false)}
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          `;
+        } else {
+          // Visão focada no perfil selecionado
+          const selRole = filterVal;
+          container.innerHTML = `
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-[11px] font-bold uppercase tracking-wider text-slate-600 bg-slate-100/90 border-b border-slate-300">
+                  <th class="py-3 px-4">Documento Específico</th>
+                  <th class="py-3 px-4">Categoria / Norma</th>
+                  <th class="py-3 px-4 text-center">Preencher / Upload</th>
+                  <th class="py-3 px-4 text-center">Visualizar em Tela</th>
+                  <th class="py-3 px-4 text-center">Editar / Retificar</th>
+                  <th class="py-3 px-4 text-center">Download de Arquivo</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 text-xs">
+                ${filteredDocs.map(doc => {
+                  const perm = doc[selRole] || {};
+                  const renderToggleBtn = (action, label) => {
+                    const isAllowed = Boolean(perm[action]);
+                    const isEvolucaoPsiEdit = doc.docId === 'evolucao' && selRole === 'psicologo' && action === 'edit';
+                    const isSigiloBlocked = (doc.docId === 'evolucao' || doc.docId === 'anamnese') && (selRole === 'adminTi' || selRole === 'coordAdmin') && !isAllowed;
+
+                    if (isAllowed) {
+                      return `
+                        <button onclick="toggleRbacPermission('${doc.docId}', '${selRole}', '${action}')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-semibold text-xs inline-flex items-center gap-1.5 transition cursor-pointer">
+                          <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+                          <span>Permitido</span>
+                          ${isEvolucaoPsiEdit ? '<span class="text-[10px] text-blue-700 font-bold ml-1">(Até 60d)</span>' : ''}
+                        </button>
+                      `;
+                    }
+                    if (isSigiloBlocked) {
+                      return `
+                        <button onclick="toggleRbacPermission('${doc.docId}', '${selRole}', '${action}')" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-700 font-semibold text-xs inline-flex items-center gap-1.5 transition cursor-pointer" title="Bloqueado por Sigilo Deontológico Estrito (CFP / LGPD)">
+                          <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-rose-600"></i>
+                          <span>403 Forbidden</span>
+                        </button>
+                      `;
+                    }
+                    return `
+                      <button onclick="toggleRbacPermission('${doc.docId}', '${selRole}', '${action}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-500 font-semibold text-xs inline-flex items-center gap-1.5 transition cursor-pointer">
+                        <i data-lucide="x" class="w-3.5 h-3.5 text-slate-400"></i>
+                        <span>Bloqueado</span>
+                      </button>
+                    `;
+                  };
+
+                  return `
+                    <tr class="hover:bg-slate-50 transition">
+                      <td class="py-3 px-4 font-bold text-slate-900">${escapeHtml(doc.nome)}</td>
+                      <td class="py-3 px-4">
+                        <span class="text-slate-600 font-medium">${doc.categoria}</span>
+                        ${doc.obs ? `<div class="text-[10px] text-blue-700 font-semibold mt-0.5">${doc.obs}</div>` : ''}
+                      </td>
+                      <td class="py-3 px-4 text-center">${renderToggleBtn('upload', 'Upload')}</td>
+                      <td class="py-3 px-4 text-center">${renderToggleBtn('view', 'Visualizar')}</td>
+                      <td class="py-3 px-4 text-center">${renderToggleBtn('edit', 'Editar')}</td>
+                      <td class="py-3 px-4 text-center">${renderToggleBtn('download', 'Download')}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          `;
+        }
+      }
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // 7. AGENDA (CALENDÁRIO SEMANAL MS TEAMS + LISTA DE ATENDIMENTOS OUTLOOK)
+    function onAgendaSearchChange() {
+      renderAgendaGrid();
+    }
+
+    function setAgendaFilter(filter) {
+      state.agendaFilter = filter;
+      const sel = document.getElementById('agendaFilterSelect');
+      if (sel && sel.value !== filter) sel.value = filter;
+      renderAgendaGrid();
+    }
+
+    function setAgendaOutlookDay(dayLabel) {
+      if (state.agendaOutlookSelectedDay === dayLabel) {
+        state.agendaOutlookSelectedDay = 'todos';
+      } else {
+        state.agendaOutlookSelectedDay = dayLabel;
+      }
+      renderAgendaGrid();
+    }
+
+    function resetAgendaFilters() {
+      const input = document.getElementById('agendaSearchInput');
+      if (input) input.value = '';
+      state.agendaFilter = 'todos';
+      state.agendaOutlookSelectedDay = 'todos';
+      const sel = document.getElementById('agendaFilterSelect');
+      if (sel) sel.value = 'todos';
+      renderAgendaGrid();
+    }
+
+    function setAgendaViewMode(mode) {
+      state.agendaViewMode = 'psicologos';
       renderAgendaGrid();
     }
 
@@ -8256,12 +9362,14 @@
       state.agendaLayout = layout;
       const btnCal = document.getElementById('layoutBtn-calendario');
       const btnList = document.getElementById('layoutBtn-lista');
-      if (layout === 'calendario') {
-        btnCal.className = 'px-2.5 py-1 rounded-md text-xs font-bold bg-white text-blue-700 border border-slate-300 flex items-center gap-1.5 transition';
-        btnList.className = 'px-2.5 py-1 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent flex items-center gap-1.5 transition';
-      } else {
-        btnList.className = 'px-2.5 py-1 rounded-md text-xs font-bold bg-white text-blue-700 border border-slate-300 flex items-center gap-1.5 transition';
-        btnCal.className = 'px-2.5 py-1 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent flex items-center gap-1.5 transition';
+      if (btnCal && btnList) {
+        if (layout === 'calendario') {
+          btnCal.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 border border-slate-300 shadow-2xs flex items-center gap-1.5 transition';
+          btnList.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent flex items-center gap-1.5 transition';
+        } else {
+          btnList.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 border border-slate-300 shadow-2xs flex items-center gap-1.5 transition';
+          btnCal.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 border border-transparent flex items-center gap-1.5 transition';
+        }
       }
       renderAgendaGrid();
     }
@@ -8276,145 +9384,361 @@
       const tbody = document.getElementById('agendaGridBody');
       const hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 
-      if (state.agendaViewMode === 'pacientes') {
-        calCont.classList.remove('hidden');
-        listCont.classList.add('hidden');
-        const fullWeekCols = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
-        headerRow.innerHTML = `<th class="p-2.5 w-16 text-[11px] font-bold text-slate-600 uppercase border-r border-slate-300 text-center">Hora</th>` + fullWeekCols.map(lbl => `<th class="p-2.5 border-r border-slate-300 last:border-r-0 text-center"><div class="text-xs font-bold text-slate-900 truncate">${lbl}</div></th>`).join('');
-        const selectedPatId = document.getElementById('agendaPatientFilter')?.value || 'todos';
-        tbody.innerHTML = hours.map(hr => {
-          const cols = WEEK_LABELS.map(d => {
-            const avail = state.waitingQueue.filter(q => (selectedPatId === 'todos' || q.id === selectedPatId) && (q.disponibilidades || []).some(slot => slot.dia === d && slot.hora === hr));
-            if (avail.length === 0) return `<td class="p-1.5 border-r border-slate-300 last:border-r-0 h-11 align-top"></td>`;
-            const cards = avail.map(q => {
-              const style = q.prioridade === 'Muito Alta' ? 'bg-red-50 border border-red-300 border-l-4 border-l-red-600 text-red-900' : q.prioridade === 'Alta' ? 'bg-orange-50 border border-orange-300 border-l-4 border-l-orange-500 text-orange-900' : q.prioridade === 'Média' ? 'bg-amber-50 border border-amber-300 border-l-4 border-l-amber-500 text-amber-900' : 'bg-emerald-50 border border-emerald-300 border-l-4 border-l-emerald-600 text-emerald-900';
-              return `<div onclick="openMatchModal('${q.id}')" class="cursor-pointer px-2 py-1.5 rounded-lg ${style} hover:opacity-90 transition mb-1 last:mb-0"><div class="font-bold text-[11px] truncate">${q.nome}</div><div class="text-[10px] opacity-80 truncate">${q.prioridade}</div></div>`;
-            }).join('');
-            return `<td class="p-1 border-r border-slate-300 last:border-r-0 h-11 align-top">${cards}</td>`;
-          }).join('');
-          return `<tr><td class="p-2 text-[11px] font-bold text-slate-600 border-r border-slate-300 bg-slate-100/70 text-center">${hr}</td>${cols}</tr>`;
-        }).join('');
-        return;
+      const query = (document.getElementById('agendaSearchInput')?.value || '').toLowerCase().trim();
+      const filterVal = state.agendaFilter || 'todos';
+
+      const clearBtn = document.getElementById('agendaClearFilterBtn');
+      if (clearBtn) {
+        if (filterVal !== 'todos' || query.length > 0 || (state.agendaOutlookSelectedDay && state.agendaOutlookSelectedDay !== 'todos')) {
+          clearBtn.classList.remove('hidden');
+          clearBtn.classList.add('inline-flex');
+        } else {
+          clearBtn.classList.add('hidden');
+          clearBtn.classList.remove('inline-flex');
+        }
+      }
+
+      function matchSlot(s) {
+        if (filterVal !== 'todos') {
+          if (filterVal.startsWith('status:')) {
+            const expectedStatus = filterVal.replace('status:', '');
+            if (s.status !== expectedStatus) return false;
+          } else if (filterVal.startsWith('psicologo:')) {
+            const expectedPsych = filterVal.replace('psicologo:', '');
+            if (s.psicologo !== expectedPsych) return false;
+          } else if (filterVal.length > 0) {
+            if (s.psicologo !== filterVal && s.status !== filterVal) return false;
+          }
+        }
+
+        if (query.length > 0) {
+          const patObj = state.patients.find(p => p.nome === s.paciente);
+          const matchPatient = s.paciente.toLowerCase().includes(query);
+          const matchPsych = s.psicologo.toLowerCase().includes(query);
+          const matchDay = s.dia.toLowerCase().includes(query);
+          const matchHour = s.hora.toLowerCase().includes(query);
+          const matchStatus = (s.status || '').toLowerCase().includes(query);
+          const matchProntuario = patObj ? (patObj.prontuario || '').toLowerCase().includes(query) : false;
+          const matchTelefone = patObj ? (patObj.telefone || '').toLowerCase().includes(query) : false;
+          if (!matchPatient && !matchPsych && !matchDay && !matchHour && !matchStatus && !matchProntuario && !matchTelefone) {
+            return false;
+          }
+        }
+        return true;
       }
 
       const weekInfo = getTodayInfo(state.agendaWeekOffset);
-      const psychFilter = document.getElementById('agendaPsychFilter')?.value || 'todos';
+      const matchingSlots = state.agendaSlots.filter(matchSlot);
 
-      // MODO LISTA EM CARDS GRANDES
+      // =========================================================================
+      // VISUALIZAÇÃO EM LISTA — BASEADA NO MODELO DO OUTLOOK
+      // =========================================================================
       if (state.agendaLayout === 'lista') {
-        calCont.classList.add('hidden');
-        listCont.classList.remove('hidden');
+        if (calCont) calCont.classList.add('hidden');
+        if (listCont) listCont.classList.remove('hidden');
 
-        const slots = state.agendaSlots
-          .filter(s => psychFilter === 'todos' || s.psicologo === psychFilter)
-          .sort((a, b) => {
-            const dDiff = WEEK_LABELS.indexOf(a.dia) - WEEK_LABELS.indexOf(b.dia);
-            return dDiff !== 0 ? dDiff : a.hora.localeCompare(b.hora);
-          });
+        const selectedDay = state.agendaOutlookSelectedDay || 'todos';
 
-        if (slots.length === 0) {
+        // 1. Barra Superior Outlook: Mini-Calendário Semanal
+        const outlookMiniStripHtml = `
+          <div class="bg-white rounded-2xl border border-slate-300 p-4 shadow-sm space-y-3">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center font-bold shrink-0">
+                  <i data-lucide="calendar" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900 lowercase tracking-tight">${weekInfo.monthYearTitle}</h3>
+                  <p class="text-[11px] text-slate-500">Semana ${weekInfo.weekNum} • ${weekInfo.weekRangeStr}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                ${selectedDay !== 'todos' ? `
+                  <button type="button" onclick="setAgendaOutlookDay('todos')" class="px-2.5 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100 text-xs font-semibold flex items-center gap-1 transition">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    <span>Ver semana completa</span>
+                  </button>
+                ` : `
+                  <span class="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200">Visão Geral da Semana</span>
+                `}
+              </div>
+            </div>
+
+            <!-- Faixa Horizontal de Dias estilo Outlook -->
+            <div class="grid grid-cols-6 gap-1 sm:gap-2 pt-2.5 border-t border-slate-200 select-none">
+              ${weekInfo.weekDays.map(wd => {
+                const countDayTotal = matchingSlots.filter(s => s.dia === wd.label).length;
+                const isSelected = selectedDay === wd.label;
+                const isToday = wd.isToday;
+                const initial = wd.label.slice(0, 1).toUpperCase();
+
+                let circleClass = 'w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-bold transition mx-auto ';
+                if (isSelected) {
+                  circleClass += 'bg-blue-600 text-white shadow-xs';
+                } else if (isToday) {
+                  circleClass += 'bg-blue-100 border border-blue-300 text-blue-800 hover:bg-blue-200';
+                } else {
+                  circleClass += 'text-slate-700 hover:bg-slate-100';
+                }
+
+                return `
+                  <button type="button" onclick="setAgendaOutlookDay('${wd.label}')" class="flex flex-col items-center justify-center py-2 px-1 rounded-xl transition ${isSelected ? 'bg-blue-50/80 border border-blue-300' : 'hover:bg-slate-50/80 border border-transparent'}" title="${wd.label}-feira (${wd.dayNum}/${wd.monthNum})">
+                    <span class="text-[11px] font-bold uppercase tracking-wider ${isSelected || isToday ? 'text-blue-700' : 'text-slate-500'}">${initial}</span>
+                    <span class="${circleClass} mt-1">
+                      ${wd.dayNum}
+                    </span>
+                    <span class="w-1.5 h-1.5 rounded-full mt-1.5 ${countDayTotal > 0 ? 'bg-blue-600' : 'bg-transparent'}"></span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+
+        // 2. Stream de Atendimentos Estilo Feed do Outlook
+        const sortedSlots = [...matchingSlots].sort((a, b) => {
+          const dDiff = WEEK_LABELS.indexOf(a.dia) - WEEK_LABELS.indexOf(b.dia);
+          return dDiff !== 0 ? dDiff : a.hora.localeCompare(b.hora);
+        });
+
+        const daysToRender = selectedDay === 'todos'
+          ? weekInfo.weekDays
+          : weekInfo.weekDays.filter(wd => wd.label === selectedDay);
+
+        const outlookStreamHtml = `
+          <div class="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden divide-y divide-slate-200">
+            ${daysToRender.map(wd => {
+              const daySlots = sortedSlots.filter(s => s.dia === wd.label);
+
+              return `
+                <div id="outlook-day-${wd.label}">
+                  <!-- Banner de Cabeçalho do Dia estilo Outlook -->
+                  <div class="bg-slate-50/90 py-2.5 px-5 text-xs font-semibold text-slate-700 flex items-center justify-between border-b border-slate-200/80 select-none">
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-slate-900">${wd.isToday ? 'Hoje • ' : ''}${wd.label}-feira, ${wd.dayNum} De ${wd.monthName.slice(0, 3)}.</span>
+                      ${wd.isToday ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-600 text-white font-bold uppercase tracking-wider">Hoje</span>' : ''}
+                    </div>
+                    <div class="text-[11px] text-slate-500 font-medium">
+                      Semana ${weekInfo.weekNum} ${daySlots.length > 0 ? `• ${daySlots.length} atendimento${daySlots.length === 1 ? '' : 's'}` : ''}
+                    </div>
+                  </div>
+
+                  <!-- Linhas de Atendimento ou 'Sem eventos' -->
+                  ${daySlots.length === 0 ? `
+                    <div class="py-4 px-6 bg-white text-xs text-slate-400 font-medium italic flex items-center gap-2 border-b border-slate-100 last:border-b-0">
+                      <i data-lucide="calendar" class="w-4 h-4 text-slate-300"></i>
+                      <span>Sem eventos</span>
+                    </div>
+                  ` : `
+                    <div class="divide-y divide-slate-100 bg-white">
+                      ${daySlots.map(slot => {
+                        const patObj = state.patients.find(p => p.nome === slot.paciente);
+                        const pct = patObj && patObj.totalSessoes > 0 ? Math.min(100, Math.round((patObj.sessoesConcluidas / patObj.totalSessoes) * 100)) : 0;
+                        let barColor = 'bg-blue-600';
+                        let statusBadge = 'bg-blue-50 border-blue-200 text-blue-800';
+                        if (slot.status === 'Realizada') {
+                          barColor = 'bg-emerald-600';
+                          statusBadge = 'bg-emerald-50 border-emerald-300 text-emerald-800';
+                        } else if (slot.status === 'Falta Justificada') {
+                          barColor = 'bg-amber-500';
+                          statusBadge = 'bg-amber-50 border-amber-300 text-amber-900';
+                        } else if (slot.status === 'Falta Injustificada') {
+                          barColor = 'bg-red-600';
+                          statusBadge = 'bg-red-50 border-red-300 text-red-800';
+                        }
+
+                        return `
+                          <div class="py-3.5 px-6 hover:bg-slate-50/80 transition flex flex-col md:flex-row md:items-center justify-between gap-3.5">
+                            <div class="flex items-start md:items-center gap-4 min-w-0">
+                              <!-- Coluna Horário estilo Outlook -->
+                              <div class="w-16 shrink-0 text-left md:text-right">
+                                <div class="text-xs font-bold text-slate-900">${slot.hora}</div>
+                                <div class="text-[10px] text-slate-500 font-medium">50 min</div>
+                              </div>
+
+                              <!-- Faixa vertical colorida de categoria/status estilo Outlook -->
+                              <div class="w-1.5 self-stretch min-h-[44px] rounded-full ${barColor} shrink-0"></div>
+
+                              <!-- Detalhes do atendimento clínico -->
+                              <div class="min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                  <h4 class="text-sm font-bold text-slate-900 truncate">${escapeHtml(slot.paciente)}</h4>
+                                  <span class="px-2 py-0.5 rounded-full border text-[10px] font-bold whitespace-nowrap ${statusBadge}">
+                                    ${slot.status}
+                                  </span>
+                                </div>
+                                <div class="text-xs text-slate-600 mt-0.5 truncate flex items-center gap-1.5">
+                                  <i data-lucide="user" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                                  <span>Psicólogo(a): <strong>${escapeHtml(slot.psicologo)}</strong></span>
+                                  ${patObj ? `<span class="text-slate-300">•</span><span class="font-mono text-[11px] text-slate-500">${patObj.prontuario} • ${patObj.telefone}</span>` : ''}
+                                </div>
+                                ${patObj ? `
+                                  <div class="text-[11px] text-slate-500 mt-1 flex flex-wrap items-center gap-2">
+                                    <span class="font-medium text-slate-600">Ciclo Terapêutico: Sessão ${patObj.sessoesConcluidas} de ${patObj.totalSessoes} (${pct}% concluído)</span>
+                                    ${patObj.faltasConsecutivas > 0 ? `<span class="text-amber-800 font-semibold flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded border border-amber-200"><i data-lucide="alert-triangle" class="w-3 h-3 text-amber-500"></i> ${patObj.faltasConsecutivas} falta(s) consecutiva(s)</span>` : ''}
+                                  </div>
+                                ` : ''}
+                              </div>
+                            </div>
+
+                            <!-- Botões de Ação -->
+                            <div class="flex items-center gap-2 shrink-0 md:self-center pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+                              <button onclick="openEditAgendaSlotModal('${slot.id}')" class="px-3 py-1.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition shadow-2xs">
+                                <i data-lucide="calendar-edit" class="w-3.5 h-3.5 text-slate-500"></i>
+                                <span>Editar</span>
+                              </button>
+                              ${patObj ? `
+                                <button onclick="openProntuarioModal('${patObj.id}')" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition shadow-2xs">
+                                  <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                                  <span>Prontuário</span>
+                                </button>
+                              ` : ''}
+                            </div>
+                          </div>
+                        `;
+                      }).join('')}
+                    </div>
+                  `}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+
+        if (matchingSlots.length === 0 && (filterVal !== 'todos' || query.length > 0)) {
           listCont.innerHTML = `
+            ${outlookMiniStripHtml}
             <div class="bg-white rounded-2xl border border-slate-300 p-12 text-center shadow-sm">
-              <div class="max-w-sm mx-auto flex flex-col items-center justify-center text-slate-500 space-y-3">
+              <div class="max-w-md mx-auto flex flex-col items-center justify-center text-slate-500 space-y-3">
                 <div class="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-300 flex items-center justify-center text-slate-400">
                   <i data-lucide="calendar-x" class="w-6 h-6"></i>
                 </div>
                 <div>
-                  <h4 class="text-sm font-bold text-slate-800">Nenhum atendimento agendado</h4>
-                  <p class="text-xs text-slate-500 mt-1 leading-relaxed">Não há atendimentos programados para o filtro selecionado nesta semana.</p>
+                  <h4 class="text-sm font-bold text-slate-800">Nenhum atendimento encontrado</h4>
+                  <p class="text-xs text-slate-500 mt-1 leading-relaxed">Não há atendimentos correspondentes aos critérios de busca e filtros selecionados nesta semana.</p>
                 </div>
+                <button onclick="resetAgendaFilters()" class="mt-2 px-3.5 py-1.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-blue-600 text-xs font-semibold flex items-center gap-1.5 transition">
+                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                  <span>Limpar busca e filtros</span>
+                </button>
               </div>
             </div>
           `;
-          if (window.lucide) lucide.createIcons();
-          return;
+        } else {
+          listCont.innerHTML = `
+            ${outlookMiniStripHtml}
+            ${outlookStreamHtml}
+          `;
         }
 
-        const groupedHtml = weekInfo.weekDays.map(wd => {
-          const daySlots = slots.filter(s => s.dia === wd.label);
-          if (daySlots.length === 0) return '';
-
-          const cardsHtml = daySlots.map(slot => {
-            const patObj = state.patients.find(p => p.nome === slot.paciente);
-            const pct = patObj ? Math.min(100, Math.round((patObj.sessoesConcluidas / patObj.totalSessoes) * 100)) : 0;
-            const statusCls = slot.status === 'Realizada' ? 'bg-emerald-100 border-emerald-300 text-emerald-800'
-              : slot.status === 'Falta Justificada' ? 'bg-amber-100 border-amber-400 text-amber-900'
-              : slot.status === 'Falta Injustificada' ? 'bg-red-100 border-red-300 text-red-800'
-              : 'bg-blue-100 border-blue-300 text-blue-800';
-
-            return `
-              <div class="bg-white rounded-2xl border border-slate-300 p-5 shadow-sm hover:border-blue-400 transition flex flex-col justify-between gap-4">
-                <div class="flex items-start justify-between gap-3">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <div class="px-3 py-2 rounded-xl bg-blue-50 border border-blue-300 text-blue-800 font-bold text-sm shrink-0">${slot.hora}</div>
-                    <div class="min-w-0">
-                      <div class="text-sm font-bold text-slate-900 truncate">${slot.paciente}</div>
-                      <div class="text-xs text-slate-600 truncate">Psicólogo(a): <strong>${slot.psicologo}</strong></div>
-                      ${patObj ? `<div class="text-[11px] text-slate-500 font-mono">${patObj.prontuario} • ${patObj.telefone}</div>` : ''}
-                    </div>
-                  </div>
-                  <span class="px-2.5 py-1 rounded-full border text-[11px] font-bold whitespace-nowrap ${statusCls}">${slot.status}</span>
-                </div>
-
-                ${patObj ? `
-                <div>
-                  <div class="flex items-center justify-between text-[11px] font-semibold text-slate-700 mb-1">
-                    <span>Sessões: ${patObj.sessoesConcluidas} de ${patObj.totalSessoes}</span>
-                    <span>${pct}%</span>
-                  </div>
-                  <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                    <div class="h-full bg-blue-600 rounded-full" style="width: ${pct}%"></div>
-                  </div>
-                </div>` : ''}
-
-                <div class="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
-                  <button onclick="openEditAgendaSlotModal('${slot.id}')" class="px-3 py-1.5 rounded-lg border border-slate-400 hover:bg-slate-100 text-slate-800 text-xs font-semibold">Editar Horário / Status</button>
-                  ${patObj ? `<button onclick="openProntuarioModal('${patObj.id}')" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold">Abrir Prontuário</button>` : ''}
-                </div>
-              </div>
-            `;
-          }).join('');
-
-          return `
-            <div class="space-y-3">
-              <div class="flex items-center gap-2 px-1">
-                <span class="text-sm font-bold ${wd.isToday ? 'text-blue-700' : 'text-slate-900'}">${wd.label}-feira — ${wd.dayNum}/${wd.monthNum}</span>
-                ${wd.isToday ? '<span class="text-[10px] px-2 py-0.5 rounded bg-blue-600 text-white font-bold">Hoje</span>' : ''}
-                <span class="text-xs text-slate-500">(${daySlots.length} atendimento${daySlots.length > 1 ? 's' : ''})</span>
-              </div>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${cardsHtml}</div>
-            </div>
-          `;
-        }).join('');
-
-        listCont.innerHTML = groupedHtml;
         if (window.lucide) lucide.createIcons();
         return;
       }
 
-      // MODO CALENDÁRIO
-      calCont.classList.remove('hidden');
-      listCont.classList.add('hidden');
-      headerRow.innerHTML = `<th class="p-2.5 w-16 text-[11px] font-bold text-slate-600 uppercase border-r border-slate-300 text-center">Hora</th>` + weekInfo.weekDays.map(wd => wd.isToday
-        ? `<th class="p-2.5 border-r border-slate-300 last:border-r-0 bg-blue-50"><div class="flex items-center gap-1"><span class="text-sm font-bold text-blue-700">${wd.dayNum}/${wd.monthNum}</span><span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-600 text-white font-bold">Hoje</span></div><div class="text-[11px] text-blue-700 font-semibold">${wd.label}</div></th>`
-        : `<th class="p-2.5 border-r border-slate-300 last:border-r-0"><div class="text-sm font-bold text-slate-900">${wd.dayNum}/${wd.monthNum}</div><div class="text-[11px] text-slate-600 font-medium">${wd.label}</div></th>`
-      ).join('');
+      // =========================================================================
+      // VISUALIZAÇÃO SEMANAL (CALENDÁRIO) — BASEADA NO MICROSOFT TEAMS
+      // =========================================================================
+      if (calCont) calCont.classList.remove('hidden');
+      if (listCont) listCont.classList.add('hidden');
 
-      tbody.innerHTML = hours.map(hr => {
-        const cols = WEEK_LABELS.map(d => {
-          const matchingSlots = state.agendaSlots.filter(s => s.hora === hr && s.dia === d && (psychFilter === 'todos' || s.psicologo === psychFilter));
-          if (matchingSlots.length === 0) return `<td onclick="openScheduleSlotModal('', '${d}', '${hr}', false, true)" class="p-1.5 border-r border-slate-300 last:border-r-0 h-11 align-top hover:bg-blue-50/40 cursor-pointer transition" title="Agendar na ${d} às ${hr}"></td>`;
-          const cardsHtml = matchingSlots.map(slot => {
-            let badgeStyle = 'bg-blue-50 border border-blue-300 border-l-4 border-l-blue-600 text-blue-950', dotColor = 'bg-blue-600';
-            if (slot.status === 'Realizada') { badgeStyle = 'bg-emerald-50 border border-emerald-300 border-l-4 border-l-emerald-600 text-emerald-950'; dotColor = 'bg-emerald-600'; }
-            else if (slot.status === 'Falta Justificada') { badgeStyle = 'bg-amber-50 border border-amber-400 border-l-4 border-l-amber-500 text-amber-950'; dotColor = 'bg-amber-500'; }
-            else if (slot.status === 'Falta Injustificada') { badgeStyle = 'bg-red-50 border border-red-300 border-l-4 border-l-red-600 text-red-950'; dotColor = 'bg-red-600'; }
-            return `<div onclick="event.stopPropagation(); openEditAgendaSlotModal('${slot.id}')" class="cursor-pointer px-2 py-1.5 rounded-lg ${badgeStyle} hover:opacity-90 transition mb-1 last:mb-0"><div class="truncate font-bold text-[11px] flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full ${dotColor} shrink-0"></span><span class="truncate">${slot.paciente}</span></div><div class="text-[10px] opacity-80 truncate pl-2.5">${slot.psicologo}</div></div>`;
-          }).join('');
-          return `<td onclick="openScheduleSlotModal('', '${d}', '${hr}', false, true)" class="p-1 border-r border-slate-300 last:border-r-0 h-11 align-top cursor-pointer">${cardsHtml}</td>`;
+      // Cabeçalho estilo MS Teams: Número do dia em destaque grande + Nome do dia embaixo
+      if (headerRow) {
+        headerRow.innerHTML = `<th class="p-3 w-20 text-[11px] font-semibold text-slate-500 uppercase tracking-wider text-center bg-slate-50 border-r border-slate-200">Hora</th>` + weekInfo.weekDays.map(wd => {
+          const countDay = matchingSlots.filter(s => s.dia === wd.label).length;
+          if (wd.isToday) {
+            return `
+              <th class="p-3 border-r border-slate-200 last:border-r-0 bg-blue-50/50 border-t-2 border-t-blue-600 text-center">
+                <div class="flex flex-col items-center justify-center">
+                  <span class="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-base flex items-center justify-center shadow-xs mb-0.5">
+                    ${wd.dayNum}
+                  </span>
+                  <span class="text-xs font-bold text-blue-700">${wd.label}-feira</span>
+                  <span class="text-[10px] text-blue-600/80 font-medium mt-0.5">${countDay} atendimento${countDay === 1 ? '' : 's'}</span>
+                </div>
+              </th>
+            `;
+          }
+          return `
+            <th class="p-3 border-r border-slate-200 last:border-r-0 bg-white hover:bg-slate-50/80 transition text-center">
+              <div class="flex flex-col items-center justify-center">
+                <span class="text-lg font-bold text-slate-800 mb-0.5">
+                  ${wd.dayNum}
+                </span>
+                <span class="text-xs font-medium text-slate-500">${wd.label}-feira</span>
+                <span class="text-[10px] text-slate-400 font-medium mt-0.5">${countDay > 0 ? `${countDay} atendimento${countDay === 1 ? '' : 's'}` : 'Livre'}</span>
+              </div>
+            </th>
+          `;
         }).join('');
-        return `<tr><td class="p-2 text-[11px] font-bold text-slate-600 border-r border-slate-300 bg-slate-100/70 text-center">${hr}</td>${cols}</tr>`;
-      }).join('');
+      }
+
+      // Grade de horários com cards estilo MS Teams
+      if (tbody) {
+        tbody.innerHTML = hours.map(hr => {
+          const cols = WEEK_LABELS.map(d => {
+            const slotInCell = matchingSlots.filter(s => s.hora === hr && s.dia === d);
+            if (slotInCell.length === 0) {
+              return `
+                <td onclick="openScheduleSlotModal('', '${d}', '${hr}', false, true)" class="p-1 border-r border-slate-200 last:border-r-0 h-18 align-top hover:bg-blue-50/30 cursor-pointer transition group" title="Agendar na ${d} às ${hr}">
+                  <div class="w-full h-full min-h-[48px] rounded-lg border border-dashed border-transparent group-hover:border-blue-300 flex items-center justify-center transition">
+                    <span class="opacity-0 group-hover:opacity-100 text-[11px] text-blue-600 font-semibold flex items-center gap-1 transition">
+                      <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                      <span>Agendar</span>
+                    </span>
+                  </div>
+                </td>
+              `;
+            }
+
+            const cardsHtml = slotInCell.map(slot => {
+              let cardStyle = 'bg-blue-50/90 border border-blue-200 border-l-[4px] border-l-blue-600 text-blue-950';
+              let statusColor = 'text-blue-700';
+              if (slot.status === 'Realizada') {
+                cardStyle = 'bg-emerald-50/90 border border-emerald-200 border-l-[4px] border-l-emerald-600 text-emerald-950';
+                statusColor = 'text-emerald-700';
+              } else if (slot.status === 'Falta Justificada') {
+                cardStyle = 'bg-amber-50/90 border border-amber-200 border-l-[4px] border-l-amber-500 text-amber-950';
+                statusColor = 'text-amber-800';
+              } else if (slot.status === 'Falta Injustificada') {
+                cardStyle = 'bg-rose-50/90 border border-rose-200 border-l-[4px] border-l-rose-600 text-rose-950';
+                statusColor = 'text-rose-800';
+              }
+
+              const patObj = state.patients.find(p => p.nome === slot.paciente);
+              const sessaoTag = patObj && patObj.totalSessoes > 0 ? `Sessão ${patObj.sessoesConcluidas}/${patObj.totalSessoes}` : '';
+
+              return `
+                <div onclick="event.stopPropagation(); openEditAgendaSlotModal('${slot.id}')" class="cursor-pointer p-2 rounded-r-lg rounded-l-xs ${cardStyle} shadow-2xs hover:shadow-md hover:scale-[1.01] transition-all mb-1.5 last:mb-0 group" title="Clique para editar ou ver detalhes do atendimento">
+                  <div class="font-bold text-xs text-slate-900 truncate tracking-tight">
+                    ${escapeHtml(slot.paciente)}
+                  </div>
+                  <div class="text-[11px] text-slate-600 truncate mt-0.5 flex items-center gap-1">
+                    <i data-lucide="user" class="w-3 h-3 text-slate-400 shrink-0"></i>
+                    <span class="truncate">Psic.: ${escapeHtml(slot.psicologo)}</span>
+                  </div>
+                  <div class="text-[10px] ${statusColor} font-semibold truncate mt-1 flex items-center justify-between">
+                    <span class="flex items-center gap-1 truncate">
+                      <i data-lucide="video" class="w-3 h-3 opacity-70 shrink-0"></i>
+                      <span>${slot.status}</span>
+                    </span>
+                    ${sessaoTag ? `<span class="font-mono text-[9px] text-slate-600 bg-white/70 px-1.5 py-0.2 rounded font-bold shrink-0 ml-1">${sessaoTag}</span>` : ''}
+                  </div>
+                </div>
+              `;
+            }).join('');
+
+            return `
+              <td onclick="openScheduleSlotModal('', '${d}', '${hr}', false, true)" class="p-1 border-r border-slate-200 last:border-r-0 h-18 align-top cursor-pointer bg-white hover:bg-slate-50/60 transition">
+                ${cardsHtml}
+              </td>
+            `;
+          }).join('');
+
+          return `<tr><td class="p-2.5 text-xs font-semibold text-slate-500 border-r border-slate-200 bg-slate-50/60 text-center select-none align-top pt-3">${hr}</td>${cols}</tr>`;
+        }).join('');
+      }
+
+      if (window.lucide) lucide.createIcons();
     }
 
     function clearSchedConflict() { document.getElementById('schedConflictAlert').classList.add('hidden'); }
@@ -8455,8 +9779,16 @@
       patSel.disabled = lockPatientAndPsych; psychSel.disabled = lockPatientAndPsych;
       daySel.disabled = lockDayAndHour; hrSel.disabled = lockDayAndHour;
 
-      if (preselectedPatientId) { patSel.value = `PAT:${preselectedPatientId}`; onSchedModalPatientChange(); }
-      else { const curPsych = document.getElementById('agendaPsychFilter')?.value; if (curPsych && curPsych !== 'todos') psychSel.value = curPsych; }
+      if (preselectedPatientId) {
+        patSel.value = `PAT:${preselectedPatientId}`;
+        onSchedModalPatientChange();
+      } else {
+        const curFilter = state.agendaFilter || 'todos';
+        if (curFilter.startsWith('psicologo:')) {
+          const psychName = curFilter.replace('psicologo:', '');
+          if (state.volunteers.some(v => v.nome === psychName)) psychSel.value = psychName;
+        }
+      }
 
       if (preselectedDay) daySel.value = preselectedDay;
       else if (!preselectedPatientId) daySel.value = getTodayInfo(0).activeGridDay;
@@ -8797,7 +10129,7 @@
       renderAll();
 
       // Atalho Enter nos campos de busca para agilidade (Heurística 7: Flexibilidade e Eficiência)
-      ['queueSearchInput', 'patientSearchInput', 'volSearchInput', 'perfisSearchInput', 'docSearchInput'].forEach(id => {
+      ['queueSearchInput', 'patientSearchInput', 'volSearchInput', 'perfisSearchInput', 'accessSearchInput', 'agendaSearchInput', 'docSearchInput'].forEach(id => {
         const input = document.getElementById(id);
         if (input) {
           input.addEventListener('keydown', (e) => {
