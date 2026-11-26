@@ -43,7 +43,7 @@ function buildNavSectionsForAllowedTabs(allowedTabs) {
     .filter(sec => sec.items.length > 0);
 }
 
-const ADMIN_TI_ALLOWED = ['painel', 'voluntarios', 'perfis', 'acessos', 'documentos', 'automacao', 'meuPerfil'];
+const ADMIN_TI_ALLOWED = ['painel', 'perfis', 'acessos', 'automacao', 'meuPerfil'];
 const PSICOLOGO_ALLOWED = ['painel', 'pacientes', 'agenda', 'documentos', 'meuPerfil'];
 const COORD_TECNICA_ALLOWED = ['painel', 'fila', 'pacientes', 'agenda', 'voluntarios', 'documentos', 'automacao', 'meuPerfil'];
 const COORD_ADMIN_ALLOWED = ['painel', 'fila', 'pacientes', 'agenda', 'voluntarios', 'documentos', 'automacao', 'meuPerfil'];
@@ -56,13 +56,13 @@ export const ROLE_CONFIG = {
     shortName: 'Admin TI',
     badge: 'Admin TI',
     badgeClass: 'bg-sky-50 text-[#156599] border-sky-200',
-    description: 'Início, Psicólogos Voluntários, Perfis, Gestão de Acessos, Documentos, Configurações e Meu Perfil.',
+    description: 'Início, Perfis, Gestão de Acessos, Configurações e Meu Perfil.',
     defaultTab: 'painel',
     defaultUserUsername: 'admin',
     clinicalAccess: false,
     allowedTabs: ADMIN_TI_ALLOWED,
-    forbiddenTabs: ['fila', 'pacientes', 'agenda'],
-    scopeDescription: 'Governança técnica, perfis, gestão de acessos RBAC, infraestrutura e configurações. Bloqueado de dados clínicos de Pacientes, Fila de Triagem e Agenda clínica.',
+    forbiddenTabs: ['fila', 'pacientes', 'agenda', 'voluntarios', 'documentos'],
+    scopeDescription: 'Governança técnica, perfis, gestão de acessos RBAC, infraestrutura e configurações. Bloqueado de dados clínicos e operacionais de Pacientes, Fila de Triagem, Agenda, Psicólogos Voluntários e Documentos.',
     navSections: buildNavSectionsForAllowedTabs(ADMIN_TI_ALLOWED)
   },
 
