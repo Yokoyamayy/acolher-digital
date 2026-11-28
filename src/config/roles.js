@@ -45,8 +45,8 @@ function buildNavSectionsForAllowedTabs(allowedTabs) {
 
 const ADMIN_TI_ALLOWED = ['painel', 'perfis', 'acessos', 'automacao', 'meuPerfil'];
 const PSICOLOGO_ALLOWED = ['painel', 'pacientes', 'agenda', 'documentos', 'meuPerfil'];
-const COORD_TECNICA_ALLOWED = ['painel', 'fila', 'pacientes', 'agenda', 'voluntarios', 'documentos', 'automacao', 'meuPerfil'];
-const COORD_ADMIN_ALLOWED = ['painel', 'fila', 'pacientes', 'agenda', 'voluntarios', 'documentos', 'automacao', 'meuPerfil'];
+const COORD_TECNICA_ALLOWED = ['painel', 'fila', 'pacientes', 'agenda', 'voluntarios', 'perfis', 'documentos', 'automacao', 'meuPerfil'];
+const COORD_ADMIN_ALLOWED = ['painel', 'fila', 'pacientes', 'agenda', 'voluntarios', 'perfis', 'documentos', 'automacao', 'meuPerfil'];
 
 export const ROLE_CONFIG = {
   [ROLES.ADMIN_TI]: {
@@ -90,12 +90,12 @@ export const ROLE_CONFIG = {
     shortName: 'Coord. Técnica',
     badge: 'Coordenação Técnica',
     badgeClass: 'bg-blue-50 text-[#156599] border-blue-200',
-    description: 'Início, Fila de Triagem, Pacientes, Agenda, Psicólogos Voluntários, Documentos, Configurações (regras clínicas) e Meu Perfil.',
+    description: 'Início, Fila de Triagem, Pacientes, Agenda, Psicólogos Voluntários, Perfis, Documentos, Configurações (regras clínicas) e Meu Perfil.',
     defaultTab: 'painel',
     defaultUserUsername: 'marcelo.psi',
     clinicalAccess: true,
     allowedTabs: COORD_TECNICA_ALLOWED,
-    forbiddenTabs: ['perfis', 'acessos'],
+    forbiddenTabs: ['acessos'],
     scopeDescription: 'Supervisão clínica global, validação de triagens, homologação/alocação de psicólogos voluntários e parametrização de regras clínicas.',
     navSections: buildNavSectionsForAllowedTabs(COORD_TECNICA_ALLOWED)
   },
@@ -107,12 +107,12 @@ export const ROLE_CONFIG = {
     shortName: 'Coord. Administrativa',
     badge: 'Coordenação Administrativa',
     badgeClass: 'bg-amber-50 text-amber-900 border-amber-300',
-    description: 'Início, Fila de Triagem, Pacientes (cadastral), Agenda (recepção/check-in), Psicólogos Voluntários, Documentos, Configurações (notificações) e Meu Perfil.',
+    description: 'Início, Fila de Triagem, Pacientes (cadastral), Agenda (recepção/check-in), Psicólogos Voluntários, Perfis, Documentos, Configurações (notificações) e Meu Perfil.',
     defaultTab: 'painel',
     defaultUserUsername: 'mariana.admin',
     clinicalAccess: false,
     allowedTabs: COORD_ADMIN_ALLOWED,
-    forbiddenTabs: ['perfis', 'acessos'],
+    forbiddenTabs: ['acessos'],
     scopeDescription: 'Recepção, cadastro administrativo de pacientes (sem acesso a evoluções clínicas/PEP), check-in/remarcação na agenda e notificações.',
     navSections: buildNavSectionsForAllowedTabs(COORD_ADMIN_ALLOWED)
   }
