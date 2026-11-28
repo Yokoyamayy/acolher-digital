@@ -1,59 +1,62 @@
-(Versão 0.4) ----------------------------------------------------------------------
+# AcolherDigital — CACS
 
-Contador de + e - no prontuário para adicionar ou reduzir sessões extras livremente
+Plataforma de gestão unificada desenvolvida para apoiar o atendimento psicológico voluntário (psicoterapia breve) do **CACS (Centro Assistencial Cairbar Schutel)**, em conformidade com diretrizes de sigilo clínico do **CFP** e da **LGPD**.
 
-Remoção da barra superior do site
+O sistema centraliza o fluxo operacional e clínico da instituição — desde a inscrição e priorização na fila de triagem até o vínculo com psicólogos voluntários, agenda semanal, prontuário clínico protegido, gestão de usuários/permissões (RBAC), repositório de documentos e trilha de auditoria.
 
-Botões de Exportar Planilha e Nova Pasta Digital movidos para a aba Pacientes (e Exportar Planilha também em Psicólogos Voluntários)
+---
 
-Remoção do texto "CACS • Gestão Unificada" abaixo de AcolherDigital no menu lateral
+## Estrutura do Repositório
 
-Remoção do texto "Psicoterapia Breve (Ciclo de 12 Sessões)" na tela Início
+```text
+acolher-digital/
+├── backend/              # Diretório reservado para a implementação do backend (API/banco de dados)
+├── frontend/             # Diretório reservado para a aplicação frontend definitiva
+├── docs/                 # Documentação de design, estrutura cadastral e matriz RBAC
+├── prototipo/            # Protótipo interativo funcional (desktop e mobile)
+│   ├── prototipo.html    # Aplicação principal do protótipo
+│   ├── public/           # Logotipos e ativos visuais
+│   └── src/
+│       └── config/
+│           └── roles.js  # Definição de perfis, permissões e regras RBAC
+└── README.md
+```
 
-Remoção do botão Simulador de Sigilo do menu lateral
+---
 
-Renomeação do menu para Início, Fila de Triagem, Pacientes, Agenda, Equipe, Gestão de Acessos, Documentos e Configurações
+## Como Baixar o Repositório
 
-Unificação de Coordenação Técnica, Coordenação Administrativa e Admins de TI na página Perfis com filtros por categoria
+### Opção 1: Via Git (recomendado)
 
-Menu com setinha para cima no usuário do rodapé com opções de Meu Perfil e Sair
+```bash
+git clone https://github.com/Yokoyamayy/acolher-digital.git
+cd acolher-digital
+```
 
-Sincronização bidirecional de dados entre Meu Perfil e os cadastros de Psicólogos Voluntários e Perfis
+### Opção 2: Download manual (ZIP)
 
-Visualização em Lista na Agenda com filtro por psicólogo e cards grandes agrupados por dia da semana e horário
+1. Acesse [https://github.com/Yokoyamayy/acolher-digital](https://github.com/Yokoyamayy/acolher-digital).
+2. Clique em **Code** > **Download ZIP**.
+3. Extraia o arquivo compactado na pasta de sua preferência.
 
-(Versão 0.3) ----------------------------------------------------------------------
+---
 
-Removido o modo escuro e todos os códigos técnicos ou referências de leis da interface.
+## Como Acessar o Protótipo
 
-Menu lateral fixado para acompanhar o scroll da página, com badges em cinza exibindo as pendências de cada aba.
+O protótipo está na pasta `prototipo/` e não precisa de instalação de dependências para rodar — basta estar **conectado à internet** (para carregar Tailwind CSS, Phosphor Icons e fontes via CDN).
 
-Bordas e contornos reforçados em toda a interface para melhorar o contraste.
+### Acesso direto pelo navegador (mais simples)
 
-Tela de login substituída por um formulário comum com usuário admin e senha 1234, bloqueio após 3 erros e botão para restaurar tentativas.
+1. Abra a pasta `prototipo/`.
+2. Dê um duplo clique no arquivo **`prototipo.html`** (ou clique com o botão direito > **Abrir com** > navegador de sua preferência).
 
-Criadas as abas Coord. Técnica, Coord. Administrativa e Admins de TI com cadastro, edição de contato e exclusão.
+### Opcional: servidor local (para desenvolvimento)
 
-Criada a aba Acessos e Permissões para gerar logins e senhas reais a partir de qualquer membro cadastrado, permitindo combinar permissões de outros grupos e testar o acesso na tela de login.
+Caso prefira servir o protótipo via `http://localhost` (ex.: para usar rotas locais ou o Live Server do VS Code):
 
-Simulador de sigilo administrativo passou a bloquear também os downloads de prontuários e triagens.
+```bash
+cd prototipo
+python3 -m http.server 8080
+```
 
-Painel Geral simplificado sem o botão de Match no topo e com acesso ao prontuário clicando direto no nome do paciente em Sessões de Hoje.
-
-Prontuário passou a exibir prontuário e status antes do nome, navegação livre entre sessões, cores diferentes para falta justificada e injustificada, e limite único de extensão para 14 sessões.
-
-Fila de Espera atualizada com Prioridade Muito Alta em vermelho, Prioridade Alta em laranja, origem Assistente Social, tag TCLE Pendente em linha única com opção de homologar ao passar o mouse.
-
-Criação de paciente na fila passou a exigir todos os campos com placeholders, aceitar apenas números no telefone, permitir rolagem no modal, cadastrar múltiplos horários disponíveis e entrar apenas na fila.
-
-Modal de Match passou a exibir a disponibilidade do paciente no topo, alertar em vermelho quando o horário escolhido estiver fora dessa lista e bloquear choques de horário.
-
-Meus Pacientes ganhou ordenação da lista, botões para concluir ou interromper paciente, trava de paciente/psicólogo ao editar apenas Dia/Hora e alinhamento fixo dos botões em todas as linhas.
-
-Psicólogos Voluntários passou a exigir todos os campos e a marcação do termo para cadastrar, ganhou edição de e-mail/telefone/vagas, exclusão de cadastro e tag estilizada para relatos em dia.
-
-Agenda ajustada para caber na tela sem rolagem horizontal, com trava de limite máximo de vagas por psicólogo, navegação de semanas e modo de Disponibilidade dos Pacientes sem datas, com filtro por paciente e botões em posição fixa.
-
-Documentos e Modelos corrigido para não sumir ícones ao filtrar, sem tags de canto e apenas com o botão Baixar.
-
-Automação ajustada com chaves individuais para E-mail, WhatsApp e Backup Drive e botão Disparar em posição fixa (desabilitado quando nenhuma chave está ativa).
+Depois, acesse **`http://localhost:8080/prototipo.html`** no navegador.
