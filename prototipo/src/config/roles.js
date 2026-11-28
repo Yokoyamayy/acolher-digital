@@ -1,30 +1,17 @@
 /**
- * @file roles.ts
- * @description Matriz centralizada de perfis, rotas canônicas e nomenclatura fixa das 10 telas do AcolherDigital (CACS).
- * Rigorosamente alinhada à LGPD, Resolução CFP nº 001/2009 e controle RBAC.
+ * @file roles.js
+ * @description Espelho JS executável em navegador de src/config/roles.ts — Matriz RBAC e nomenclatura fixa das 10 telas do AcolherDigital (CACS).
  */
 
 export const ROLES = {
+  GERAL: 'GERAL',
   ADMIN_TI: 'ADMIN_TI',
   PSICOLOGO_VOLUNTARIO: 'PSICOLOGO_VOLUNTARIO',
   COORDENACAO_TECNICA: 'COORDENACAO_TECNICA',
   COORDENACAO_ADMINISTRATIVA: 'COORDENACAO_ADMINISTRATIVA'
-} as const;
+};
 
-export type RoleKey = (typeof ROLES)[keyof typeof ROLES];
-
-export interface ScreenDefinition {
-  id: string;
-  label: string;
-  route: string;
-  icon: string;
-  section: string;
-}
-
-/**
- * As 10 telas oficiais com nomenclatura 100% fixa para todos os perfis.
- */
-export const FIXED_SCREENS: readonly ScreenDefinition[] = [
+export const FIXED_SCREENS = [
   { id: 'painel', label: 'Início', route: '/inicio', icon: 'home', section: 'Atendimento' },
   { id: 'fila', label: 'Fila de Triagem', route: '/fila-triagem', icon: 'list-ordered', section: 'Atendimento' },
   { id: 'pacientes', label: 'Pacientes', route: '/pacientes', icon: 'users', section: 'Atendimento' },
@@ -35,7 +22,7 @@ export const FIXED_SCREENS: readonly ScreenDefinition[] = [
   { id: 'documentos', label: 'Documentos', route: '/documentos', icon: 'file-text', section: 'Sistema' },
   { id: 'automacao', label: 'Configurações', route: '/configuracoes', icon: 'settings', section: 'Sistema' },
   { id: 'meuPerfil', label: 'Meu Perfil', route: '/meu-perfil', icon: 'user-circle', section: 'Conta' }
-] as const;
+];
 
 export const LOGOUT_NAV_ACTION = {
   id: 'sair',
@@ -43,31 +30,9 @@ export const LOGOUT_NAV_ACTION = {
   route: '/login',
   icon: 'log-out',
   section: 'Conta'
-} as const;
+};
 
-export interface NavSection {
-  header: string;
-  items: Array<{ tab: string; label: string; route: string; icon: string }>;
-}
-
-export interface RoleDefinition {
-  id: RoleKey;
-  legacyId: string;
-  name: string;
-  shortName: string;
-  badge: string;
-  badgeClass: string;
-  description: string;
-  defaultTab: string;
-  defaultUserUsername: string;
-  clinicalAccess: boolean;
-  allowedTabs: string[];
-  forbiddenTabs: string[];
-  scopeDescription: string;
-  navSections: NavSection[];
-}
-
-function buildNavSectionsForAllowedTabs(allowedTabs: string[]): NavSection[] {
+function buildNavSectionsForAllowedTabs(allowedTabs) {
   const sectionOrder = ['Atendimento', 'Equipe', 'Sistema', 'Conta'];
   return sectionOrder
     .map(header => ({
@@ -79,12 +44,30 @@ function buildNavSectionsForAllowedTabs(allowedTabs: string[]): NavSection[] {
     .filter(sec => sec.items.length > 0);
 }
 
+const GERAL_ALLOWED = ['painel', 'fila', 'pacientes', 'agenda', 'voluntarios', 'perfis', 'acessos', 'documentos', 'automacao', 'meuPerfil'];
 const ADMIN_TI_ALLOWED = ['painel', 'perfis', 'acessos', 'automacao', 'meuPerfil'];
 const PSICOLOGO_ALLOWED = ['painel', 'pacientes', 'agenda', 'documentos', 'meuPerfil'];
 const COORD_TECNICA_ALLOWED = ['painel', 'fila', 'pacientes', 'agenda', 'voluntarios', 'perfis', 'documentos', 'automacao', 'meuPerfil'];
 const COORD_ADMIN_ALLOWED = ['painel', 'fila', 'pacientes', 'agenda', 'voluntarios', 'perfis', 'documentos', 'automacao', 'meuPerfil'];
 
-export const ROLE_CONFIG: Record<RoleKey, RoleDefinition> = {
+export const ROLE_CONFIG = {
+  [ROLES.GERAL]: {
+    id: ROLES.GERAL,
+    legacyId: 'geral',
+    name: 'Acesso Geral',
+    shortName: 'Geral',
+    badge: 'Geral',
+    badgeClass: 'bg-[#FEF9C3] text-[#713F12] border-[#FDE047]',
+    description: 'Acesso total a todas as 10 telas e permissões clínicas, administrativas, de acessos e auditoria.',
+    defaultTab: 'painel',
+    defaultUserUsername: 'geral',
+    clinicalAccess: true,
+    allowedTabs: GERAL_ALLOWED,
+    forbiddenTabs: [],
+    scopeDescription: 'Acesso irrestrito a todos os módulos do AcolherDigital: atendimento, triagem, prontuários clínicos, agenda, voluntários, perfis, gestão de acessos, documentos, configurações e logs de auditoria.',
+    navSections: buildNavSectionsForAllowedTabs(GERAL_ALLOWED)
+  },
+
   [ROLES.ADMIN_TI]: {
     id: ROLES.ADMIN_TI,
     legacyId: 'adminTi',
@@ -154,16 +137,16 @@ export const ROLE_CONFIG: Record<RoleKey, RoleDefinition> = {
   }
 };
 
-export function normalizeRole(roleKey?: string | null): RoleKey {
+export function normalizeRole(roleKey) {
   if (!roleKey) return ROLES.ADMIN_TI;
-  if (roleKey in ROLE_CONFIG) return roleKey as RoleKey;
+  if (ROLE_CONFIG[roleKey]) return roleKey;
   const match = Object.values(ROLE_CONFIG).find(
     c => c.legacyId === roleKey || c.id === roleKey || c.shortName.toLowerCase() === String(roleKey).toLowerCase()
   );
   return match ? match.id : ROLES.ADMIN_TI;
 }
 
-export function resolveTabFromRoute(routeOrTab?: string | null): string {
+export function resolveTabFromRoute(routeOrTab) {
   if (!routeOrTab) return 'painel';
   const cleaned = String(routeOrTab).replace(/^#/, '').trim();
   const byRoute = FIXED_SCREENS.find(s => s.route === cleaned || s.route.slice(1) === cleaned);
@@ -171,27 +154,45 @@ export function resolveTabFromRoute(routeOrTab?: string | null): string {
   return cleaned;
 }
 
-export function getRouteForTab(tabName: string): string {
+export function getRouteForTab(tabName) {
   const found = FIXED_SCREENS.find(s => s.id === tabName);
   return found ? found.route : '/inicio';
 }
 
-export function canAccessTab(roleKey: string | null | undefined, tabName: string): boolean {
+export function canAccessTab(roleKey, tabName) {
   const resolved = resolveTabFromRoute(tabName);
   if (resolved === 'meuPerfil' || resolved === 'restrito') return true;
   const normRole = normalizeRole(roleKey);
   const config = ROLE_CONFIG[normRole];
-  return config ? config.allowedTabs.includes(resolved) : false;
+  if (!config) return false;
+  return config.allowedTabs.includes(resolved);
 }
 
-export function getDefaultTab(roleKey?: string | null): string {
-  return ROLE_CONFIG[normalizeRole(roleKey)]?.defaultTab || 'painel';
+export function getDefaultTab(roleKey) {
+  const normRole = normalizeRole(roleKey);
+  return ROLE_CONFIG[normRole]?.defaultTab || 'painel';
 }
 
-export function getRoleConfig(roleKey?: string | null): RoleDefinition {
-  return ROLE_CONFIG[normalizeRole(roleKey)] || ROLE_CONFIG[ROLES.ADMIN_TI];
+export function getRoleConfig(roleKey) {
+  const normRole = normalizeRole(roleKey);
+  return ROLE_CONFIG[normRole] || ROLE_CONFIG[ROLES.ADMIN_TI];
 }
 
-export function getRoleName(roleKey?: string | null): string {
+export function getRoleName(roleKey) {
   return getRoleConfig(roleKey).name;
+}
+
+if (typeof window !== 'undefined') {
+  window.CACS_ROLES = {
+    ROLES,
+    FIXED_SCREENS,
+    ROLE_CONFIG,
+    normalizeRole,
+    resolveTabFromRoute,
+    getRouteForTab,
+    canAccessTab,
+    getDefaultTab,
+    getRoleConfig,
+    getRoleName
+  };
 }
